@@ -13,6 +13,7 @@ export default {
     <div class="container mt-3">
         
         <h2>REGISTRAZIONE</h2>
+        
         <form>
             <div class="d-flex justify-content-around">
                 <div>
@@ -53,6 +54,7 @@ export default {
 
         <div class="d-flex justify-content-around mt-3">
 
+            <!--Checklist policy-->            
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
@@ -68,6 +70,7 @@ export default {
             
         </div>
 
+        <!--Button-->
         <div class="text-center">
             <button type="submit" class="btn btn-primary">Registrati</button>
         </div>
