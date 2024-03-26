@@ -10,7 +10,11 @@ export default {
 </script>
 
 <template>
-    CIAO SONO LA HOME PAGE
+    <div class="container">
+        <div class="text-center display-6 mt-5 fw-bold">
+            HOME PAGE
+        </div>
+    </div>
     <div class="scroll-watcher"></div>
 
 </template>
