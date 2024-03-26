@@ -10,9 +10,7 @@ export default {
 </script>
 
 <template>
-    <div class="container">
-        
-    </div>
+    CIAO SONO LA PAGINA DI REGISTRAZIONE
     <div class="scroll-watcher"></div>
 
 </template>
