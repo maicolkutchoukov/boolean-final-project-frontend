@@ -13,7 +13,8 @@ export default {
 
 <template>
     <main>
-        MAIN
+        <!-- Componente che mi permette di avere, per URL diversi, contenuti informativi diversi -->
+        <router-view></router-view>
     </main>
 </template>
 
