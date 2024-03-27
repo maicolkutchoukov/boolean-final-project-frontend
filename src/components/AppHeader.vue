@@ -12,7 +12,7 @@ export default {
 </script>
 
 <template>
-    <div class="container">
+    <div class="container mb-5">
         <header class="d-flex justify-content-between">
             <div class="logo-container">
                 <router-link :to="{ name: 'home' }" class="">Logo BMusic</router-link>
