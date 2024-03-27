@@ -135,7 +135,7 @@
     </div>
 
     <!-- Carousel -->
-    <div class="container-fluid">
+    <div class="container-fluid mb-5">
         <swiper
         :slidesPerView="3"
         :spaceBetween="30"
@@ -145,8 +145,8 @@
         :modules="modules"
         class="mySwiper"
     >
-        <swiper-slide>Slide 1</swiper-slide>
-        <swiper-slide>Slide 2</swiper-slide><swiper-slide>Slide 3</swiper-slide>
+        <swiper-slide><img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" alt=""></swiper-slide>
+        <swiper-slide><img src="https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp" alt=""></swiper-slide><swiper-slide><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgUbGn2rFhY73Z4jGq3NhcVynmqkXkVlN6qw&usqp=CAU" alt=""></swiper-slide>
         <swiper-slide>Slide 4</swiper-slide><swiper-slide>Slide 5</swiper-slide>
         <swiper-slide>Slide 6</swiper-slide><swiper-slide>Slide 7</swiper-slide>
         <swiper-slide>Slide 8</swiper-slide><swiper-slide>Slide 9</swiper-slide>
