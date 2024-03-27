@@ -1,11 +1,15 @@
-<!-- PAGINA PRINCIPALE DOVE ANDRANNO INSERITI TUTTI I COMPONENTI  -->
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
         }
      },
+     methods:{
+
+     }
 }
 </script>
 
