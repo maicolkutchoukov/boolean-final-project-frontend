@@ -25,8 +25,8 @@ export default {
                     <input type="password" class="form-control w-50" id="password">
                 </div>
                 <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Ricordami</label>
+                    <input type="checkbox" class="form-check-input" id="remember">
+                    <label class="form-check-label" for="remember">Ricordami</label>
                 </div>
                 <button type="submit" class="btn btn-primary">Accedi</button>
                 </form>
