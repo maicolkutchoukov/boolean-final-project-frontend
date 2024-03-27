@@ -54,7 +54,7 @@ export default {
         </div>
 
         <div class="homepage-left">
-            Sei un musicista?
+            <router-link :to="{ name: 'home2' }" class="px-3">Home</router-link>
         </div>
     </div>
 
@@ -64,7 +64,7 @@ export default {
         <!-- Section-1 -->
         <h2 class="mt-3 mb-3">SCEGLI IL TUO ARTISTA</h2>
         
-       <form class="d-flex justify-content-center">
+        <form class="d-flex justify-content-center">
             <div class="me-2">
                 <input class="form-control form-control-lg" type="text" placeholder="Inserisci il nome">
             </div>
