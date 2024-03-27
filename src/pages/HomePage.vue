@@ -54,7 +54,7 @@ export default {
         </div>
 
         <div class="homepage-left">
-            <router-link :to="{ name: 'home2' }" class="px-3">Home</router-link>
+            <router-link :to="{ name: 'home2' }" class="px-3">Sei un musicista?</router-link>
         </div>
     </div>
 
