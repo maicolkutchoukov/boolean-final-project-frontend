@@ -1,12 +1,28 @@
 <!-- PAGINA PRINCIPALE DOVE ANDRANNO INSERITI TUTTI I COMPONENTI  -->
 
 <script>
-export default {
-    data() {
-        return {
-        }
-     },
-}
+  // Import Swiper Vue.js components
+  import { Swiper, SwiperSlide } from 'swiper/vue';
+
+  // Import Swiper styles
+  import 'swiper/css';
+
+  import 'swiper/css/pagination';
+
+  // import required modules
+  import { Pagination } from 'swiper/modules';
+
+  export default {
+    components: {
+      Swiper,
+      SwiperSlide,
+    },
+    setup() {
+      return {
+        modules: [Pagination],
+      };
+    },
+  };
 </script>
 
 <template>
@@ -56,34 +72,34 @@ export default {
         </div>
        
 
-        <div class="row">
-            <div class="col-12 d-flex justify-content-around">
+        <div class="row d-flex justify-content-around">
+            
                 <!-- Single Card -->
-                <div class="col-3">
+                <div class="col-4 g-2">
                     <div class="container-card d-flex align-items-center">
                         <div class="container-img">
                             IMG
                         </div>
-                        <div class="container-text">
-                            <div class="text-center">
+                        <div class="container-text text-center">
+                            <div>
                                 Passo 1
                             </div>
                     
                             <div class="m-2">
-                                Filtra le ricerche per trovare l'artista tra migliai di proposte
+                                Filtra le ricerche per trovare l'artista
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Single Card -->
-                <div class="col-3">
+                <div class="col-4 g-2">
                     <div class="container-card d-flex align-items-center">
                         <div class="container-img">
                             IMG
                         </div>
-                        <div>
-                            <div class="text-center">
+                        <div class="container-text text-center">
+                            <div>
                                 Passo 2
                             </div>
                     
@@ -95,33 +111,51 @@ export default {
                 </div>
 
                 <!-- Single Card -->
-                <div class="col-3">
+                <div class="col-4 g-2">
                     <div class="container-card d-flex align-items-center">
                         <div class="container-img">
                             IMG
                         </div>
-                        <div class="container-text">
-                            <div class="text-center">
-                                Passo 2
+                        <div class="container-text text-center">
+                            <div>
+                                Passo 3
                             </div>
                     
                             <div class="m-2">
-                                Contatta i musicisti che desideri ingaggiare. BMusic non prende commissioni.
+                                Contatta i musicisti che desideri ingaggiare.
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="text-center mt-3">
-                <button type="submit" class="btn btn-primary">Cerca Musicisti</button>
-            </div>
-            
-        </div>
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">Cerca Musicisti</button>
+                </div>
+            </div>    
     </div>
-    
 
-    <div class="scroll-watcher"></div>
+    <!-- Carousel -->
+    <div class="container-fluid">
+        <swiper
+        :slidesPerView="3"
+        :spaceBetween="30"
+        :pagination="{
+        clickable: true,
+        }"
+        :modules="modules"
+        class="mySwiper"
+    >
+        <swiper-slide>Slide 1</swiper-slide>
+        <swiper-slide>Slide 2</swiper-slide><swiper-slide>Slide 3</swiper-slide>
+        <swiper-slide>Slide 4</swiper-slide><swiper-slide>Slide 5</swiper-slide>
+        <swiper-slide>Slide 6</swiper-slide><swiper-slide>Slide 7</swiper-slide>
+        <swiper-slide>Slide 8</swiper-slide><swiper-slide>Slide 9</swiper-slide>
+        </swiper>
+    </div>
+       
+    <!--
+        <div class="scroll-watcher"></div>
+    -->
 
 </template>
 
@@ -157,7 +191,7 @@ img {
 
 .section-2 {
     border: 1px solid black;
-    height: 300px;
+    min-height: 400px;
 }
 
 .container-card {
@@ -175,6 +209,27 @@ img {
     height: 100%;
     width: 60%;
     border: 1px dashed black;
+}
+
+/* Swiper */
+.mySwiper {
+    height: 400px;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 
@@ -196,3 +251,4 @@ img {
 }
 */
 </style>
+
