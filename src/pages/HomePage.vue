@@ -42,10 +42,6 @@ export default {
 
 <template>
 
-    <div class="text-center display-6 mt-5 fw-bold">
-            HOME PAGE
-    </div>
-
     <!-- HomePage-Top -->
     <div class="homepage-top d-flex">
       
@@ -59,12 +55,12 @@ export default {
     </div>
 
     <!-- HomePage-Buttom -->
-    <div class="section-1 container-fluid ">
+    <div class="section-1 container-fluid mb-5 px-5 bg-body-secondary">
         
         <!-- Section-1 -->
-        <h2 class="mt-3 mb-3">SCEGLI IL TUO ARTISTA</h2>
+        <h1 class="py-5 mb-3 display-4 fw-bold">Trova musicisti, gruppi, <br> Dj e band per il tuo evento</h1>
         
-        <form class="d-flex justify-content-center">
+        <form class="d-flex justify-content-center w-75 mx-auto">
             <div class="me-2">
                 <input class="form-control form-control-lg" type="text" placeholder="Inserisci il nome">
             </div>
@@ -166,7 +162,7 @@ img {
 /* section-1 */
 .section-1 {
     border: 1px solid black;
-    height: 300px;
+    min-height: 200px;
 }
 
 /* section-2 */
