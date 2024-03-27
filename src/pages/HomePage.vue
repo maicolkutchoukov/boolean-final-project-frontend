@@ -86,30 +86,32 @@ export default {
         </div>
        
 
-        <div class="row">
+        <div class="container">
+            <div class="row">
             
             <!-- Single Card -->
-            <div v-for="(card, i) in cardData" :key="i" class="col-4 g-2 d-flex justify-content-center">
-                <div class="container-card d-flex">
-                    <div class="container-img">
-                        IMG
-                    </div>
-                    <div class="container-text text-center">
-                        <div>
-                            {{ card.title }}
+                <div v-for="(card, i) in cardData" :key="i" class="col-4 g-2 ">
+                    <div class="container-card d-flex">
+                        <div class="container-img h-100">
+                            IMG
                         </div>
-                
-                        <div class="m-2">
-                            {{ card.text }}
+                        <div class="container-text text-center d-flex align-items-center justify-content-center flex-column">
+                            <div>
+                                {{ card.title }}
+                            </div>
+                    
+                            <div class="m-2">
+                                {{ card.text }}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="text-center mt-3">
-                <button type="submit" class="btn btn-primary">Cerca Musicisti</button>
-            </div>
-        </div>    
+                
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">Cerca Musicisti</button>
+                </div>
+            </div>    
+        </div>
     </div>
 
     <!-- Carousel -->
@@ -178,13 +180,11 @@ img {
 }
 
 .container-img {
-    height: 100%;
     min-width: 40%;
     border: 1px dashed black;
 }
 
 .container-text {
-    height: 100%;
     min-width:60%;
     border: 1px dashed black;
 }
