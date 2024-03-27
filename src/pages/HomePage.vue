@@ -1,28 +1,42 @@
 <!-- PAGINA PRINCIPALE DOVE ANDRANNO INSERITI TUTTI I COMPONENTI  -->
 
 <script>
-  // Import Swiper Vue.js components
-  import { Swiper, SwiperSlide } from 'swiper/vue';
 
-  // Import Swiper styles
-  import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
 
-  import 'swiper/css/pagination';
-
-  // import required modules
-  import { Pagination } from 'swiper/modules';
-
-  export default {
+export default {
     components: {
-      Swiper,
-      SwiperSlide,
+        Swiper,
+        SwiperSlide,
     },
     setup() {
-      return {
+        return {
         modules: [Pagination],
-      };
+        };
     },
-  };
+
+    data() {
+        return {
+            cardData: [
+                {
+                    title: 'Passo 1',
+                    text: 'Usufruisci dei nostri filtri'
+                },
+                {
+                    title: 'Passo 2',
+                    text: 'Visualizza le recensioni dagli altri utenti'
+                },
+                {
+                    title: 'Passo 3',
+                    text: 'Contatta i musicisti che desideri ingaggiare.'
+                },
+            ]
+        }
+    },
+};
 </script>
 
 <template>
@@ -72,66 +86,30 @@
         </div>
        
 
-        <div class="row d-flex justify-content-around">
+        <div class="row">
             
-                <!-- Single Card -->
-                <div class="col-4 g-2">
-                    <div class="container-card d-flex align-items-center">
-                        <div class="container-img">
-                            IMG
-                        </div>
-                        <div class="container-text text-center">
-                            <div>
-                                Passo 1
-                            </div>
-                    
-                            <div class="m-2">
-                                Filtra le ricerche per trovare l'artista
-                            </div>
-                        </div>
+            <!-- Single Card -->
+            <div class="col-4 g-2 d-flex justify-content-aruond">
+                <div v-for="(card, i) in cardData" :key="i" class="container-card d-flex">
+                    <div class="container-img">
+                        IMG
                     </div>
-                </div>
+                    <div class="container-text text-center">
+                        <div>
+                            {{ card.title }}
+                        </div>
                 
-                <!-- Single Card -->
-                <div class="col-4 g-2">
-                    <div class="container-card d-flex align-items-center">
-                        <div class="container-img">
-                            IMG
-                        </div>
-                        <div class="container-text text-center">
-                            <div>
-                                Passo 2
-                            </div>
-                    
-                            <div class="m-2">
-                                Visualizza le recensioni dagli altri utenti
-                            </div>
+                        <div class="m-2">
+                            {{ card.text }}
                         </div>
                     </div>
                 </div>
-
-                <!-- Single Card -->
-                <div class="col-4 g-2">
-                    <div class="container-card d-flex align-items-center">
-                        <div class="container-img">
-                            IMG
-                        </div>
-                        <div class="container-text text-center">
-                            <div>
-                                Passo 3
-                            </div>
-                    
-                            <div class="m-2">
-                                Contatta i musicisti che desideri ingaggiare.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-primary">Cerca Musicisti</button>
-                </div>
-            </div>    
+            </div>
+            
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary">Cerca Musicisti</button>
+            </div>
+        </div>    
     </div>
 
     <!-- Carousel -->
