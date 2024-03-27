@@ -23,7 +23,7 @@ export default {
             cardData: [
                 {
                     title: 'Passo 1',
-                    text: 'Usufruisci dei nostri filtri'
+                    text: 'Usufruisci dei nostri filtri per trovare migliai di artisti'
                 },
                 {
                     title: 'Passo 2',
@@ -89,8 +89,8 @@ export default {
         <div class="row">
             
             <!-- Single Card -->
-            <div class="col-4 g-2 d-flex justify-content-aruond">
-                <div v-for="(card, i) in cardData" :key="i" class="container-card d-flex">
+            <div v-for="(card, i) in cardData" :key="i" class="col-4 g-2 d-flex justify-content-center">
+                <div class="container-card d-flex">
                     <div class="container-img">
                         IMG
                     </div>
@@ -174,18 +174,18 @@ img {
 
 .container-card {
     border: 1px solid red;
-    height: 200px;
+    min-height: 200px;
 }
 
 .container-img {
     height: 100%;
-    width: 40%;
+    min-width: 40%;
     border: 1px dashed black;
 }
 
 .container-text {
     height: 100%;
-    width: 60%;
+    min-width:60%;
     border: 1px dashed black;
 }
 
