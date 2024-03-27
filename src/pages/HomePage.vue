@@ -32,7 +32,7 @@
     </div>
 
     <!-- HomePage-Top -->
-    <div class="homepage-top container-fluid d-flex">
+    <div class="homepage-top d-flex">
       
         <div class="homepage-right">
             Cerchi Musicisti?
