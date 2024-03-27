@@ -5,7 +5,8 @@
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Pagination } from 'swiper/modules';
+import 'swiper/css/navigation';
+import { Pagination, Navigation } from 'swiper/modules';
 
 export default {
     components: {
@@ -14,7 +15,7 @@ export default {
     },
     setup() {
         return {
-        modules: [Pagination],
+        modules: [Pagination, Navigation],
         };
     },
 
@@ -119,6 +120,7 @@ export default {
         <swiper
         :slidesPerView="3"
         :spaceBetween="30"
+        :loop="true"
         :pagination="{
         clickable: true,
         }"
