@@ -68,7 +68,7 @@ export default {
                 <input class="form-control form-control-lg" type="text" placeholder="Inserisci la città">
             </div>
 
-            <div class="">
+            <div>
                 <button type="submit" class="btn btn-primary">Cerca</button>
             </div>
         </form>

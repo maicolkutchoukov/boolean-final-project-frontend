@@ -1,12 +1,17 @@
 <!-- PAGINA PRINCIPALE DOVE ANDRANNO INSERITI TUTTI I COMPONENTI  -->
 
 <script>
+
+import axios from 'axios';
+
 export default {
-    data() {
-        return {
-            CheckBoxData: [
+  data() {
+    return {
+      responseData: null,
+
+      CheckBoxData: [
                 {
-                    title: 'Cantanti',
+                    title: 'Cantante',
                 },
                 {
                     title: 'Bassista',
@@ -14,14 +19,49 @@ export default {
                 {
                     title: 'Violista',
                 },
+                {
+                    title: 'Percussionista',
+                },
+                {
+                    title: 'Chitarrista',
+                },
+                {
+                    title: 'Violista',
+                },
+                {
+                    title: 'Violista',
+                },
+                {
+                    title: 'Violista',
+                },
             ]
-        }
-     },
+    };
+  },
+  mounted() {
+    // Esegui la chiamata API quando il componente viene montato
+    axios.get('URL_della_tua_API')
+      .then(response => {
+        // Gestisci la risposta della chiamata API
+        this.responseData = response.data;
+      })
+      .catch(error => {
+        // Gestisci eventuali errori durante la chiamata API
+        console.error('Errore durante la chiamata API:', error);
+      });
+  }
 }
+
+
 </script>
 
 <template>
-    <div class="container-fluid d-flex">
+    <div class="container">
+        <div class="fw-bold fs-4 mb-4">
+            Home / <span class="opacity-50">Profili sponsorizzati</span>
+        </div>
+    </div>
+    
+    <div class="container d-flex">
         <div class="aside-container">
             <!-- Aside-container -->
             <form>
@@ -47,7 +87,7 @@ export default {
         <div class="main-container">
             <!-- main-container -->
             <div class="row d-flex">                    
-                <div class="col-2">
+                <div class="col-3">
                     <div class="card-result d-flex flex-column">
                         <div class="card-result-top d-flex flex-column">
                             <div class="background-img">background-img</div>
