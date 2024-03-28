@@ -20,6 +20,7 @@ export default {
             <div class="d-flex">
 
                 <router-link :to="{ name: 'instrumental' }" class="px-3">Strumenti</router-link>
+                <router-link :to="{ name: 'sponsor' }" class="px-3">Sponsor</router-link>
                 <router-link :to="{ name: 'search' }" class="px-3">Cerca</router-link>
                 <router-link :to="{ name: 'login' }" class="px-3">Accedi/Registrati</router-link>
 

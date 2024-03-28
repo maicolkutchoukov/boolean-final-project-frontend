@@ -107,7 +107,7 @@ export default {
             <!-- Button Single Card -->
             <div class="d-flex justify-content-center">
                 <div id="button-musicians" class="text-center mt-3 w-25">
-                    <router-link :to="{ name: 'search' }" class="text-link px-3">Sei un musicista?</router-link>
+                    <router-link :to="{ name: 'search' }" class="text-link px-3">Cerca musicisti</router-link>
                 </div>
             </div>
                 
