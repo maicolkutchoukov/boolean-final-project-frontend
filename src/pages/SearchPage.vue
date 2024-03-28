@@ -7,7 +7,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      responseData: null,
+      responseData: [],
 
       CheckBoxData: [
                 {
@@ -37,18 +37,15 @@ export default {
             ]
     };
   },
-  mounted() {
-    // Esegui la chiamata API quando il componente viene montato
-    axios.get('URL_della_tua_API')
-      .then(response => {
-        // Gestisci la risposta della chiamata API
+    mounted() {
+    axios.get('http://127.0.0.1:8080/api/users')
+        .then(response => {
         this.responseData = response.data;
-      })
-      .catch(error => {
-        // Gestisci eventuali errori durante la chiamata API
-        console.error('Errore durante la chiamata API:', error);
-      });
-  }
+        })
+    .catch(error => {
+    console.error('Errore durante la chiamata API:', error);
+    });
+    }
 }
 
 
