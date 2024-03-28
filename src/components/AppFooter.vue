@@ -9,6 +9,29 @@ export default {
 
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    var myButton = document.getElementById("myButton");
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+    var modalMessage = document.getElementById("modal-message");
+
+    myButton.addEventListener("click", function() {
+        modal.style.display = "block";
+        
+    });
+
+    span.addEventListener("click", function() {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+});
+
 </script>
 
 <template>
@@ -107,11 +130,29 @@ export default {
                         </h4>
                     </div>
                 </div>
+                <!-- Modal -->
+                <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-top">
+                        <span class="close">&times;</span>
+                        <h2 class="modal-top-title">Assistenza BMusic</h2>
+                        <p id="modal-message">Il team si riserva di rispondere quando meglio crede</p>
+                    </div>
+                    <div class="modal-bottom">
+                        <div>
+                            <i class="fa-brands fa-whatsapp"> Whatsapp</i>
+                        </div>
+                        <div>
+                            <i class="fa-regular fa-envelope"> Email</i>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <button id="myButton"><i class="fa-regular fa-comments"></i> Chat </button>
             </div>
         </div>
         <div class="footer-bottom">
             <p>Copyright © 2024 | All rights reserved</p>
-            <button id="button"><i class="fa-sharp fa-light fa-messages"></i> Serve aiuto? </button>
         </div>
     </footer>
 </template>
@@ -212,10 +253,6 @@ export default {
     margin-bottom: 0;
 }
 
-/*.fa-brands {
-    height: 100;
-}*/
-
 // Menù a tendina
 .select {
     box-sizing: border-box;
@@ -285,18 +322,84 @@ select {
 // Button
 
 button {
-    position: absolute;
-    background-color: red;
+    position: relative;
+    background-color: #ed0f46;
     color: white;
     width: 150px;
     height: 40px;
     border-radius: 25px;
     border: none;
-    bottom: -66rem;
-    right: 1rem;
+    bottom: -24rem;
+    right: 0.3rem;
 }
 
-#button {
+button .fa-comments {
+    margin-right: 5px;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+/* Contenuto del modal */
+.modal-content {
+  margin: 15% auto;
+  padding: 3px;
+  border: 1px solid #888;
+  width: 25%;
+}
+
+.modal-top {
+    display: flex;
+    justify-content: space-between;
+    background-color: #903;
+    color: white;
+    padding-left: 20px;
+    width: 100%;
+    flex-direction: column;
+}
+
+.modal-top-title {
+    margin-top: 1.4rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.modal-message {
+    margin-bottom: 2rem;
+}
+
+.modal-bottom {
+    background-color: white;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Chiudi pulsante (x) */
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 10px;
+  position: absolute;
+  top: -1rem;
+  right: 1rem;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 </style>
