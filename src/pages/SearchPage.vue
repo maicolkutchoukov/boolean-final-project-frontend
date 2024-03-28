@@ -49,27 +49,23 @@ export default {
             <div class="row d-flex">                    
                 <div class="col-2">
                     <div class="card-result d-flex flex-column">
-                        <div class="card-result-top">
+                        <div class="card-result-top d-flex flex-column">
                             <div class="background-img">background-img</div>
-                            <div class="user-icon"> icon</div>
+                            <div class="user-icon">icon</div>
                         </div>
-                        <div class="card-result-bottom">
-                            <div class="container-text">
-                                <h4>*NOME ARTISTA*</h4>
 
-                                <div>*città*</div>
+                        <div class="card-result-bottom mt-3">
+                            <h4>nome artista</h4>
+                            <div>città</div>
+                            <div>valutazione</div>
 
-                                <div>*ruoli musicisti*</div>
-
-                                <div>*recensioni(stelle)*</div>
-                            </div>
+                           <div class="d-flex justify-content-center mt-2">
+                                <button type="button" class="btn btn-primary btn-sm me-2">contatta</button>
+                                <button type="button" class="btn btn-primary btn-sm">profilo</button>
+                           </div>
+                           
+                        </div>
                         
-                            <div class="card-result-button d-flex justify-content-center">
-                                <button type="button" class="btn btn-primary btn-sm me-1">Contatta</button>
-                                <button type="button" class="btn btn-primary btn-sm">Visualizza profilo</button>
-                            </div>
-                                                            
-                        </div>
                     </div>
                 </div>
                 
@@ -115,7 +111,6 @@ export default {
 .card-result {
     border: 1px dashed black;
     border-radius: 20px;
-    min-height: 350px;
 }
 
 .card-result-top {
@@ -125,20 +120,8 @@ export default {
 }
 
 .card-result-bottom {
-    border: 1px dashed blue;
-    height: 200px;
-    position: relative;
-}
-
-.card-result-button {
-    position: absolute;
-    bottom: 0;
-    left: 10px;
-}
-
-.container-text {
-    position: absolute;
-    top: 40px;
+    border: 1px dashed red;
+    height: calc(100% - 150px);
 }
 
 .user-icon {
@@ -147,10 +130,8 @@ export default {
     height: 100px;
     width: 100px;
     border-radius: 20px;
-    position: relative;
-    z-index: 10%;
-    bottom: -30px;
-    left: 10px;
+    position: absolute;
+    bottom: -10px;
 }
 
 /*
