@@ -21,7 +21,13 @@ export default {
 </script>
 
 <template>
-    <div class="container-fluid d-flex">
+    <div class="container">
+        <div class="fw-bold fs-4 mb-4">
+            Home / <span class="opacity-50">Profili sponsorizzati</span>
+        </div>
+    </div>
+    
+    <div class="container d-flex">
         <div class="aside-container">
             <!-- Aside-container -->
             <form>
@@ -47,7 +53,7 @@ export default {
         <div class="main-container">
             <!-- main-container -->
             <div class="row d-flex">                    
-                <div class="col-2">
+                <div class="col-3">
                     <div class="card-result d-flex flex-column">
                         <div class="card-result-top d-flex flex-column">
                             <div class="background-img">background-img</div>
