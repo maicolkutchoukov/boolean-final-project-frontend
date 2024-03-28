@@ -140,10 +140,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                     <div class="modal-bottom">
                         <div>
-                            <i class="fa-brands fa-whatsapp"> Whatsapp</i>
+                            <i class="fa-brands fa-whatsapp"></i>
+                            <p>Whatsapp</p>
                         </div>
                         <div>
-                            <i class="fa-regular fa-envelope"> Email</i>
+                            <i class="fa-regular fa-envelope"></i>
+                            <p>Email</p>
                         </div>
                     </div>
                 </div>
@@ -333,6 +335,13 @@ button {
     right: 0.3rem;
 }
 
+button:hover,
+button:focus {
+  background-color: #888;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 button .fa-comments {
     margin-right: 5px;
 }
@@ -342,19 +351,19 @@ button .fa-comments {
   display: none;
   position: fixed;
   z-index: 1;
-  left: 0;
-  top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.4);
+  /*background-color: rgba(0,0,0,0.4);*/
 }
 
 /* Contenuto del modal */
 .modal-content {
-  margin: 15% auto;
+  bottom: -25rem;
+  right: -51rem;
   padding: 3px;
   border: 1px solid #888;
   width: 25%;
+  font-size: 1rem;
 }
 
 .modal-top {
@@ -381,6 +390,27 @@ button .fa-comments {
     background-color: white;
     padding: 20px;
     width: 100%;
+}
+
+.modal-bottom div {
+    margin-bottom: 10px;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+}
+
+.modal-bottom i {
+    margin-left: 6px;
+    margin-right: 20px;
+}
+
+.modal-bottom p {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+
+.fa-whatsapp {
+    color: green;
 }
 
 /* Chiudi pulsante (x) */
