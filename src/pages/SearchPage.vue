@@ -109,7 +109,7 @@ export default {
 /* Card-result */
 
 .card-result {
-    border: 1px dashed black;
+    border: 1px solid black;
     border-radius: 20px;
 }
 
@@ -120,7 +120,6 @@ export default {
 }
 
 .card-result-bottom {
-    border: 1px dashed red;
     height: calc(100% - 150px);
 }
 

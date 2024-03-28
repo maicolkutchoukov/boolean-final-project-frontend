@@ -104,8 +104,8 @@ export default {
                     </div>
                 </div>
                 
-                <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-primary">Cerca Musicisti</button>
+                <div id="button-musicians" class="text-center mt-3 w-25">
+                    <router-link :to="{ name: 'search' }" class="px-3">Sei un musicista?</router-link>
                 </div>
             </div>    
         </div>
@@ -163,6 +163,11 @@ img {
 .section-1 {
     border: 1px solid black;
     min-height: 200px;
+}
+
+#button-musicians {
+    background-color: blue;
+    padding: 10px;
 }
 
 /* section-2 */

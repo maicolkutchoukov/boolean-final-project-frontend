@@ -20,7 +20,6 @@ export default {
             <div class="d-flex">
 
                 <router-link :to="{ name: 'instrumental' }" class="px-3">Strumenti</router-link>
-                <router-link :to="{ name: 'review' }" class="px-3">Recensioni</router-link>
                 <router-link :to="{ name: 'search' }" class="px-3">Cerca</router-link>
                 <router-link :to="{ name: 'login' }" class="px-3">Accedi/Registrati</router-link>
 
