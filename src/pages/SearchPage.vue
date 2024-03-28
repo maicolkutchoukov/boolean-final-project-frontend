@@ -1,12 +1,17 @@
 <!-- PAGINA PRINCIPALE DOVE ANDRANNO INSERITI TUTTI I COMPONENTI  -->
 
 <script>
+
+import axios from 'axios';
+
 export default {
-    data() {
-        return {
-            CheckBoxData: [
+  data() {
+    return {
+      responseData: null,
+
+      CheckBoxData: [
                 {
-                    title: 'Cantanti',
+                    title: 'Cantante',
                 },
                 {
                     title: 'Bassista',
@@ -14,10 +19,39 @@ export default {
                 {
                     title: 'Violista',
                 },
+                {
+                    title: 'Percussionista',
+                },
+                {
+                    title: 'Chitarrista',
+                },
+                {
+                    title: 'Violista',
+                },
+                {
+                    title: 'Violista',
+                },
+                {
+                    title: 'Violista',
+                },
             ]
-        }
-     },
+    };
+  },
+  mounted() {
+    // Esegui la chiamata API quando il componente viene montato
+    axios.get('URL_della_tua_API')
+      .then(response => {
+        // Gestisci la risposta della chiamata API
+        this.responseData = response.data;
+      })
+      .catch(error => {
+        // Gestisci eventuali errori durante la chiamata API
+        console.error('Errore durante la chiamata API:', error);
+      });
+  }
 }
+
+
 </script>
 
 <template>
