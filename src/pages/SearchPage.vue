@@ -47,26 +47,43 @@ export default {
         <div class="main-container">
             <!-- main-container -->
             <div class="row d-flex">                    
-                    <div class="col-3">
-                        <div class="card-result d-flex flex-column">
-                            <div class="card-result-top">
-                                <div class="background-img">background-img</div>
-                                <div class="user-icon">user icon</div>
+                <div class="col-2">
+                    <div class="card-result d-flex flex-column">
+                        <div class="card-result-top">
+                            <div class="background-img">background-img</div>
+                            <div class="user-icon"> icon</div>
+                        </div>
+                        <div class="card-result-bottom">
+                            <div class="container-text">
+                                <h4>*NOME ARTISTA*</h4>
+
+                                <div>*città*</div>
+
+                                <div>*ruoli musicisti*</div>
+
+                                <div>*recensioni(stelle)*</div>
                             </div>
-                            <div class="card-result-bottom"></div>
+                        
+                            <div class="card-result-button d-flex justify-content-center">
+                                <button type="button" class="btn btn-primary btn-sm me-1">Contatta</button>
+                                <button type="button" class="btn btn-primary btn-sm">Visualizza profilo</button>
+                            </div>
+                                                            
                         </div>
                     </div>
-                    <!--
-                    <div class="col-3 ">
-                        <div class="card-result"></div>
-                    </div>
-                    <div class="col-3 ">
-                        <div class="card-result"></div>
-                    </div>
-                    <div class="col-3">
-                        <div class="card-result"></div>
-                    </div>
-                    -->                                   
+                </div>
+                
+                <!--
+                <div class="col-3 ">
+                    <div class="card-result"></div>
+                </div>
+                <div class="col-3 ">
+                    <div class="card-result"></div>
+                </div>
+                <div class="col-3">
+                    <div class="card-result"></div>
+                </div>
+                -->                                   
             </div>
 
         </div>
@@ -98,30 +115,42 @@ export default {
 .card-result {
     border: 1px dashed black;
     border-radius: 20px;
-    min-height: 300px;
+    min-height: 350px;
 }
 
 .card-result-top {
     border: 1px dashed violet;
     height: 150px;
+    position: relative;
 }
 
 .card-result-bottom {
     border: 1px dashed blue;
-    height: 100px;
+    height: 200px;
+    position: relative;
 }
 
-.container-img {
-    border: 1px solid red;
-    height: 100px;
-    width: 100px;
+.card-result-button {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+}
+
+.container-text {
+    position: absolute;
+    top: 40px;
 }
 
 .user-icon {
+    text-align: center;
     border: 1px solid green;
-    height: 70px;
-    width: 70px;
-    border-radius: 50px;
+    height: 100px;
+    width: 100px;
+    border-radius: 20px;
+    position: relative;
+    z-index: 10%;
+    bottom: -30px;
+    left: 10px;
 }
 
 /*
