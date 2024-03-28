@@ -102,12 +102,15 @@ export default {
                             </div>
                         </div>
                     </div>
-                </div>
-                
+                </div>                                
+            </div>
+            <!-- Button Single Card -->
+            <div class="d-flex justify-content-center">
                 <div id="button-musicians" class="text-center mt-3 w-25">
-                    <router-link :to="{ name: 'search' }" class="px-3">Sei un musicista?</router-link>
+                    <router-link :to="{ name: 'search' }" class="text-link px-3">Sei un musicista?</router-link>
                 </div>
-            </div>    
+            </div>
+                
         </div>
     </div>
 
@@ -166,12 +169,16 @@ img {
 }
 
 #button-musicians {
-    background-color: blue;
+    background-color: #0D6EFD;
     padding: 10px;
 }
 
-/* section-2 */
+.text-link {
+    color: white;
+    text-decoration: none;
+}
 
+/* section-2 */
 .section-2 {
     border: 1px solid black;
     min-height: 400px;
