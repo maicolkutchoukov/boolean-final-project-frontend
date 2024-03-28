@@ -161,6 +161,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <style lang="scss" scoped>
 
+footer {
+    margin-top: 20px;
+}
+
 .footer-top {
     background-color: #23272a;
     min-height: 300px;
