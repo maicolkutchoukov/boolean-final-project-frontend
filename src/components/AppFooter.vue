@@ -17,20 +17,19 @@ export default {
         <div class="footer-top">
             <div class="container-footer-top">
                 <div class="container-footer-left">
-                    <h3>
+                    <h2>
                         LOGO
-                    </h3>
-                    <h4>
+                    </h2>
+                    <h3>
                         Altri paesi
-                    </h4>
+                    </h3>
                     <form action="#">
-                        <label for="lang">Language</label>
-                        <select name="languages" id="lang">
-                            <option value="javascript">Italia</option>
-                            <option value="php">Francia</option>
-                            <option value="java">Spagna</option>
-                            <option value="golang">Germania</option>
-                            <option value="python">Regno Unito</option>
+                        <select name="countries">
+                            <option>Italia</option>
+                            <option>Francia</option>
+                            <option>Spagna</option>
+                            <option>Germania</option>
+                            <option>Regno Unito</option>
                         </select>
                     </form>
                     <nav class="footer-social">
@@ -110,7 +109,10 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="footer-bottom"></div>
+        <div class="footer-bottom">
+            <p>Copyright © 2024 | All rights reserved</p>
+            <button id="button"><i class="fa-sharp fa-light fa-messages"></i> Serve aiuto? </button>
+        </div>
     </footer>
 </template>
 
@@ -124,22 +126,21 @@ export default {
 
 .footer-top .container-footer-top {
     display: flex;
-    padding: 85px;
+    padding: 50px;
 }
 
 .container-footer-left {
     width: 30%;
-    min-height: 400px;
-    margin: 20px 0;
+    min-height: 200px;
 }
 
-.container-footer-left h3 {
+.container-footer-left h2 {
     color:white;
     font-size: 2em;
     margin-bottom: 5rem;
 }
 
-.container-footer-left h4 {
+.container-footer-left h3 {
     line-height: 2.3rem;
     font-size: 1.8rem;
     color: #fff;
@@ -150,6 +151,7 @@ export default {
 .container-footer-right {
     width: 70%;
     display: flex;
+    padding-top: 4rem;
 }
 
 .footer-column {
@@ -174,7 +176,7 @@ export default {
     font-size: 1.6rem;
     line-height: 2.4rem;
     color: #f4f4ed;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .social-list {
@@ -195,6 +197,19 @@ export default {
     color: #f4f4ed;
     text-decoration: none;
     margin-left: 10px;
+}
+
+.footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #323232;
+    padding: .9rem 0;
+}
+
+.footer-bottom p {
+    color: white;
+    margin-bottom: 0;
 }
 
 /*.fa-brands {
@@ -260,19 +275,28 @@ export default {
     box-sizing: border-box;
 }
 
-label {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     margin: 0 auto;
-   }
-
 select {
      margin-bottom: 10px;
      margin-top: 10px;
      height: 50px;
-   }
+     border-radius: 5px;
+}
 
+// Button
 
+button {
+    position: absolute;
+    background-color: red;
+    color: white;
+    width: 150px;
+    height: 40px;
+    border-radius: 25px;
+    border: none;
+    bottom: -66rem;
+    right: 1rem;
+}
+
+#button {
+}
 
 </style>
