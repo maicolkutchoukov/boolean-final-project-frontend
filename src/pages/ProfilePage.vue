@@ -38,7 +38,7 @@ export default {
     };
   },
     created() {
-        axios.get('http://127.0.0.1:8000/api/users') // URL DELL'API
+        axios.get('http://127.0.0.1:8000/api/users/') // URL DELL'API
             .then((response) => {
                 console.log(response.data.results.data);
                 this.allMusicians = response.data.results.data;
@@ -54,12 +54,28 @@ export default {
 </script>
 
 <template>
-    <div v-for="(SingleMusician, i) in allMusicians" :key="i" class="card mb-3">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">{{ SingleMusician.name }}</h5>
-            <p class="card-text">{{ SingleMusician.user_details.bio }}</p>
-            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+    <div>
+        <div v-for="(musician, index) in allMusicians" :key="index" class="card mb-3">
+            <img :src="musician.user_details.picture" class="card-img-top" alt="Profile Picture">
+            <div class="card-body">
+                <h5 class="card-title">{{ musician.name }}</h5>
+                <p class="card-text">{{ musician.user_details.bio }}</p>
+                <p class="card-text">Città: {{ musician.city }}</p>
+                <p class="card-text">Email: {{ musician.email }}</p>
+                <p class="card-text">Ruoli:
+                    <span v-for="(role, i) in musician.roles" :key="i">
+                    {{ role.title }}
+                    <span v-if="i !== musician.roles.length - 1">, </span>
+                    </span>
+                </p>
+                <p class="card-text">Votes:
+                    <span v-for="(vote, i) in musician.votes" :key="i">
+                    {{ vote.label }}
+                    <span v-if="i !== musician.votes.length - 1">, </span>
+                    </span>
+                </p>
+                <p class="card-text">Messaggi: {{ musician.messages.length }}</p>
+            </div>
         </div>
     </div>
 </template>
