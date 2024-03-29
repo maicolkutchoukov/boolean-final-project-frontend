@@ -1,5 +1,25 @@
 <script>
 
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+        allMusicians: [],
+    };
+  },
+    created() {
+        axios.get('http://127.0.0.1:8000/api/users') // URL DELL'API
+            .then((response) => {
+                console.log(response.data.results.data);
+                this.allMusicians = response.data.results.data;
+                console.log(this.allMusicians)
+            })
+            .catch(error => {
+            console.error('Errore durante la chiamata API:', error);
+            });
+    }
+}
 </script>
 
 <template>
