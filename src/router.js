@@ -8,6 +8,7 @@ import InstrumentPage from './pages/InstrumentPage.vue'
 import SponsorPage from './pages/SponsorPage.vue'
 import LoginPage from './pages/LoginPage.vue'
 import SearchPage from './pages/SearchPage.vue'
+import ProfilePage from './pages/ProfilePage.vue'
 import RegistrationPage from './pages/RegistrationPage.vue'
 import ReviewPage from './pages/ReviewPage.vue'
 import NotFoundPage from './pages/NotFoundPage.vue'
@@ -54,6 +55,11 @@ const router = createRouter({
             path: '/search',
             name: 'search',
             component: SearchPage
+        },
+        {
+            path: '/profile',
+            name: 'profile',
+            component: ProfilePage
         },
         {
             path: '/review',
