@@ -1,7 +1,7 @@
 <!-- PAGINA PRINCIPALE DOVE ANDRANNO INSERITI TUTTI I COMPONENTI  -->
 
 <script>
-
+import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -22,21 +22,30 @@ export default {
     data() {
         return {
             cardData: [
-                {
-                    title: 'Passo 1',
-                    text: 'Usufruisci dei nostri filtri per trovare migliai di artisti'
-                },
-                {
-                    title: 'Passo 2',
-                    text: 'Visualizza le recensioni dagli altri utenti'
-                },
-                {
-                    title: 'Passo 3',
-                    text: 'Contatta i musicisti che desideri ingaggiare.'
-                },
-            ]
-        }
-    },
+                    {
+                        title: 'Passo 1',
+                        text: 'Usufruisci dei nostri filtri per trovare migliai di artisti'
+                    },
+                    {
+                        title: 'Passo 2',
+                        text: 'Visualizza le recensioni dagli altri utenti'
+                    },
+                    {
+                        title: 'Passo 3',
+                        text: 'Contatta i musicisti che desideri ingaggiare.'
+                    },
+                ]
+            }
+        },
+        mounted(){
+        
+            axios.get('http://127.0.0.1:8000/api/users') // URL DELL'API
+            .then((response) => {
+                console.log(response)
+            })
+        
+    }
+    
 };
 </script>
 
@@ -68,9 +77,8 @@ export default {
                 <input class="form-control form-control-lg" type="text" placeholder="Inserisci la città">
             </div>
 
-            <div>
-                <button type="submit" class="btn btn-primary">Cerca</button>
-            </div>
+            <router-link :to="{ name: 'search' }" class="btn btn-success">Cerca musicisti</router-link>
+
         </form>
     </div>
 
@@ -107,7 +115,7 @@ export default {
             <!-- Button Single Card -->
             <div class="d-flex justify-content-center">
                 <div id="button-musicians" class="text-center mt-3 w-25">
-                    <router-link :to="{ name: 'search' }" class="text-link px-3">Cerca musicisti</router-link>
+                    <router-link :to="{ name: 'login' }" class="text-link px-3">Iscriviti subito</router-link>
                 </div>
             </div>
                 

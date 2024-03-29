@@ -7,7 +7,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      responseData: [],
+      allMusicians: [],
 
       CheckBoxData: [
                 {
@@ -37,14 +37,16 @@ export default {
             ]
     };
   },
-    mounted() {
-    axios.get('http://127.0.0.1:8080/api/users')
-        .then(response => {
-        this.responseData = response.data;
-        })
-    .catch(error => {
-    console.error('Errore durante la chiamata API:', error);
-    });
+    created() {
+        axios.get('http://127.0.0.1:8000/api/users') // URL DELL'API
+            .then((response) => {
+                console.log(response.data.results.data);
+                this.allMusicians = response.data.results.data;
+                console.log(this.allMusicians)
+            })
+            .catch(error => {
+            console.error('Errore durante la chiamata API:', error);
+            });
     }
 }
 
@@ -54,7 +56,7 @@ export default {
 <template>
     <div class="container">
         <div class="fw-bold fs-4 mb-4">
-            Home / <span class="opacity-50">Profili sponsorizzati</span>
+            Home / <span class="opacity-50">Ricerca musicisti</span>
         </div>
     </div>
     
@@ -84,7 +86,7 @@ export default {
         <div class="main-container">
             <!-- main-container -->
             <div class="row d-flex">                    
-                <div class="col-3">
+                <div v-for="(SingleMusician, i) in allMusicians" class="col-3">
                     <div class="card-result d-flex flex-column">
                         <div class="card-result-top d-flex flex-column">
                             <div class="background-img">background-img</div>
@@ -92,8 +94,8 @@ export default {
                         </div>
 
                         <div class="card-result-bottom mt-3">
-                            <h4>nome artista</h4>
-                            <div>città</div>
+                            <h4>{{ SingleMusician.name }}</h4>
+                            <div>{{ SingleMusician.city }}</div>
                             <div>valutazione</div>
 
                            <div class="d-flex justify-content-center mt-2">

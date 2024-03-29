@@ -50,12 +50,12 @@ export default {
         </div>
         <p class="fs-4">BMusic è il punto di riferimento per chi cerca musicisti per un matrimonio, una festa, un concerto, un locale o un altro tipo di evento</p>
     </section>
-    <section id="how-work-section" class="container text-center mb-5">
-        <div>
+    <section id="how-work-section" class="container text-center mb-5 p-3 bg-body-secondary">
+        <div class="">
             <h5 class="mb-4">COME FUNZIONA</h5>
             <h2 class="mb-5">Trovare <span>ingaggi</span> non è mai stato così semplice</h2>
-            <div class="row justify-content-center border">
-                <div class="col-6 border d-flex">
+            <div class="row justify-content-center">
+                <div class="col-6 d-flex">
                     <div class="img-container w-25">
                         <img src="" alt="IMG">
                     </div>
@@ -64,13 +64,13 @@ export default {
                         <p>Iscriviti alla piattaforma</p>
                     </div>
                 </div>
-                <div class="col-6 border d-flex">
+                <div class="col-6 d-flex">
                     <div class="img-container w-25">
                         <img src="" alt="IMG">
                     </div>
                     <div class="text-container text-start w-75">
                         <p>STEP 2</p>
-                        <p>Crea le pagine dei tuoi progetti musicali e personalizzale con foto e video.a</p>
+                        <p>Crea le pagine dei tuoi progetti musicali e personalizzale con foto e video.</p>
                     </div>
                 </div>
                 <div class="col-6 d-flex">
