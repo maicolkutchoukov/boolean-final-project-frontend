@@ -86,7 +86,7 @@ export default {
         <div class="main-container">
             <!-- main-container -->
             <div class="row d-flex p-3 g-4">                    
-                <div v-for="(SingleMusician, i) in allMusicians" class="col-4">
+                <div v-for="(SingleMusician, i) in allMusicians" :key="SingleMusician.id" class="col-4">
                     <div class="card-result d-flex flex-column">
                         <div class="card-result-top d-flex flex-column">
                             <div class="background-img">background-img</div>
@@ -101,7 +101,7 @@ export default {
                            <div class="d-flex justify-content-center mt-2">
                                 <button type="button" class="btn btn-primary btn-sm me-2">contatta</button>
                                 <!-- <button type="button" class="btn btn-primary btn-sm">profilo</button> -->
-                                <router-link :to="{ name: 'profile' }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+                                <router-link :to="{ name: 'profile', params: { id: SingleMusician.id} }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
 
                            </div>
                            
