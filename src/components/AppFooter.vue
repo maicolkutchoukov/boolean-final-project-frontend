@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <h3>
                         Altri paesi
                     </h3>
+                    <!-- Menù a tendina -->
                     <form action="#">
                         <select name="countries">
                             <option>Italia</option>
@@ -260,69 +261,12 @@ footer {
 }
 
 // Menù a tendina
-.select {
-    box-sizing: border-box;
-    position: relative;
-    width: 100%;
-}
-
-.select-control {
-    -webkit-box-align: center;
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    position: relative;
-    transition: all 100ms;
-    background-color: hsl(0, 0%, 100%);
-    border-color: hsl(0, 0%, 80%);
-    border-width: 1px;
-    box-sizing: border-box;
-}
-
-.select-value {
-    width: 100%;
-    padding: 9px 12px;
-}
-
-.single-value {
-    grid-area: 1/1/2/3;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: hsl(0, 0%, 20%);
-    margin-left: 2px;
-    margin-right: 2px;
-    box-sizing: border-box;
-}
-
-.input-container {
-    visibility: visible;
-    display: inline-grid;
-    grid-area: 1/1/2/3;
-    grid-template-columns: 0 min-content;
-    margin: 2px;
-    padding-bottom: 2px;
-    padding-top: 2px;
-    color: hsl(0, 0%, 20%);
-    box-sizing: border-box;
-}
-
-.select-dropdown {
-    color: black;
-    display: flex;
-    padding-right: 2rem;
-    padding-left: 0;
-    transition: color .15s;
-    box-sizing: border-box;
-}
 
 select {
-     margin-bottom: 10px;
-     margin-top: 10px;
-     height: 50px;
-     border-radius: 5px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    height: 50px;
+    border-radius: 5px;
 }
 
 // Button
@@ -350,20 +294,21 @@ button .fa-comments {
     margin-right: 5px;
 }
 
-/* Modal */
+// Modal
+
 .modal {
   display: none;
   position: fixed;
+  top: 55%;
+  left: 70%;
   z-index: 1;
   width: 100%;
   height: 100%;
-  /*background-color: rgba(0,0,0,0.4);*/
 }
 
-/* Contenuto del modal */
+// Contenuto del modal
+
 .modal-content {
-  bottom: -25rem;
-  right: -51rem;
   padding: 3px;
   border: 1px solid #888;
   width: 25%;
@@ -417,7 +362,7 @@ button .fa-comments {
     color: green;
 }
 
-/* Chiudi pulsante (x) */
+// Chiudi pulsante (x)
 .close {
   color: white;
   float: right;
