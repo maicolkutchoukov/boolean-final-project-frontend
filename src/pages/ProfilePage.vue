@@ -39,10 +39,11 @@ export default {
         };
     },
     created() {
+        console.log(`${this.apiUrl}${this.$route.params.id}`)
         axios.get(`${this.apiUrl}${this.$route.params.id}`) // URL DELL'API
             .then((response) => {
-                console.log(response.data.results);
-                this.allMusicians = response.data.results;
+                console.log(response.data.result);
+                this.allMusicians = response.data.result;
                 console.log(this.allMusicians)
             })
             .catch(error => {
@@ -79,9 +80,9 @@ export default {
                 <p class="card-text">Messaggi: {{ musician.messages.length }}</p>
             </div>
         </div> -->
-        <img :src="allMusicians.user_details.picture" class="card-img-top" alt="Profile Picture">
+        <!-- <img :src="allMusicians.user_details.picture" class="card-img-top" alt="Profile Picture"> -->
             <div class="card-body">
-                {{ allMusicians.id }}
+                
                 <h5 class="card-title">{{ allMusicians.name }}</h5>
                 <p class="card-text">{{ allMusicians.user_details.bio }}</p>
                 <p class="card-text">Città: {{ allMusicians.city }}</p>
