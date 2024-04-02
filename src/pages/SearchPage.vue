@@ -8,33 +8,7 @@ export default {
   data() {
     return {
       allMusicians: [],
-
-      CheckBoxData: [
-                {
-                    title: 'Cantante',
-                },
-                {
-                    title: 'Bassista',
-                },
-                {
-                    title: 'Violista',
-                },
-                {
-                    title: 'Percussionista',
-                },
-                {
-                    title: 'Chitarrista',
-                },
-                {
-                    title: 'Violista',
-                },
-                {
-                    title: 'Violista',
-                },
-                {
-                    title: 'Violista',
-                },
-            ]
+      allRoles:[],
     };
   },
     created() {
@@ -47,6 +21,15 @@ export default {
             .catch(error => {
             console.error('Errore durante la chiamata API:', error);
             });
+            axios.get('http://127.0.0.1:8000/api/roles') // URL DELL'API
+            .then((res) => {
+                console.log(res.data.results);
+                this.allRoles = res.data.results;
+                console.log(this.allRoles)
+            })
+            .catch(error => {
+            console.error('Errore durante la chiamata API:', error);
+            });
     }
 }
 
@@ -54,126 +37,47 @@ export default {
 </script>
 
 <template>
-    <div class="container">
-        <div class="fw-bold fs-4 mb-4">
-            Home / <span class="opacity-50">Ricerca musicisti</span>
-        </div>
-    </div>
-    
-    <div class="container d-flex">
-        <div class="aside-container p-4">
-            <!-- Aside-container -->
-            <form>
-                <div class="form-group w-75">
-                    <label for="exampleInputEmail1">Search</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Inserisci il nome dell'artista">
-                </div>
-                <div class="form-group w-50">
-                    <label for="exampleInputEmail1">Città</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Inserisci la città">
-                </div>
-                
-                <h5 class="mt-3">Tipi di musicisti:</h5>
-                <div v-for="(CheckBox, i) in CheckBoxData" :key="i" class="form-check form-check-inline d-flex mb-2">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                    <label class="form-check-label" for="inlineCheckbox1">{{ CheckBox.title }}</label>
-                </div>
-                
-
-                <button type="submit" class="btn btn-primary mt-2 mb-2">Submit</button>
-            </form>
-        </div>
-        <div class="main-container">
-            <!-- main-container -->
-            <div class="row d-flex p-3 g-4">                    
-                <div v-for="(SingleMusician, i) in allMusicians" :key="SingleMusician.id" class="col-4">
-                    <div class="card-result d-flex flex-column">
-                        <div class="card-result-top d-flex flex-column">
-                            <div class="background-img">background-img</div>
-                            <div class="user-icon">icon</div>
-                        </div>
-
-                        <div class="card-result-bottom mt-3">
-                            <h4>{{ SingleMusician.name }}</h4>
-                            <div>{{ SingleMusician.city }}</div>
-                            <div>valutazione</div>
-
-                           <div class="d-flex justify-content-center mt-2">
-                                <button type="button" class="btn btn-primary btn-sm me-2">contatta</button>
-                                <!-- <button type="button" class="btn btn-primary btn-sm">profilo</button> -->
-                                <router-link :to="{ name: 'profile', params: { id: SingleMusician.id} }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
-
-                           </div>
-                           
-                        </div>
-                        
-                    </div>
-                </div>
-                
-                <!--
-                <div class="col-3 ">
-                    <div class="card-result"></div>
-                </div>
-                <div class="col-3 ">
-                    <div class="card-result"></div>
-                </div>
-                <div class="col-3">
-                    <div class="card-result"></div>
-                </div>
-                -->                                   
+    <div class="container-fluid">
+        <h1 class="p-5 fw-bold">Trova artisti o band</h1>
+        <form class="">
+            <div class="mb-3">
+                <input type="text" name="searchArtist" class="form-control w-100" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Cerca artisti o band...">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
             </div>
-
-        </div>
+            <div class="container d-flex flex-wrap text-center">
+                <div v-for="(SingleRoles, i) in allRoles" class="mycol-2">
+                    {{ SingleRoles.title }}
+                </div>
+            </div>
+        </form>
     </div>
-
-    <div class="scroll-watcher"></div>
 
 </template>
 
 <style lang="scss" scoped>
-
-/* Aside Container */
-.aside-container {
-    border: 1px dashed black;
-    width: 30%;
-    min-height: 500px; 
-}
-
-/* Main Container */
-
-.main-container {
-    border: 1px dashed red;
-    width: calc(100% - 400px);
-    min-height: 500px;
-}
-
-/* Card-result */
-
-.card-result {
-    border: 1px solid black;
+.mycol-2{
+    width: calc((100% / 5) - 40px );
+    background-color: white;
+    color: grey;
+    border: 1px solid grey;
+    margin: 10px 20px;
+    padding: 10px 0;
     border-radius: 20px;
-}
 
-.card-result-top {
-    border: 1px dashed violet;
-    height: 150px;
-    position: relative;
 }
-
-.card-result-bottom {
-    height: calc(100% - 150px);
-}
-
-.user-icon {
-    text-align: center;
-    border: 1px solid green;
-    height: 100px;
-    width: 100px;
-    border-radius: 20px;
-    position: absolute;
-    bottom: -10px;
-}
-
+/* form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    margin: 0 auto;
+    div{
+        width: 100%;
+        
+    }
+} */
 /*
 .scroll-watcher{
     height: 5px;

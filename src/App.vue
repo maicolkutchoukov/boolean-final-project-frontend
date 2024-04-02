@@ -21,9 +21,6 @@ export default {
 </script>
 
 <template>
-    <h1 class="text-center">
-        Progetto BMusic
-    </h1>
 
     <AppHeader />
 

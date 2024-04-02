@@ -52,7 +52,7 @@ export default {
 <template>
 
     <!-- HomePage-Top -->
-    <div class="homepage-top d-flex">
+<!--     <div class="homepage-top d-flex">
       
         <div class="homepage-right">
             Cerchi Musicisti?
@@ -61,8 +61,11 @@ export default {
         <div class="homepage-left">
             <router-link :to="{ name: 'home2' }" class="px-3">Sei un musicista?</router-link>
         </div>
+    </div> -->
+    <div class="container-fluid jumbotron p-0">
+        <!-- <img src="../../public/Img/Hero.jpg" alt="jumbotron" class="img-fluid"> -->
+        <h1 class="py-5 mb-3 display-4 fw-bold text-white px-4">Trova musicisti, <br> gruppi, Dj e band per il<br> tuo evento</h1>
     </div>
-
     <!-- HomePage-Buttom -->
     <div class="section-1 container-fluid mb-5 px-5 bg-body-secondary">
         
@@ -149,6 +152,14 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+
+.jumbotron{
+    min-height: 500px;
+    background-image: url("../../public/Img/Hero.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
 
 /* GENERAL */
 
