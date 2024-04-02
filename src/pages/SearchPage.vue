@@ -1,72 +1,133 @@
-<!-- PAGINA PRINCIPALE DOVE ANDRANNO INSERITI TUTTI I COMPONENTI  -->
-
 <script>
-
 import axios from 'axios';
 
 export default {
   data() {
     return {
-      allMusicians: [],
-      allRoles:[],
+        allMusicians: [],
+        allRoles: [],
+        selectedRoles: [], // Array per memorizzare i ruoli selezionati
+        searchQuery: ''
     };
   },
-    created() {
-        axios.get('http://127.0.0.1:8000/api/users') // URL DELL'API
-            .then((response) => {
-                console.log(response.data.results.data);
-                this.allMusicians = response.data.results.data;
-                console.log(this.allMusicians)
+  methods: {
+    toggleRole(role) {
+        // Aggiungi o rimuovi il ruolo selezionato dall'array
+        if (this.selectedRoles.includes(role)) {
+            this.selectedRoles = this.selectedRoles.filter(selectedRole => selectedRole !== role);
+        } else {
+            this.selectedRoles.push(role);
+        }
+        },
+    isSelected(role) {
+        // Verifica se il ruolo è selezionato
+        return this.selectedRoles.includes(role);
+    },
+    search() {
+            console.log(this.selectedRoles)
+        // Esegui la ricerca solo se ci sono ruoli selezionati
+        if (this.selectedRoles.length > 0 || this.searchQuery.trim() !== '') {
+            axios.get('http://127.0.0.1:8000/api/users', { params: { roles: this.selectedRoles, query: this.searchQuery }})
+            .then(response => {
+                console.log(response.data);
+                // Gestisci la risposta della richiesta API qui
             })
             .catch(error => {
-            console.error('Errore durante la chiamata API:', error);
+                console.error('Errore durante la chiamata API:', error);
             });
-            axios.get('http://127.0.0.1:8000/api/roles') // URL DELL'API
-            .then((res) => {
-                console.log(res.data.results);
-                this.allRoles = res.data.results;
-                console.log(this.allRoles)
-            })
-            .catch(error => {
-            console.error('Errore durante la chiamata API:', error);
-            });
+        } else {
+            console.log('Seleziona almeno un ruolo o inserisci un termine di ricerca.');
+        }
     }
-}
+  },
+  created() {
+        axios.get('http://127.0.0.1:8000/api/users')
+        .then(response => {
+            this.allMusicians = response.data.results.data;
+            console.log(this.allMusicians)
+        })
+        .catch(error => {
+            console.error('Errore durante la chiamata API:', error);
+        });
 
-
+        axios.get('http://127.0.0.1:8000/api/roles')
+        .then(response => {
+            this.allRoles = response.data.results;
+        })
+        .catch(error => {
+            console.error('Errore durante la chiamata API:', error);
+        });
+  }
+};
 </script>
 
 <template>
     <div class="container-fluid">
-        <h1 class="p-5 fw-bold">Trova artisti o band</h1>
-        <form class="">
-            <div class="mb-3">
-                <input type="text" name="searchArtist" class="form-control w-100" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Cerca artisti o band...">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </div>
-            <div class="container d-flex flex-wrap text-center">
-                <div v-for="(SingleRoles, i) in allRoles" class="mycol-2">
-                    {{ SingleRoles.title }}
+        <h2 class="p-5 fw-bold">Trova artisti o band</h2>
+            <form>
+                <div class="mb-5">
+                    <input type="text" v-model="searchQuery" class="form-control w-50 input-searchbar" name="searchArtist" placeholder="Cerca artisti o band...">
+                </div>
+                <div class="container d-flex flex-wrap text-center mb-5">
+                    <div v-for="(role, index) in allRoles" :key="index"  class="mycol-2">
+                        <button class="button-roles"
+                                type="button"
+                                :class="{ 'active': isSelected(role.title) }" 
+                                @click="toggleRole(role.title)">
+                            {{ role.title }}
+                        </button>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary px-5" @click="search">Cerca</button>
+                </div>
+            </form>
+        </div>
+        <div class="container-fluid">
+            <h2 class="p-5 fw-bold">Artisti in evidenza</h2>
+            <div class="row g-3">
+                <div class="col-3" v-for="(singleMusician, index) in allMusicians" :key="singleMusician.id">
+                    <div class="card">
+                        <div>
+                            <img :src="'http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture" class="card-img-top" alt="Immagine artista">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ singleMusician.name }}</h5>
+                            <p class="card-text">{{ singleMusician.city }}</p>
+                            <!-- <a :href="singleMusician.link" class="btn btn-primary">Dettagli</a> -->
+                            <router-link :to="{ name: 'profile', params: { id: singleMusician.id} }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </form>
-    </div>
-
+        </div>
 </template>
 
 <style lang="scss" scoped>
 .mycol-2{
     width: calc((100% / 5) - 40px );
-    background-color: white;
-    color: grey;
-    border: 1px solid grey;
     margin: 10px 20px;
-    padding: 10px 0;
-    border-radius: 20px;
-
+    .button-roles{
+        width: 90%;
+        background-color: white;
+        color: grey;
+        border: 1px solid grey;
+        padding: 10px 0;
+        border-radius: 20px;
+    }
+    .active {
+        background-color: black; /* Cambia lo stile del bottone quando è selezionato */
+        color: white;
+    }
 }
+
+.card-img-top{
+    max-height: 200px;
+}
+.input-searchbar{
+    margin: 0 auto;
+}
+
 /* form{
     display: flex;
     align-items: center;
