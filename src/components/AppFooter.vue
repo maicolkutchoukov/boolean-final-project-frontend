@@ -40,9 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
         <div class="footer-top">
             <div class="container-footer-top">
                 <div class="container-footer-left">
-                    <h2>
-                        LOGO
-                    </h2>
+                    <router-link :to="{ name: 'homme' }" class="logo-container"></router-link>
                     <h3>
                         Altri paesi
                     </h3>
@@ -137,16 +135,16 @@ document.addEventListener("DOMContentLoaded", function() {
                     <div class="modal-top">
                         <span class="close">&times;</span>
                         <h2 class="modal-top-title">Assistenza BMusic</h2>
-                        <p id="modal-message">Il team si riserva di rispondere quando meglio crede</p>
+                        <p id="modal-message">Il team di solito risponde in poche ore</p>
                     </div>
                     <div class="modal-bottom">
                         <div>
                             <i class="fa-brands fa-whatsapp"></i>
-                            <p>Whatsapp</p>
+                            <p>Contattaci su Whatsapp</p>
                         </div>
                         <div>
                             <i class="fa-regular fa-envelope"></i>
-                            <p>Email</p>
+                            <p>Contattaci su Email</p>
                         </div>
                     </div>
                 </div>
@@ -167,9 +165,18 @@ footer {
 }
 
 .footer-top {
-    background-color: #23272a;
+    background-color: #21252B;
     min-height: 300px;
     width: 100%;
+}
+
+.logo-container{
+    width: 90%;
+    display: flex;
+    height: 50px;
+    background-image: url('/public/Img/LogoBMusic.png');
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .footer-top .container-footer-top {
@@ -194,6 +201,7 @@ footer {
     color: #fff;
     font-weight: 700;
     margin-bottom: 0.5rem;
+    margin-top: 4.5rem;
 }
 
 .container-footer-right {
@@ -217,7 +225,7 @@ footer {
 
 .footer-list a {
     text-decoration: none;
-    color: white;
+    color: #BADFDA;
 }
 
 .social-text {
@@ -273,8 +281,8 @@ select {
 
 button {
     position: relative;
-    background-color: #ed0f46;
-    color: white;
+    background-color: #BADFDA;
+    color: black;
     width: 150px;
     height: 40px;
     border-radius: 25px;
@@ -299,7 +307,7 @@ button .fa-comments {
 .modal {
   display: none;
   position: fixed;
-  top: 55%;
+  top: 50%;
   left: 70%;
   z-index: 1;
   width: 100%;
@@ -310,7 +318,7 @@ button .fa-comments {
 
 .modal-content {
   padding: 3px;
-  border: 1px solid #888;
+  border: 1px solid white;
   width: 25%;
   font-size: 1rem;
 }
@@ -318,11 +326,12 @@ button .fa-comments {
 .modal-top {
     display: flex;
     justify-content: space-between;
-    background-color: #903;
-    color: white;
+    background-color: #BADFDA;
+    color: #21252B;
     padding-left: 20px;
     width: 100%;
     flex-direction: column;
+    border: 1px solid #21252B;
 }
 
 .modal-top-title {
@@ -336,21 +345,22 @@ button .fa-comments {
 }
 
 .modal-bottom {
-    background-color: white;
+    background-color: #21252B;
     padding: 20px;
     width: 100%;
 }
 
 .modal-bottom div {
     margin-bottom: 10px;
-    background-color: #f5f5f5;
+    background-color: #BADFDA;
     display: flex;
     align-items: center;
+    border-radius: 20px;
 }
 
 .modal-bottom i {
-    margin-left: 6px;
-    margin-right: 20px;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 .modal-bottom p {
@@ -364,7 +374,7 @@ button .fa-comments {
 
 // Chiudi pulsante (x)
 .close {
-  color: white;
+  color: #21252B;
   float: right;
   font-size: 28px;
   font-weight: bold;
