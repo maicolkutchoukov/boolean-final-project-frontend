@@ -11,13 +11,15 @@ import { Pagination, Navigation } from 'swiper/modules';
 export default {
     data() {
         return {
+            allMusicians:[]
             }
         },
         mounted(){
         
             axios.get('http://127.0.0.1:8000/api/users') // URL DELL'API
             .then((response) => {
-                console.log(response)
+                console.log(response.data.results.data)
+                this.allMusicians = response.data.results.data
             })
         
     }
@@ -88,8 +90,30 @@ export default {
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item">
-                    <!-- <img src="../../public/Img/Musician-2.jpg" class="d-block w-100 img-fluid" alt="img-2"> -->
+                <div class="carousel-item"
+                        v-for="(singleMusician, index) in allMusicians" 
+                        :key="singleMusician.id" 
+                        :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }">
+                    <div class="row px-5 py-3">
+                        <div class="col-6">
+                            <div class="text-white">
+                                <h3 class="mb-4">{{ singleMusician.name }}</h3>
+                                <div class="d-flex">
+                                    <h6 v-for="(userRole, i) in singleMusician.roles">
+                                        {{ userRole.title }}  
+                                    </h6>
+                                    
+                                </div>
+                                <p>
+                                    {{ singleMusician.user_details.bio }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-6 d-flex align-items-center justify-content-end">
+                            <!-- <a href="#" class="">Visualizza Profilo</a> -->
+                            <router-link :to="{ name: 'profile', params: { id: singleMusician.id} }" class="show-profile-btn">Vedi Profilo</router-link>
+                        </div>
+                    </div>
                 </div>
                 <div class="carousel-item">
                     <!-- <img src="../../public/Img/Musician-3.jpg" class="d-block w-100 img-fluid" alt="img-3"> -->
@@ -184,14 +208,14 @@ export default {
         position: absolute;
         bottom: 0;
         z-index: 10;
-        a{
-        text-decoration: none;
-        font-weight: bold;
-        color: black;
-        background-color: white;
-        padding: 10px 20px;
-        border-radius: 20px;
-    }
+        .show-profile-btn{
+            text-decoration: none;
+            font-weight: bold;
+            color: black;
+            background-color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
     }
 }
 
