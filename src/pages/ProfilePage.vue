@@ -81,26 +81,27 @@ export default {
             </div>
         </div> -->
         <!-- <img :src="allMusicians.user_details.picture" class="card-img-top" alt="Profile Picture"> -->
-            <div class="card-body">
-                
-                <h5 class="card-title">{{ allMusicians.name }}</h5>
-                <p class="card-text">{{ allMusicians.user_details.bio }}</p>
-                <p class="card-text">Città: {{ allMusicians.city }}</p>
-                <p class="card-text">Email: {{ allMusicians.email }}</p>
-                <p class="card-text">Ruoli:
-                    <span v-for="(role, i) in allMusicians.roles" :key="i">
-                    {{ role.title }}
-                    <span v-if="i !== allMusicians.roles.length - 1">, </span>
-                    </span>
-                </p>
-                <p class="card-text">Votes:
-                    <span v-for="(vote, i) in allMusicians.votes" :key="i">
-                    {{ vote.label }}
-                    <span v-if="i !== allMusicians.votes.length - 1">, </span>
-                    </span>
-                </p>
-                <p class="card-text">Messaggi: {{ allMusicians.messages.length }}</p>
-            </div>
+        <div class="card-body">
+            
+            <h5 class="card-title">{{ allMusicians.name }}</h5>
+            <p class="card-text">{{ allMusicians.user_details.bio }}</p>
+            <p class="card-text">Città: {{ allMusicians.city }}</p>
+            <p class="card-text">Email: {{ allMusicians.email }}</p>
+            <p class="card-text">Ruoli:
+                <span v-for="(role, i) in allMusicians.roles" :key="i">
+                {{ role.title }}
+                <span v-if="i !== allMusicians.roles.length - 1">, </span>
+                </span>
+            </p>
+            <p class="card-text">Votes:
+                <span v-for="(vote, i) in allMusicians.votes" :key="i">
+                {{ vote.label }}
+                <span v-if="i !== allMusicians.votes.length - 1">, </span>
+                </span>
+            </p>
+            <p class="card-text">Messaggi: {{ allMusicians.messages.length }}</p>
+        </div>
+        <router-link :to="{ name: 'contact' }" class="header-link">Contattami</router-link>
     </div>
 </template>
 

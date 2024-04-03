@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.vue'
 import HommePage from './pages/HommePage.vue'
 import HomePage2 from './pages/HomePage2.vue'
 import AboutUsPage from './pages/AboutUsPage.vue'
+import ContactPage from './pages/ContactPage.vue'
 import InstrumentPage from './pages/InstrumentPage.vue'
 import SponsorPage from './pages/SponsorPage.vue'
 import LoginPage from './pages/LoginPage.vue'
@@ -36,6 +37,11 @@ const router = createRouter({
             path: '/chi-siamo',
             name: 'about',
             component: AboutUsPage
+        },
+        {
+            path: '/contatti',
+            name: 'contact',
+            component: ContactPage
         },
         {
             path: '/strumenti',
