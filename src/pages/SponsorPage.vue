@@ -22,17 +22,118 @@ export default {
 }
 </script>
 
+
 <template>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <div class="container">
         <div class="fw-bold fs-4 mb-4">
             Home / <span class="opacity-50">Profili sponsorizzati</span>
         </div>
-        
+
+        <p class="fw-bold fs-4">
+            Accendendo al profilo, nell'apposita sezione sponsor, l'utente ha la possibilità si scegliere tre pacchetti promozionali:
+        </p>
+
         <div class="row">
-            <!--SINGLE CARD
-                aggiungere dettagli per caratterizzare profilo con lo sponsor
-                (es:bordo marcato|bedge affianco all'imagine profilo)
-            -->
+            <!--CARD1-->
+            <div class="col-4">
+                <div class="card">
+                    <!--Card Top-->
+                    <div class="card-top text-center mb-2">
+                        <div class="icon">
+                            <i class="bi bi-folder"></i>
+                        </div>
+                        <h5>SMALL</h5>
+                        <h3>2.99€ / 24h </h3>
+                    </div>
+                    <!--Card bottom-->
+                    <div class="card-bottom">
+                        <ul>
+                            <li class="mb-2">
+                                Il tuo profilo appare in Homepage
+                            </li>
+                            
+                            <li class="mb-2">
+                                Nella pagina di ricerca, il profilo viene posizionato sempre prima di quello di un musicista non sponsorizzato che soddisfa le stesse caratteristiche di ricerca.
+                            </li>
+                            <li class="mb-2">
+                                Terminato il periodo di sponsorizzazione, il profilo tornerà ad essere visualizzato normalmente.
+                            </li>
+                        </ul>
+                    </div>
+                </div>  
+            </div>
+            
+            <!--CARD2-->
+            <div class="col-4">
+                <div class="card">
+                    <div class="badge">
+                        Most Popular
+                    </div>
+                    <!--Card Top-->
+                    <div class="card-top text-center mb-2">
+                        <div class="icon">
+                        <i class="bi bi-gem"></i>
+                    </div>
+                        <h5>PREMIUM</h5>
+                        <h3>9.99€ / 144h </h3>
+                    </div>
+                    <!--Card bottom-->
+                    <div class="card-bottom">
+                        <ul>
+                            <li class="mb-2">
+                                Il tuo profilo appare in Homepage
+                            </li>
+                            
+                            <li class="mb-2">
+                                Nella pagina di ricerca, il profilo viene posizionato sempre prima di quello di un musicista non sponsorizzato che soddisfa le stesse caratteristiche di ricerca.
+                            </li>
+                            <li class="mb-2">
+                                Terminato il periodo di sponsorizzazione, il profilo tornerà ad essere visualizzato normalmente.
+                            </li>
+                        </ul>
+                    </div>
+                </div>  
+            </div>
+
+            <!--CARD3-->
+            <div class="col-4">
+                <div class="card">
+                    <!--Card Top-->
+                    <div class="card-top text-center mb-2">
+                        <div class="icon">
+                        <i class="bi bi-rocket-takeoff"></i>
+                    </div>
+                        <h5>STANDARD</h5>
+                        <h3>5.99€ / 72h </h3>
+                    </div>
+                    <!--Card bottom-->
+                    <div class="card-bottom">
+                        <ul>
+                            <li class="mb-2">
+                                Il tuo profilo appare in Homepage
+                            </li>
+                            
+                            <li class="mb-2">
+                                Nella pagina di ricerca, il profilo viene posizionato sempre prima di quello di un musicista non sponsorizzato che soddisfa le stesse caratteristiche di ricerca.
+                            </li>
+                            <li class="mb-2">
+                                Terminato il periodo di sponsorizzazione, il profilo tornerà ad essere visualizzato normalmente.
+                            </li>
+                        </ul>
+                    </div>
+                </div>  
+            </div>
+
+            <div class="text-center">
+                <router-link :to="{ name: 'login' }" class="btn my-4 fw-bold">ACCEDI O REGISTRATI</router-link>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            
             <div class="col-3">
                 <div class="sponsor-user mb-3">
                     <div class="card-result">
@@ -117,11 +218,10 @@ export default {
                 </div>
             </div> 
         </div>
-
+        -->
     </div>
-    <!--
-        <div class="scroll-watcher"></div>
-    -->
+    
+    <!--<div class="scroll-watcher"></div>-->
 
 </template>
 
@@ -139,5 +239,32 @@ export default {
     height: 75px;
     width: 75px;
     border-radius: 10px;
+}
+
+.card {
+    border: 5px solid #BADFDA;
+    border-radius: 20px;
+    background-color: #21252B;
+    color: #BADFDA
+}
+
+.bi-folder, .bi-gem, .bi-rocket-takeoff {
+    font-size: 50px;
+    color: #BADFDA;
+}
+
+.btn {
+    background-color: #BADFDA;
+    color: #21252B
+}
+
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    border-radius: 0 20px 20px 0;
+    padding: 5px;
+    background-color: #BADFDA;
+    color: #21252B
 }
 </style>
