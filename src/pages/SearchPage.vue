@@ -18,28 +18,42 @@ export default {
         } else {
             this.selectedRoles.push(role);
         }
-        },
+    },
     isSelected(role) {
         // Verifica se il ruolo è selezionato
         return this.selectedRoles.includes(role);
     },
     search() {
-            console.log(this.selectedRoles)
-        // Esegui la ricerca solo se ci sono ruoli selezionati
-        if (this.selectedRoles.length > 0 || this.searchQuery.trim() !== '') {
-            axios.get('http://127.0.0.1:8000/api/users', { params: { roles: this.selectedRoles, query: this.searchQuery }})
-            .then(response => {
-                console.log(response.data);
-                // Gestisci la risposta della richiesta API qui
-            })
-            .catch(error => {
-                console.error('Errore durante la chiamata API:', error);
-            });
+        // Costruisci l'oggetto dei parametri per la richiesta API
+        let params = {};
+
+        // Aggiungi il nome alla richiesta API se è stato inserito
+        if (this.searchQuery.trim() !== '') {
+            params.name = this.searchQuery;
+        }
+
+        // Aggiungi i ruoli alla richiesta API se sono stati selezionati
+        if (this.selectedRoles.length > 0) {
+            // Trasforma l'array di ruoli in una stringa separata da virgole
+            params.roles = this.selectedRoles.join(',');
+        }
+
+        // Esegui la ricerca solo se sono stati inseriti il nome o i ruoli
+        if (Object.keys(params).length > 0) {
+            axios.get('http://127.0.0.1:8000/api/users/search', { params })
+                .then(response => {
+                    console.log(response.data);
+                    
+                    // Gestisci la risposta della richiesta API qui
+                })
+                .catch(error => {
+                    console.error('Errore durante la chiamata API:', error);
+                });
         } else {
-            console.log('Seleziona almeno un ruolo o inserisci un termine di ricerca.');
+            console.log('Inserisci almeno un termine di ricerca o seleziona almeno un ruolo.');
         }
     }
-  },
+},
   created() {
         axios.get('http://127.0.0.1:8000/api/users')
         .then(response => {
@@ -64,7 +78,7 @@ export default {
 <template>
     <div class="container-fluid">
         <h2 class="p-5 fw-bold">Trova artisti o band</h2>
-            <form>
+            <form method="GET">
                 <div class="mb-5">
                     <input type="text" v-model="searchQuery" class="form-control w-50 input-searchbar" name="searchArtist" placeholder="Cerca artisti o band...">
                 </div>
