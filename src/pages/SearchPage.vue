@@ -14,6 +14,7 @@ export default {
         filteredMusicians() {
             let filtered = this.allMusicians;
 
+            
             // Filtrare per ruoli selezionati, se presenti
             if (this.selectedRoles.length > 0) {
                 filtered = filtered.filter(musician => musician.roles.some(role => this.selectedRoles.includes(role.title)));
