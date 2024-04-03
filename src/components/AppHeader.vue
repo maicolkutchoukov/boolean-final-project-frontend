@@ -22,7 +22,8 @@ export default {
 
                 <router-link :to="{ name: 'instrumental' }" class="header-link">Strumenti</router-link>
                 <router-link :to="{ name: 'sponsor' }" class="header-link">Sponsor</router-link>
-                <router-link :to="{ name: 'login' }" class="header-link">Accedi</router-link>
+                <!-- <router-link :to="{ name: 'login' }" class="header-link">Accedi</router-link> -->
+                <a href="http://127.0.0.1:8000/login" class="header-link">Accedi</a>
                 <router-link :to="{ name: 'registration' }" class="header-link">Registrati</router-link>
                 <router-link :to="{ name: 'search' }" class="header-link">Cerca</router-link>
 
@@ -55,5 +56,4 @@ header{
     }
 }
 
-/* #BADFDA */
 </style>
