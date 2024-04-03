@@ -95,9 +95,6 @@ export default {
                     </button>
                 </div>
             </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary px-5">Cerca</button>
-            </div>
         </form>
     </div>
     <div class="container-fluid">

@@ -35,10 +35,10 @@ export default {
 
     <!-- How To Do Section -->
     <section class="how-section">
-        <div class="container-fluid p-5">
+        <div class="container-lg container-fluid p-5">
             <h3 class="display-4 fw-bold mb-2">Come funziona?</h3>
             <div class="row py-5 justify-content-between">
-                <div class="col-7">
+                <div class="col-lg-7 col-xxl-7 col-auto<">
                     <p class="mb-1">
                         Benvenuti su BMusic, il palcoscenico digitale dove il talento musicale si incontra con le opportunità. 
                         Qui, ci impegniamo a promuovere e mettere in mostra musicisti e band di ogni genere e provenienza, 
@@ -56,11 +56,11 @@ export default {
                         Unisciti a noi su <strong>BMusic</strong> e immergiti in un mondo di musica senza confini, dove ogni nota racconta una storia e ogni artista ha la possibilità di brillare.
                     </p>
                     <div class="buttons-controller">
-                        <a href="" class="btn-login">Accedi</a>
-                        <a href="" class="btn-register">Registrati</a>
+                        <router-link :to="{ name: 'login' }" class="btn-login">Accedi</router-link>
+                        <router-link :to="{ name: 'registration' }" class="btn-register">Registrati</router-link>
                     </div>
                 </div>
-                <div class="col-5 how-section-img">
+                <div class="col-lg-5 col-xxl-5 col-auto how-section-img">
                     <div class="img-container">
                         <!-- <img src="../../public/Img/BandArrotondata.png" alt="" class="img-fluid"> -->
                     </div>
@@ -71,9 +71,9 @@ export default {
     <section class="carousel-section">
         <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false">
             <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <!-- <img src="../../public/Img/Musician-1.jpg" class="d-block w-100 img-fluid" alt="img-1"> -->
-                    <div class="row px-5 py-3">
+                <!-- <div class="carousel-item active">
+                    
+                    <div class="row px-5 py-3 carousel-text">
                         <div class="col-6">
                             <div class="text-white">
                                 <h3 class="mb-4">Nathan Drake</h3>
@@ -89,14 +89,15 @@ export default {
                             <a href="#" class="">Visualizza Profilo</a>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="carousel-item"
                         v-for="(singleMusician, index) in allMusicians" 
                         :key="singleMusician.id" 
-                        :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }">
-                    <div class="row px-5 py-3">
-                        <div class="col-6">
-                            <div class="text-white">
+                        :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }"
+                        :class="!index ? 'active' : ''">
+                    <div class="row px-5 py-3 justify-content-between">
+                        <div class="col-9">
+                            <div class="text-white px-3 w-75">
                                 <h3 class="mb-4">{{ singleMusician.name }}</h3>
                                 <div class="d-flex">
                                     <h6 v-for="(userRole, i) in singleMusician.roles">
@@ -109,14 +110,11 @@ export default {
                                 </p>
                             </div>
                         </div>
-                        <div class="col-6 d-flex align-items-center justify-content-end">
+                        <div class="col-3 d-flex align-items-center justify-content-end">
                             <!-- <a href="#" class="">Visualizza Profilo</a> -->
                             <router-link :to="{ name: 'profile', params: { id: singleMusician.id} }" class="show-profile-btn">Vedi Profilo</router-link>
                         </div>
                     </div>
-                </div>
-                <div class="carousel-item">
-                    <!-- <img src="../../public/Img/Musician-3.jpg" class="d-block w-100 img-fluid" alt="img-3"> -->
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
@@ -208,6 +206,7 @@ export default {
         position: absolute;
         bottom: 0;
         z-index: 10;
+        
         .show-profile-btn{
             text-decoration: none;
             font-weight: bold;
@@ -217,6 +216,15 @@ export default {
             border-radius: 20px;
         }
     }
+}
+.carousel-text{
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+.carousel-control-prev, .carousel-control-next {
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
 }
 
 .third-section{

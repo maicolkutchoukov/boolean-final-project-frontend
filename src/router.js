@@ -8,6 +8,7 @@ import AboutUsPage from './pages/AboutUsPage.vue'
 import ContactPage from './pages/ContactPage.vue'
 import InstrumentPage from './pages/InstrumentPage.vue'
 import SponsorPage from './pages/SponsorPage.vue'
+import PaymentPage from './pages/PaymentPage.vue'
 import LoginPage from './pages/LoginPage.vue'
 import SearchPage from './pages/SearchPage.vue'
 import ProfilePage from './pages/ProfilePage.vue'
@@ -52,6 +53,11 @@ const router = createRouter({
             path: '/sponsor',
             name: 'sponsor',
             component: SponsorPage
+        },
+        {
+            path: '/payment',
+            name: 'payment',
+            component: PaymentPage
         },
         {
             path: '/login',
