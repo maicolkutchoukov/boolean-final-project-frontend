@@ -32,7 +32,6 @@ export default {
     <div class="container-fluid jumbotron p-0">
         <h1 class="py-5 mb-3 display-4 fw-bold text-white px-5">Trova musicisti, <br> gruppi, Dj e band per il<br> tuo evento</h1>
     </div>
-
     <!-- How To Do Section -->
     <section class="how-section">
         <div class="container-lg container-fluid p-5">
@@ -127,7 +126,7 @@ export default {
             </button>
             </div>
     </section>
-    <section class="third-section py-5">
+    <section class="third-section py-5 fade-in">
         <div class="container-fluid ">
             <div class="row">
                 <div class="col-4">
@@ -252,5 +251,25 @@ export default {
     to { scale: 1 1;}
 }
 
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+  }
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: #fff;
+    animation: falling 5s linear infinite;
+  }
+  @keyframes falling {
+    0% {
+      transform: translateY(-10%);
+    }
+    100% {
+      transform: translateY(100vh);
+    }
+  }
 </style>
 

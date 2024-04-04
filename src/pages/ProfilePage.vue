@@ -3,108 +3,186 @@
 <script>
 
 import axios from 'axios';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
+  // Import Swiper styles
+  import 'swiper/css';
+
+  import 'swiper/css/pagination';
+
+
+
+  // import required modules
+  import { Pagination } from 'swiper/modules';
 
 export default {
-  data() {
-    return {
-        apiUrl: 'http://127.0.0.1:8000/api/users/',
-        allMusicians: [],
-
-        CheckBoxData: [
-                    {
-                        title: 'Cantante',
-                    },
-                    {
-                        title: 'Bassista',
-                    },
-                    {
-                        title: 'Violista',
-                    },
-                    {
-                        title: 'Percussionista',
-                    },
-                    {
-                        title: 'Chitarrista',
-                    },
-                    {
-                        title: 'Violista',
-                    },
-                    {
-                        title: 'Violista',
-                    },
-                    {
-                        title: 'Violista',
-                    },
-                ]
+    data() {
+        return {
+            apiUrl: 'http://127.0.0.1:8000/api/users/',
+            singleMusician: [],
+            demoPath: '',
+        };
+    },
+    components: {
+        Swiper,
+        SwiperSlide,
+    },
+    setup() {
+        return {
+            modules: [Pagination],
         };
     },
     created() {
-        console.log(`${this.apiUrl}${this.$route.params.id}`)
         axios.get(`${this.apiUrl}${this.$route.params.id}`) // URL DELL'API
             .then((response) => {
                 console.log(response.data.result);
-                this.allMusicians = response.data.result;
-                console.log(this.allMusicians)
+                this.singleMusician = response.data.result;
+                console.log(this.singleMusician)
+                this.demoPath = 'http://127.0.0.1:8000/storage' + this.singleMusician.user_details.demo
+                console.log(this.demoPath)
             })
             .catch(error => {
             console.error('Errore durante la chiamata API:', error);
-            });
-    }
+        });
+    },
 }
 
 
 </script>
 
 <template>
-    <div>
-        <!-- <div v-for="(musician, index) in allMusicians" :key="musician.id" class="card mb-3">
-            <img :src="musician.user_details.picture" class="card-img-top" alt="Profile Picture">
-            <div class="card-body">
-                {{ musician.id }}
-                <h5 class="card-title">{{ musician.name }}</h5>
-                <p class="card-text">{{ musician.user_details.bio }}</p>
-                <p class="card-text">Città: {{ musician.city }}</p>
-                <p class="card-text">Email: {{ musician.email }}</p>
-                <p class="card-text">Ruoli:
-                    <span v-for="(role, i) in musician.roles" :key="i">
-                    {{ role.title }}
-                    <span v-if="i !== musician.roles.length - 1">, </span>
-                    </span>
-                </p>
-                <p class="card-text">Votes:
-                    <span v-for="(vote, i) in musician.votes" :key="i">
-                    {{ vote.label }}
-                    <span v-if="i !== musician.votes.length - 1">, </span>
-                    </span>
-                </p>
-                <p class="card-text">Messaggi: {{ musician.messages.length }}</p>
+    <div class="container-fluid user-img d-flex justify-content-center flex-column ps-5 mb-5"
+        :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }">
+        <h1 class="text-white ms-5">{{ singleMusician.name }}</h1>
+        <h2 class="text-white ms-5">{{ singleMusician.city }}</h2>
+    </div>
+    <div class="container-fluid px-5">
+        <div class="row justify-content-between px-5">
+            <div class="col-6">
+                <h2 class="fw-bold pt-3 mb-4">Bio</h2>
+                <p>{{ singleMusician.user_details.bio }}</p>
             </div>
-        </div> -->
-        <!-- <img :src="allMusicians.user_details.picture" class="card-img-top" alt="Profile Picture"> -->
-        <div class="card-body">
-            
-            <h5 class="card-title">{{ allMusicians.name }}</h5>
-            <p class="card-text">{{ allMusicians.user_details.bio }}</p>
-            <p class="card-text">Città: {{ allMusicians.city }}</p>
-            <p class="card-text">Email: {{ allMusicians.email }}</p>
-            <p class="card-text">Ruoli:
-                <span v-for="(role, i) in allMusicians.roles" :key="i">
-                {{ role.title }}
-                <span v-if="i !== allMusicians.roles.length - 1">, </span>
-                </span>
-            </p>
-            <p class="card-text">Votes:
-                <span v-for="(vote, i) in allMusicians.votes" :key="i">
-                {{ vote.label }}
-                <span v-if="i !== allMusicians.votes.length - 1">, </span>
-                </span>
-            </p>
-            <p class="card-text">Messaggi: {{ allMusicians.messages.length }}</p>
+            <div class="col-4 text-end">
+                <h2 class="fw-bold pt-3 mb-4 ">Competenze</h2>
+                <div class="">
+                    <span v-for="(role, i) in singleMusician.roles" :key="i">
+                        {{ role.title }}
+                        <span v-if="i !== singleMusician.roles.length - 1">, </span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-12">
+                <h2 class="fw-bold pt-3 mb-4">Demo</h2>
+                <audio controls class="w-100 px-5">
+                    <source :src="this.demoPath" type="audio/mpeg">
+                </audio>
+            </div>
+            <div class="col-12">
+                <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
+                <div>
+                    <i class="fa-solid fa-phone me-3"></i>
+                    Mail: {{ singleMusician.user_details.cellphone }}
+                </div>
+                <div>
+                    <i class="fa-solid fa-envelope me-3"></i>
+                    Cell: {{ singleMusician.email }}
+                </div>
+            </div>
         </div>
-        <router-link :to="{ name: 'contact' }" class="header-link">Contattami</router-link>
+        <div class="container">
+            <div class="row py-5 my-5 justify-content-center">
+                <div class="col-4">
+                    <div class="card px-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title py-4">Federico Benevento</h4>
+                            <p class="card-text pe-4">
+                                Questo concerto ha creato delle
+                                atmosfere magiche che mi hanno rapito
+                                fin dal primo momento.
+                                Il perfomer ha saputo coinvolgere il
+                                pubblico con la sua presenza
+                                carismatica e le sue performance
+                                straordinarie. La musica ha trasportato
+                                tutti in un viaggio
+                                emotivo che non dimenticherò
+                                facilmente.
+                            </p>
+                            <div>STELLE</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card px-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title py-4">Federico Benevento</h4>
+                            <p class="card-text pe-4">
+                                Questo concerto ha creato delle
+                                atmosfere magiche che mi hanno rapito
+                                fin dal primo momento.
+                                Il perfomer ha saputo coinvolgere il
+                                pubblico con la sua presenza
+                                carismatica e le sue performance
+                                straordinarie. La musica ha trasportato
+                                tutti in un viaggio
+                                emotivo che non dimenticherò
+                                facilmente.
+                            </p>
+                            <div>STELLE</div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card px-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title py-4">Federico Benevento</h4>
+                            <p class="card-text pe-4">
+                                Questo concerto ha creato delle
+                                atmosfere magiche che mi hanno rapito
+                                fin dal primo momento.
+                                Il perfomer ha saputo coinvolgere il
+                                pubblico con la sua presenza
+                                carismatica e le sue performance
+                                straordinarie. La musica ha trasportato
+                                tutti in un viaggio
+                                emotivo che non dimenticherò
+                                facilmente.
+                            </p>
+                            <div>STELLE</div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <a href="#" class="button-review">Lascia una recensione</a>
+            </div>
+        </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+.card{
+    background-color: #21252B;
+    color: white;
+    border-radius: 20px;
+    margin: 0 auto;
+}
 
+.button-review{
+    text-decoration: none;
+    color: white;
+    background-color: #21252B;
+    padding: 15px 6rem;
+    border-radius: 20px;
+    font-size: 1.5em;
+
+}
+.user-img{
+    min-height: 500px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    
+}
 </style>
