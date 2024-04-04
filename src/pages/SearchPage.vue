@@ -7,7 +7,9 @@ export default {
             allMusicians: [],
             allRoles: [],
             selectedRoles: [],
-            searchQuery: ''
+            searchQuery: '',
+            rating: null, // Valore delle stelle selezionate
+            minimumReviews: null
         };
     },
     computed: {
@@ -22,6 +24,25 @@ export default {
             // Filtrare per query di ricerca, se presente
             if (this.searchQuery.trim() !== '') {
                 filtered = filtered.filter(musician => musician.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
+            }
+
+            // Filtrare per il voto minimo inserito dall'utente
+            if (this.rating !== null) {
+                filtered = filtered.filter(musician => {
+                    if (musician.votes.length > 0) {
+                        const averageRating = musician.votes.reduce((acc, vote) => acc + parseInt(vote.vote), 0) / musician.votes.length;
+                        return averageRating >= this.rating;
+                    } else {
+                        return false; // Se non ci sono voti, escludi il musicista
+                    }
+                });
+            }
+
+            // Filtrare per il numero minimo di recensioni inserito dall'utente
+            if (this.minimumReviews !== null) {
+                filtered = filtered.filter(musician => {
+                    return musician.reviews.length >= this.minimumReviews;
+                });
             }
 
             return filtered;
@@ -55,10 +76,20 @@ export default {
                 .catch(error => {
                     console.error('Errore durante la chiamata API:', error);
                 });
+        },
+        selectRating(rating) {
+            // Gestisce il click su una stella e aggiorna il valore delle stelle selezionate
+            this.rating = rating;
+        },
+        resetFilters() {
+            // Reimposta tutti i filtri ai valori predefiniti
+            this.selectedRoles = [];
+            this.searchQuery = '';
+            this.rating = null;
+            this.minimumReviews = null;
         }
     },
     created() {
-        console.log('entra')
         // Ottieni la lista di tutti i musicisti e i ruoli al caricamento del componente
         axios.get('http://127.0.0.1:8000/api/users')
             .then(response => {
@@ -86,6 +117,16 @@ export default {
             <div class="mb-5">
                 <input type="text" v-model="searchQuery" class="form-control w-50 input-searchbar" placeholder="Cerca artisti o band...">
             </div>
+            <div class="mb-5">
+                <div class="star-rating text-center">
+                    <span class="star" v-for="star in 5" :key="star" @click="selectRating(star)">
+                        {{ star <= rating ? '★' : '☆' }}
+                    </span>
+                </div>
+            </div>
+            <div class="mb-5">
+                <input type="number" v-model="minimumReviews" class="form-control w-50 input-min-reviews" min="0" placeholder="Numero minimo di recensioni">
+            </div>
             <div class="container d-flex flex-wrap text-center mb-5">
                 <div v-for="(role, index) in allRoles" :key="index" class="mycol-2">
                     <button class="button-roles"
@@ -97,6 +138,7 @@ export default {
                 </div>
             </div>
         </form>
+        <button class="btn btn-secondary" @click="resetFilters">Reset</button>
     </div>
     <div class="container-fluid">
         <h2 class="p-5 fw-bold">Artisti in evidenza</h2>
@@ -110,7 +152,7 @@ export default {
                         <h5 class="card-title">{{ singleMusician.name }}</h5>
                         <p class="card-text">{{ singleMusician.city }}</p>
                         <!-- <a :href="singleMusician.link" class="btn btn-primary">Dettagli</a> -->
-                        <router-link :to="{ name: 'profile', params: { id: singleMusician.id} }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+                        <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
                     </div>
                 </div>
             </div>
@@ -119,10 +161,10 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-.mycol-2{
+.mycol-2 {
     width: calc((100% / 5) - 40px );
     margin: 10px 20px;
-    .button-roles{
+    .button-roles {
         width: 90%;
         background-color: white;
         color: grey;
@@ -136,39 +178,19 @@ export default {
     }
 }
 
-.card-img-top{
+.card-img-top {
     max-height: 200px;
 }
-.input-searchbar{
+.input-searchbar, .input-min-reviews{
     margin: 0 auto;
 }
 
-/* form{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 80%;
-    margin: 0 auto;
-    div{
-        width: 100%;
-        
-    }
-} */
-/*
-.scroll-watcher{
-    height: 5px;
-    position: fixed;
-    top: 0;
-    z-index: 9999;
-    background-color: black;
-    width: 100%;
-    scale: 0 1;
-    transform-origin: left;
-    animation: scroll-watcher linear;
-    animation-timeline: scroll(y);
+.star-rating {
+    font-size: 24px;
 }
-@keyframes scroll-watcher{
-    to { scale: 1 1;}
+
+.star {
+    cursor: pointer;
 }
-*/
+
 </style>
