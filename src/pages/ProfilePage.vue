@@ -18,9 +18,8 @@ export default {
         reviewForm:{
             firstname: '',
             lastname: '',
-            reviewText: '',
+            description: '',
             user_id: '',
-            rating: null
         }
     };
 },
@@ -44,20 +43,15 @@ methods: {
         this.contactForm.message = '';
     },
 
-    submitReviewAndVote() {
-        if (!this.reviewForm.reviewText && !this.reviewForm.rating) {
-            alert('Per favore, inserisci almeno una recensione o un voto');
-            return;
-        }
+    submitReview() {
+        // if (!this.reviewForm.description && !this.reviewForm.rating) {
+        //     alert('Per favore, inserisci almeno una recensione o un voto');
+        //     return;
+        // }
 
         // Invia la richiesta API per salvare la recensione
-        if (this.reviewForm.reviewText && this.reviewForm.firstname && this.reviewForm.lastname) {
-            axios.post(`${this.apiUrl}reviews`, {
-            firstname: this.reviewForm.firstname,
-            lastname: this.reviewForm.lastname,
-            reviewText: this.reviewForm.reviewText,
-            userId: this.reviewForm.user_id
-            })
+        if (this.reviewForm.description && this.reviewForm.firstname && this.reviewForm.lastname) {
+            axios.post(`${this.apiUrl}reviews`, this.reviewForm)
             .then(response => {
                 console.log('Recensione inviata con successo:', response.data);
                 this.resetReviewForm();
@@ -70,24 +64,26 @@ methods: {
         }
 
         // Invia la richiesta API per salvare il voto
-        if (this.reviewForm.rating && this.reviewForm <= 5 && this.reviewForm >= 1 ) {
-            axios.post(`${this.apiUrl}votes`, {
-            vote: this.reviewForm.rating,
-            userId: this.reviewForm.user_id
-            })
-            .then(response => {
-                console.log('Voto inviato con successo:', response.data);
-                this.resetRating();
-                alert('Voto inviato con successo');
-            })
-            .catch(error => {
-                console.error('Errore durante l\'invio del voto:', error);
-                alert('Errore durante l\'invio del voto');
-            });
-        }
+        // if (this.reviewForm.rating && this.reviewForm <= 5 && this.reviewForm >= 1 ) {
+        //     axios.post(`${this.apiUrl}votes`, {
+        //     vote: this.reviewForm.rating,
+        //     user_id: this.reviewForm.user_id
+        //     })
+        //     .then(response => {
+        //         console.log('Voto inviato con successo:', response.data);
+        //         this.resetRating();
+        //         alert('Voto inviato con successo');
+        //     })
+        //     .catch(error => {
+        //         console.error('Errore durante l\'invio del voto:', error);
+        //         alert('Errore durante l\'invio del voto');
+        //     });
+        // }
     },
     resetReviewForm() {
-        this.reviewForm.reviewText = '';
+        this.reviewForm.firstname = '',
+        this.reviewForm.lastname = '',
+        this.reviewForm.description = '';
     },
     resetRating() {
         this.reviewForm.rating = null;
@@ -102,6 +98,7 @@ methods: {
             this.demoPath = `http://127.0.0.1:8000/storage${this.singleMusician.user_details.demo}`;
             console.log(this.demoPath);
             this.contactForm.user_id = this.singleMusician.id;
+            this.reviewForm.user_id = this.singleMusician.id;
         })
         .catch(error => {
             console.error('Errore durante la chiamata API:', error);
@@ -191,12 +188,12 @@ methods: {
     </div>
     <div>
       <!-- Form per inserire una recensione e un voto -->
-        <form @submit.prevent="submitReviewAndVote">
-            <input type="text" v-model="reviewForm.firstname" name="firstname" placeholder="Inserisci il tuo nome">
-            <input type="text" v-model="reviewForm.lastname" name="lastname" placeholder="Inserisci il tuo cognome">
-            <input type="text" v-model="reviewForm.reviewText" name="description" placeholder="Inserisci la tua recensione">
-            <input type="number" v-model="reviewForm.rating" name="vote" placeholder="Voto da 1 a 5">
-            <button type="submit">Invia recensione e voto</button>
+        <form @submit.prevent="submitReview()">
+            <input type="text" v-model="reviewForm.firstname" id="firstname" name="firstname" placeholder="Inserisci il tuo nome">
+            <input type="text" v-model="reviewForm.lastname" id="lastname" name="lastname" placeholder="Inserisci il tuo cognome">
+            <input type="text" v-model="reviewForm.description" id="description" name="description" placeholder="Inserisci la tua recensione">
+            <!-- <input type="number" v-model="reviewForm.rating" name="vote" placeholder="Voto da 1 a 5"> -->
+            <button type="submit">Invia recensione</button>
         </form>
     </div>
     <section class="contact-section">
