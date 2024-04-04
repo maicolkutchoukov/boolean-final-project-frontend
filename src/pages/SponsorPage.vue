@@ -144,6 +144,10 @@ export default {
         </div>
 
         <!--SWIPER-->
+        <!--
+            Da valutare se mantere lo swiper in pagina, perchè i profili
+            sponsorizzati verranno riportati già in una sezione apposita in home
+        -->
         <div class="container">
             <h4 class="fw-bold fs-4">PROFILI SPONSORIZZATI</h4>
 
