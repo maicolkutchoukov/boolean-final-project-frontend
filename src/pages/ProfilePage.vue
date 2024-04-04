@@ -13,7 +13,13 @@ export default {
             email: '',
             message: '',
             user_id: '',
+
+        },
+        reviewForm:{
+            firstname: '',
+            lastname: '',
             reviewText: '',
+            user_id: '',
             rating: null
         }
     };
@@ -31,23 +37,26 @@ methods: {
                 alert('Errore invio messaggio');
             });
         },
-        resetForm() {
-            this.contactForm.firstname = '';
-            this.contactForm.lastname = '';
-            this.contactForm.email = '';
-            this.contactForm.message = '';
-        },
+    resetForm() {
+        this.contactForm.firstname = '';
+        this.contactForm.lastname = '';
+        this.contactForm.email = '';
+        this.contactForm.message = '';
+    },
+
     submitReviewAndVote() {
-        if (!this.contactForm.reviewText && !this.contactForm.rating) {
+        if (!this.reviewForm.reviewText && !this.reviewForm.rating) {
             alert('Per favore, inserisci almeno una recensione o un voto');
             return;
         }
 
         // Invia la richiesta API per salvare la recensione
-        if (this.contactForm.reviewText) {
+        if (this.reviewForm.reviewText && this.reviewForm.firstname && this.reviewForm.lastname) {
             axios.post(`${this.apiUrl}reviews`, {
-            reviewText: this.contactForm.reviewText,
-            userId: this.contactForm.user_id
+            firstname: this.reviewForm.firstname,
+            lastname: this.reviewForm.lastname,
+            reviewText: this.reviewForm.reviewText,
+            userId: this.reviewForm.user_id
             })
             .then(response => {
                 console.log('Recensione inviata con successo:', response.data);
@@ -61,11 +70,10 @@ methods: {
         }
 
         // Invia la richiesta API per salvare il voto
-        if (this.contactForm.rating) {
+        if (this.reviewForm.rating && this.reviewForm <= 5 && this.reviewForm >= 1 ) {
             axios.post(`${this.apiUrl}votes`, {
-            label: 'Rating',
-            vote: this.contactForm.rating,
-            userId: this.contactForm.user_id
+            vote: this.reviewForm.rating,
+            userId: this.reviewForm.user_id
             })
             .then(response => {
                 console.log('Voto inviato con successo:', response.data);
@@ -79,10 +87,10 @@ methods: {
         }
     },
     resetReviewForm() {
-        this.contactForm.reviewText = '';
+        this.reviewForm.reviewText = '';
     },
     resetRating() {
-        this.contactForm.rating = null;
+        this.reviewForm.rating = null;
     }
 },
     created() {
@@ -184,8 +192,10 @@ methods: {
     <div>
       <!-- Form per inserire una recensione e un voto -->
         <form @submit.prevent="submitReviewAndVote">
-            <input type="text" v-model="contactForm.reviewText" placeholder="Inserisci la tua recensione">
-            <input type="number" v-model="contactForm.rating" placeholder="Voto da 1 a 5">
+            <input type="text" v-model="reviewForm.firstname" name="firstname" placeholder="Inserisci il tuo nome">
+            <input type="text" v-model="reviewForm.lastname" name="lastname" placeholder="Inserisci il tuo cognome">
+            <input type="text" v-model="reviewForm.reviewText" name="description" placeholder="Inserisci la tua recensione">
+            <input type="number" v-model="reviewForm.rating" name="vote" placeholder="Voto da 1 a 5">
             <button type="submit">Invia recensione e voto</button>
         </form>
     </div>
