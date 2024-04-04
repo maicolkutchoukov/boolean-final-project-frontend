@@ -195,7 +195,6 @@ export default {
     height: 500px;
     width: 100%;
     background-image: url('../../public/Img/Musician-1.jpg');
-    background-color: darkblue;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;

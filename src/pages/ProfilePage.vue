@@ -5,15 +5,13 @@
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
-  // Import Swiper styles
-  import 'swiper/css';
+// Import Swiper styles
+import 'swiper/css';
 
-  import 'swiper/css/pagination';
+import 'swiper/css/pagination';
 
-
-
-  // import required modules
-  import { Pagination } from 'swiper/modules';
+// import required modules
+import { Pagination } from 'swiper/modules';
 
 export default {
     data() {
@@ -21,6 +19,12 @@ export default {
             apiUrl: 'http://127.0.0.1:8000/api/users/',
             singleMusician: [],
             demoPath: '',
+            showModal: false,
+            contactForm: {
+                firstName: '',
+                lastName: '',
+                message: ''
+            }
         };
     },
     components: {
@@ -31,6 +35,31 @@ export default {
         return {
             modules: [Pagination],
         };
+    },
+    methods: {
+        openModal() {
+            console.log(this.showModal)
+            this.showModal = true;
+        },
+        closeModal() {
+            this.showModal = false;
+        },
+        sendMessage() {
+            axios.post('http://127.0.0.1:8000/api/messages', this.contactForm)
+                .then(response => {
+                    console.log('Messaggio inviato con successo:', response.data);
+                    this.resetForm();
+                })
+                .catch(error => {
+                    console.error('Errore durante l\'invio del messaggio:', error);
+                });
+        },
+        resetForm() {
+            // Resettare i valori del form dopo l'invio del messaggio
+            this.contactForm.firstName = '';
+            this.contactForm.lastName = '';
+            this.contactForm.message = '';
+        }
     },
     created() {
         axios.get(`${this.apiUrl}${this.$route.params.id}`) // URL DELL'API
@@ -51,35 +80,36 @@ export default {
 </script>
 
 <template>
-    <div class="container-fluid user-img d-flex justify-content-center flex-column ps-5 mb-5"
+    <div v-if="singleMusician.user_details" class="container-fluid user-img d-flex justify-content-center flex-column ps-5 mb-5"
         :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }">
         <h1 class="text-white ms-5">{{ singleMusician.name }}</h1>
         <h2 class="text-white ms-5">{{ singleMusician.city }}</h2>
     </div>
-    <div class="container-fluid px-5">
+    <div class="container-fluid px-5 mb-5">
         <div class="row justify-content-between px-5">
             <div class="col-6">
                 <h2 class="fw-bold pt-3 mb-4">Bio</h2>
-                <p>{{ singleMusician.user_details.bio }}</p>
+                <p v-if="singleMusician.user_details" >{{ singleMusician.user_details.bio }}</p>
             </div>
             <div class="col-4 text-end">
                 <h2 class="fw-bold pt-3 mb-4 ">Competenze</h2>
                 <div class="">
                     <span v-for="(role, i) in singleMusician.roles" :key="i">
-                        {{ role.title }}
-                        <span v-if="i !== singleMusician.roles.length - 1">, </span>
+                        
+                        <img :src='"http://127.0.0.1:8000/storage/" + role.icon' alt="roleInstrument" class="instrument-pic px-4">
+                        <!-- <span v-if="i !== singleMusician.roles.length - 1">, </span> -->
                     </span>
                 </div>
             </div>
             <div class="col-12">
                 <h2 class="fw-bold pt-3 mb-4">Demo</h2>
-                <audio controls class="w-100 px-5">
+                <audio v-if="singleMusician.user_details" controls class="w-100 px-5">
                     <source :src="this.demoPath" type="audio/mpeg">
                 </audio>
             </div>
             <div class="col-12">
                 <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
-                <div>
+                <div v-if="singleMusician.user_details" >
                     <i class="fa-solid fa-phone me-3"></i>
                     Mail: {{ singleMusician.user_details.cellphone }}
                 </div>
@@ -158,10 +188,16 @@ export default {
                 <a href="#" class="button-review">Lascia una recensione</a>
             </div>
         </div>
+        <div class="row pt-5">
+            <div class="col-2 offset-10 text-end pe-5">
+                <router-link :to="{ name: 'contact' }" class="header-link"><i class="fa-solid fa-comments fa-2xl"></i></router-link>
+            </div>
+        </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+
 .card{
     background-color: #21252B;
     color: white;
@@ -184,5 +220,9 @@ export default {
     background-position: center;
     background-size: cover;
     
+}
+
+.instrument-pic{
+    max-width: 100px;
 }
 </style>
