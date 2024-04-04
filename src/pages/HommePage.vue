@@ -55,8 +55,8 @@ export default {
                         Unisciti a noi su <strong>BMusic</strong> e immergiti in un mondo di musica senza confini, dove ogni nota racconta una storia e ogni artista ha la possibilità di brillare.
                     </p>
                     <div class="buttons-controller">
-                        <router-link :to="{ name: 'login' }" class="btn-login">Accedi</router-link>
-                        <router-link :to="{ name: 'registration' }" class="btn-register">Registrati</router-link>
+                        <a href="http://127.0.0.1:8000/login" class="btn-login">Accedi</a>
+                        <a href="http://127.0.0.1:8000/register" class="btn-register">Registrati</a>
                     </div>
                 </div>
                 <div class="col-lg-5 col-xxl-5 col-auto how-section-img">
@@ -144,7 +144,7 @@ export default {
                         lasciati trasportare dalle emozioni e dall'energia di talenti freschi e innovativi. 
                         Entra nel mondo della musica di BMusic oggi stesso e preparati a scoprire il prossimo grande successo!
                     </p>
-                    <a href="" class="btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Cerca artisti o band</a>
+                    <router-link :to="{ name: 'search' }" class="btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Cerca artisti o band</router-link>
                 </div>
             </div>
         </div>
