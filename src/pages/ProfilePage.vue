@@ -3,7 +3,6 @@
 <script>
 
 import axios from 'axios';
-import { Swiper, SwiperSlide } from 'swiper/vue';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -19,45 +18,34 @@ export default {
             apiUrl: 'http://127.0.0.1:8000/api/users/',
             singleMusician: [],
             demoPath: '',
-            showModal: false,
             contactForm: {
-                firstName: '',
-                lastName: '',
-                message: ''
+                firstname: '',
+                lastname: '',
+                email:'',
+                message: '',
+                user_id: '',
             }
         };
     },
-    components: {
-        Swiper,
-        SwiperSlide,
-    },
-    setup() {
-        return {
-            modules: [Pagination],
-        };
-    },
+
     methods: {
-        openModal() {
-            console.log(this.showModal)
-            this.showModal = true;
-        },
-        closeModal() {
-            this.showModal = false;
-        },
         sendMessage() {
             axios.post('http://127.0.0.1:8000/api/messages', this.contactForm)
                 .then(response => {
                     console.log('Messaggio inviato con successo:', response.data);
                     this.resetForm();
+                    alert('Messaggio inviato con successo')
                 })
                 .catch(error => {
                     console.error('Errore durante l\'invio del messaggio:', error);
+                    alert('Errore invio messaggio')
                 });
         },
         resetForm() {
             // Resettare i valori del form dopo l'invio del messaggio
-            this.contactForm.firstName = '';
-            this.contactForm.lastName = '';
+            this.contactForm.firstname = '';
+            this.contactForm.lastname = '';
+            this.contactForm.email = '';
             this.contactForm.message = '';
         }
     },
@@ -69,6 +57,7 @@ export default {
                 console.log(this.singleMusician)
                 this.demoPath = 'http://127.0.0.1:8000/storage' + this.singleMusician.user_details.demo
                 console.log(this.demoPath)
+                this.contactForm.user_id = this.singleMusician.id
             })
             .catch(error => {
             console.error('Errore durante la chiamata API:', error);
@@ -188,12 +177,33 @@ export default {
                 <a href="#" class="button-review">Lascia una recensione</a>
             </div>
         </div>
-        <div class="row pt-5">
-            <div class="col-2 offset-10 text-end pe-5">
-                <router-link :to="{ name: 'contact' }" class="header-link"><i class="fa-solid fa-comments fa-2xl"></i></router-link>
-            </div>
-        </div>
     </div>
+    <section class="contact-section">
+        <div class="container">
+            <h2 class="text-white text-center py-5">Contatta l'utente!</h2>
+            <form @submit.prevent="sendMessage()">
+                <div class="mb-3">
+                    <label for="firstname" class="form-label text-white">Nome*</label>
+                    <input type="text" v-model="contactForm.firstname" class="form-control" id="firstname" placeholder="Inserisci il tuo nome..." required maxlength="74">
+                </div>
+                <div class="mb-3">
+                    <label for="lastname" class="form-label text-white">Cognome*</label>
+                    <input type="text" v-model="contactForm.lastname" class="form-control" id="lastname" placeholder="Inserisci il tuo cognome..." required maxlength="74">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label text-white">Email*</label>
+                    <input type="email" v-model="contactForm.email" class="form-control" id="email" placeholder="Inserisci la tua mail..." required maxlength="255">
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label text-white">Messaggio*</label>
+                    <textarea v-model="contactForm.message" class="form-control" id="message" rows="5" required maxlength="2048" placeholder="Lascia un messaggio che verrà visualizzato dall'artista..."></textarea>
+                </div>
+                <div class="text-center py-5">
+                    <button type="submit" class="btn px-5 my-button btn-lg">Invia</button>
+                </div>
+            </form>
+        </div>
+    </section>
 </template>
 
 <style lang="scss" scoped>
@@ -224,5 +234,20 @@ export default {
 
 .instrument-pic{
     max-width: 100px;
+}
+
+.contact-section{
+    background-color: #21252B;
+
+    h2{
+        font-size: 3rem;
+        font-weight: bold;
+    }
+    .my-button{
+        background-color: white;
+        border-radius: 30px;
+        color: #21252B;
+        font-weight: bold;
+    }
 }
 </style>
