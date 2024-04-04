@@ -19,13 +19,13 @@ import NotFoundPage from './pages/NotFoundPage.vue'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
+        // {
+        //     path: '/',
+        //     name: 'home',
+        //     component: HomePage
+        // },
         {
             path: '/',
-            name: 'home',
-            component: HomePage
-        },
-        {
-            path: '/home',
             name: 'homme',
             component: HommePage
         },
@@ -75,7 +75,7 @@ const router = createRouter({
             component: SearchPage
         },
         {
-            path: '/profile/:id',
+            path: '/profile/:name',
             name: 'profile',
             component: ProfilePage
         },

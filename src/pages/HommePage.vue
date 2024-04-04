@@ -111,7 +111,7 @@ export default {
                         </div>
                         <div class="col-3 d-flex align-items-center justify-content-end">
                             <!-- <a href="#" class="">Visualizza Profilo</a> -->
-                            <router-link :to="{ name: 'profile', params: { id: singleMusician.id} }" class="show-profile-btn">Vedi Profilo</router-link>
+                            <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn">Vedi Profilo</router-link>
                         </div>
                     </div>
                 </div>

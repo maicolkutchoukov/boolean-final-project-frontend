@@ -62,7 +62,7 @@ export default {
         }
     },
     created() {
-        axios.get(`${this.apiUrl}${this.$route.params.id}`) // URL DELL'API
+        axios.get(`${this.apiUrl}${this.$route.params.name}`) // URL DELL'API
             .then((response) => {
                 console.log(response.data.result);
                 this.singleMusician = response.data.result;
