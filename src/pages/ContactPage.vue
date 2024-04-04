@@ -5,8 +5,9 @@ export default {
     data() {
         return {
             contactForm: {
-                firstName: '',
-                lastName: '',
+                firstname: '',
+                lastname: '',
+                email:'',
                 message: ''
             }
         };
@@ -24,8 +25,9 @@ export default {
         },
         resetForm() {
             // Resettare i valori del form dopo l'invio del messaggio
-            this.contactForm.firstName = '';
-            this.contactForm.lastName = '';
+            this.contactForm.firstname = '';
+            this.contactForm.lastname = '';
+            this.contactForm.email = '';
             this.contactForm.message = '';
         }
     }
@@ -33,34 +35,32 @@ export default {
 </script>
 
 <template>
-    <section class="">
-        <div class="container-fluid py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-6">
-                    
-                        <h2 class="text-center mb-4 fw-bold">Contatta il musicista</h2>
-                        <form @submit.prevent="sendMessage" class="p-5 rounded-4">
-                            <div class="mb-3">
-                                <label for="firstName" class="form-label">Nome *</label>
-                                <input type="text" v-model="contactForm.firstName" class="form-control" id="firstName" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="lastName" class="form-label">Cognome *</label>
-                                <input type="text" v-model="contactForm.lastName" class="form-control" id="lastName" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="lastName" class="form-label">email *</label>
-                                <input type="text" v-model="contactForm.lastName" class="form-control" id="lastName" required>
-                            </div>
-                            <div class="mb-5">
-                                <label for="message" class="form-label">Messaggio *</label>
-                                <textarea v-model="contactForm.message" class="form-control" id="message" rows="5" required></textarea>
-                            </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary btn-lg">Invia</button>
-                            </div>
-                        </form>
-                    
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-lg p-4">
+                    <h2 class="text-center mb-4">Contattare un musicista</h2>
+                    <form @submit.prevent="sendMessage">
+                        <div class="mb-3">
+                            <label for="firstname" class="form-label">Nome</label>
+                            <input type="text" v-model="contactForm.firstname" class="form-control" id="firstname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastname" class="form-label">Cognome</label>
+                            <input type="text" v-model="contactForm.lastname" class="form-control" id="lastname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" v-model="contactForm.email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Messaggio</label>
+                            <textarea v-model="contactForm.message" class="form-control" id="message" rows="5" required></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">Invia Messaggio</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

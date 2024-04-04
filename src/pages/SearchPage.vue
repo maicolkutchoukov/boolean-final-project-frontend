@@ -57,7 +57,8 @@ export default {
                 });
         }
     },
-    mounted() {
+    created() {
+        console.log('entra')
         // Ottieni la lista di tutti i musicisti e i ruoli al caricamento del componente
         axios.get('http://127.0.0.1:8000/api/users')
             .then(response => {

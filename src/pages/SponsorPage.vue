@@ -1,11 +1,21 @@
 <script>
 
 import axios from 'axios';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
 export default {
+    components: {
+    Swiper,
+    SwiperSlide,
+    },
   data() {
     return {
         allMusicians: [],
+        modules: [Autoplay, Pagination, Navigation],
     };
   },
     created() {
@@ -19,6 +29,7 @@ export default {
             console.error('Errore durante la chiamata API:', error);
             });
     }
+    
 }
 </script>
 
@@ -130,6 +141,43 @@ export default {
             <div class="text-center">
                 <router-link :to="{ name: 'login' }" class="btn my-4 fw-bold">ACCEDI O REGISTRATI</router-link>
             </div>
+        </div>
+
+        <!--SWIPER-->
+        <!--
+            Da valutare se mantere lo swiper in pagina, perchè i profili
+            sponsorizzati verranno riportati già in una sezione apposita in home
+        -->
+        <div class="container">
+            <h4 class="fw-bold fs-4">PROFILI SPONSORIZZATI</h4>
+
+            <swiper
+            :spaceBetween="30"
+            :centeredSlides="true"
+            :autoplay="{
+            delay: 2500,
+            disableOnInteraction: false,
+            }"
+            :pagination="{
+            clickable: true,
+            }"
+            :navigation="false"
+            :modules="modules"
+            class="mySwiper">
+
+            <swiper-slide
+                v-for="(singleMusician, index) in allMusicians" 
+                :key="singleMusician.id" 
+                :style="
+                { 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')',
+                'background-size': 'cover',
+                'background-position': 'center', 
+                }"
+                :class="!index ? 'active' : ''">
+            </swiper-slide>
+                
+            </swiper>
+
         </div>
         <!--
         <div class="row">
@@ -267,4 +315,12 @@ export default {
     background-color: #BADFDA;
     color: #21252B
 }
+
+.mySwiper {
+    height: 500px;
+}
+
+
+
+
 </style>
