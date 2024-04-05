@@ -127,11 +127,11 @@ methods: {
                 <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
             <div v-if="singleMusician.user_details">
                 <i class="fa-solid fa-phone me-3"></i>
-                Mail: {{ singleMusician.user_details.cellphone }}
+                Mail: {{ singleMusician.email }}
             </div>
             <div>
                 <i class="fa-solid fa-envelope me-3"></i>
-                Cell: {{ singleMusician.email }}
+                Cell: {{ singleMusician.user_details.cellphone }}
             </div>
             </div>
         </div>
