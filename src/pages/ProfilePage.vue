@@ -188,7 +188,7 @@ methods: {
         <form @submit.prevent="submitVote">
             <!-- Campi del form per il voto -->
            <!--  <input type="text" v-model="voteForm.label" name="label" placeholder="Label"> -->
-            <input type="text" v-model="voteForm.vote" name="vote" placeholder="Vote">
+            <input type="number" v-model="voteForm.vote" name="vote" min="1" max="5" placeholder="Vote">
             <button type="submit">Invia voto</button>
         </form>
 
