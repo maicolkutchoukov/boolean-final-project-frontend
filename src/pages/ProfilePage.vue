@@ -22,13 +22,14 @@ export default {
         },
         voteForm: {
             user_id: '',
-            //label: '', // Assumi che questo valore sia già settato in qualche modo nel tuo componente
-            vote: '' // Assumi che questo valore sia già settato in qualche modo nel tuo componente
-        }
+            vote: ''
+        },
+        isSubmitting: false // Variabile per tenere traccia dello stato di invio del form
     };
 },
 methods: {
     sendMessage() {
+        this.isSubmitting = true; // Imposta lo stato di invio del form su true
         axios.post(`${this.apiUrl}messages`, this.contactForm)
             .then(response => {
                 console.log('Messaggio inviato con successo:', response.data);
@@ -38,35 +39,32 @@ methods: {
             .catch(error => {
                 console.error('Errore durante l\'invio del messaggio:', error);
                 alert('Errore invio messaggio');
+            })
+            .finally(() => {
+                this.isSubmitting = false; // Ripristina lo stato di invio del form
             });
-        },
-    resetForm() {
-        this.contactForm.firstname = '';
-        this.contactForm.lastname = '';
-        this.contactForm.email = '';
-        this.contactForm.message = '';
     },
-
     submitReview() {
         if (this.reviewForm.description && this.reviewForm.firstname && this.reviewForm.lastname) {
+            this.isSubmitting = true; // Imposta lo stato di invio del form su true
             axios.post(`${this.apiUrl}reviews`, this.reviewForm)
             .then(response => {
                 console.log('Recensione inviata con successo:', response.data);
                 this.resetReviewForm();
                 alert('Recensione inviata con successo');
+                this.submitVote()
             })
             .catch(error => {
                 console.error('Errore durante l\'invio della recensione:', error);
                 alert('Errore durante l\'invio della recensione');
+            })
+            .finally(() => {
+                this.isSubmitting = false; // Ripristina lo stato di invio del form
             });
         }
     },
-    resetReviewForm() {
-        this.reviewForm.firstname = '',
-        this.reviewForm.lastname = '',
-        this.reviewForm.description = '';
-    },
     submitVote() {
+        this.isSubmitting = true; // Imposta lo stato di invio del form su true
         axios.post(`${this.apiUrl}votes`, this.voteForm)
             .then(response => {
                 console.log('Voto inviato con successo:', response.data);
@@ -75,25 +73,39 @@ methods: {
             .catch(error => {
                 console.error('Errore durante l\'invio del voto:', error);
                 // Aggiungi qui eventuali azioni in caso di errore nell'invio del voto
+            })
+            .finally(() => {
+                this.isSubmitting = false; // Ripristina lo stato di invio del form
             });
+    },
+    resetForm() {
+        this.contactForm.firstname = '';
+        this.contactForm.lastname = '';
+        this.contactForm.email = '';
+        this.contactForm.message = '';
+    },
+    resetReviewForm() {
+        this.reviewForm.firstname = '';
+        this.reviewForm.lastname = '';
+        this.reviewForm.description = '';
     }
 },
-    created() {
-        axios.get(`${this.apiUrl}users/${this.$route.params.name}`)
-        .then(response => {
-            console.log(response.data.result);
-            this.singleMusician = response.data.result;
-            console.log(this.singleMusician);
-            this.demoPath = `http://127.0.0.1:8000/storage${this.singleMusician.user_details.demo}`;
-            console.log(this.demoPath);
-            this.contactForm.user_id = this.singleMusician.id;
-            this.reviewForm.user_id = this.singleMusician.id;
-            this.voteForm.user_id = this.singleMusician.id; // Imposta l'ID dell'utente per il voto
-        })
-        .catch(error => {
-            console.error('Errore durante la chiamata API:', error);
-        });
-    }
+created() {
+    axios.get(`${this.apiUrl}users/${this.$route.params.name}`)
+    .then(response => {
+        console.log(response.data.result);
+        this.singleMusician = response.data.result;
+        console.log(this.singleMusician);
+        this.demoPath = `http://127.0.0.1:8000/storage${this.singleMusician.user_details.demo}`;
+        console.log(this.demoPath);
+        this.contactForm.user_id = this.singleMusician.id;
+        this.reviewForm.user_id = this.singleMusician.id;
+        this.voteForm.user_id = this.singleMusician.id; // Imposta l'ID dell'utente per il voto
+    })
+    .catch(error => {
+        console.error('Errore durante la chiamata API:', error);
+    });
+}
 };
 </script>
 
@@ -127,11 +139,11 @@ methods: {
                 <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
             <div v-if="singleMusician.user_details">
                 <i class="fa-solid fa-phone me-3"></i>
-                Mail: {{ singleMusician.user_details.cellphone }}
+                Mail: {{ singleMusician.email }}
             </div>
-            <div>
+            <div v-if="singleMusician.user_details">
                 <i class="fa-solid fa-envelope me-3"></i>
-                Cell: {{ singleMusician.email }}
+                Cell: {{ singleMusician.user_details.cellphone }}
             </div>
             </div>
         </div>
@@ -178,20 +190,13 @@ methods: {
     </div>
     <div>
       <!-- Form per inserire una recensione e un voto -->
-        <form @submit.prevent="submitReview()">
-            <input type="text" v-model="reviewForm.firstname" id="firstname" name="firstname" placeholder="Inserisci il tuo nome">
-            <input type="text" v-model="reviewForm.lastname" id="lastname" name="lastname" placeholder="Inserisci il tuo cognome">
-            <input type="text" v-model="reviewForm.description" id="description" name="description" placeholder="Inserisci la tua recensione">
-            <!-- <input type="number" v-model="reviewForm.rating" name="vote" placeholder="Voto da 1 a 5"> -->
-            <button type="submit">Invia recensione</button>
-        </form>
-        <form @submit.prevent="submitVote">
-            <!-- Campi del form per il voto -->
-           <!--  <input type="text" v-model="voteForm.label" name="label" placeholder="Label"> -->
-            <input type="text" v-model="voteForm.vote" name="vote" placeholder="Vote">
-            <button type="submit">Invia voto</button>
-        </form>
-
+    <form @submit.prevent="submitReview(), submitVote" class="review-form">
+        <input type="text" v-model="reviewForm.firstname" id="firstname" name="firstname" placeholder="Inserisci il tuo nome">
+        <input type="text" v-model="reviewForm.lastname" id="lastname" name="lastname" placeholder="Inserisci il tuo cognome">
+        <input type="text" v-model="reviewForm.description" id="description" name="description" placeholder="Inserisci la tua recensione">
+        <input type="number" v-model="voteForm.vote" name="vote" placeholder="Vote" class="form-input" min="1" max="5">
+        <button type="submit" class="form-button">Invia Recensione e Voto</button>
+    </form>
     </div>
     <section class="contact-section">
         <div class="container">
@@ -268,6 +273,43 @@ methods: {
         border-radius: 30px;
         color: #21252B;
         font-weight: bold;
+    }
+}
+
+.review-form,
+.vote-form {
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+.bounce-in {
+    animation: bounceIn 0.5s ease forwards;
+    opacity: 0;
+    transform: translateY(-30px);
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 1;
     }
 }
 </style>
