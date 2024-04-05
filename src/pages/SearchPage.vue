@@ -13,107 +13,82 @@ import axios from 'axios';
 export default {
     data() {
         return {
-        allMusicians: [],
-        allRoles: [],
-        selectedRoles: [],
-        searchQuery: '',
-        rating: null,
-        minimumReviews: null,
-        loading: false
+            allMusicians: [],
+            allRoles: [],
+            selectedRoles: [],
+            searchQuery: '',
+            rating: null,
+            minimumReviews: null,
+            loading: false
         };
     },
-  computed: {
+    computed: {
         filteredMusicians() {
-        let filtered = this.allMusicians;
+            let filtered = this.allMusicians;
 
-        if (this.selectedRoles.length > 0) {
-            filtered = filtered.filter(musician => musician.roles.some(role => this.selectedRoles.includes(role.title)));
-        }
-
-        if (this.searchQuery.trim() !== '') {
-            filtered = filtered.filter(musician => musician.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
-        }
-
-        if (this.rating !== null) {
-            filtered = filtered.filter(musician => {
-            if (musician.votes.length > 0) {
-                const averageRating = musician.votes.reduce((acc, vote) => acc + parseInt(vote.vote), 0) / musician.votes.length;
-                return averageRating >= this.rating;
-            } else {
-                return false;
+            if (this.selectedRoles.length > 0) {
+                filtered = filtered.filter(musician => this.selectedRoles.some(role => musician.roles.includes(role)));
             }
-            });
-        }
 
-        if (this.minimumReviews !== null) {
-            filtered = filtered.filter(musician => {
-            return musician.reviews.length >= this.minimumReviews;
-            });
-        }
+            if (this.searchQuery.trim() !== '') {
+                filtered = filtered.filter(musician => musician.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
+            }
 
-        return filtered;
+            if (this.rating !== null) {
+                filtered = filtered.filter(musician => {
+                    const averageRating = musician.votes.reduce((acc, vote) => acc + parseInt(vote.vote), 0) / musician.votes.length;
+                    return averageRating >= this.rating;
+                });
+            }
+
+            if (this.minimumReviews !== null) {
+                filtered = filtered.filter(musician => musician.reviews.length >= this.minimumReviews);
+            }
+
+            return filtered;
         }
     },
-  methods: {
-        toggleRole(role) {
-        if (this.selectedRoles.includes(role)) {
-            this.selectedRoles = this.selectedRoles.filter(selectedRole => selectedRole !== role);
-        } else {
-            this.selectedRoles.push(role);
-        }
-        },
-        isSelected(role) {
-        return this.selectedRoles.includes(role);
-        },
-        search() {
-        this.loading = true; // Visualizza il feedback di caricamento
-        axios.get('http://127.0.0.1:8000/api/users', {
-            params: {
-            name: this.searchQuery,
-            roles: this.selectedRoles.join(',')
-            }
-        })
-            .then(response => {
+    methods: {
+        async search() {
+            this.loading = true;
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/users', {
+                    params: {
+                        name: this.searchQuery,
+                        roles: this.selectedRoles.join(',')
+                    }
+                });
                 this.allMusicians = response.data.results.data;
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Errore durante la chiamata API:', error);
-            })
-            .finally(() => {
-                this.loading = false; // Nascondi il feedback di caricamento
-            });
+            } finally {
+                this.loading = false;
+            }
         },
-        selectRating(rating) {
-        this.rating = rating;
+        async getMusicians() {
+            this.loading = true;
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/users');
+                this.allMusicians = response.data.results.data;
+            } catch (error) {
+                console.error('Errore durante la chiamata API:', error);
+            } finally {
+                this.loading = false;
+            }
         },
         resetFilters() {
-        this.selectedRoles = [];
-        this.searchQuery = '';
-        this.rating = null;
-        this.minimumReviews = null;
+            this.selectedRoles = [];
+            this.searchQuery = '';
+            this.rating = null;
+            this.minimumReviews = null;
         },
         getProfilePicture(musician) {
-        return musician.user_details && musician.user_details.picture ? 'http://127.0.0.1:8000/storage/' + musician.user_details.picture : '';
+            return musician.user_details && musician.user_details.picture ? 'http://127.0.0.1:8000/storage/' + musician.user_details.picture : '';
         }
     },
     created() {
-    this.loading = true; // Visualizza il feedback di caricamento
-
-    // Simula un ritardo di 1 secondo prima di caricare i dati
-    setTimeout(() => {
-        axios.get('http://127.0.0.1:8000/api/users')
-        .then(response => {
-            this.allMusicians = response.data.results.data;
-        })
-        .catch(error => {
-            console.error('Errore durante la chiamata API:', error);
-        })
-        .finally(() => {
-            this.loading = false; // Nascondi il feedback di caricamento
-        });
-    }, 1000); // Ritardo di 1000 millisecondi (1 secondo)
+        this.getMusicians();
     }
-
 };
 </script>
 
@@ -121,7 +96,7 @@ export default {
     <div class="container-fluid">
         <div v-if="loading" class="loading-overlay">
             <div class="spinner-border" role="status">
-            <span class="visually-hidden">Caricamento...</span>
+                <span class="visually-hidden">Caricamento...</span>
             </div>
             <p>Caricamento in corso...</p>
         </div>
@@ -129,27 +104,27 @@ export default {
         <h2 class="p-5 fw-bold">Trova artisti o band</h2>
         <form @submit.prevent="search">
             <div class="mb-5">
-            <input type="text" v-model="searchQuery" class="form-control w-50 input-searchbar" placeholder="Cerca artisti o band...">
+                <input type="text" v-model="searchQuery" class="form-control w-50 input-searchbar" placeholder="Cerca artisti o band...">
             </div>
             <div class="mb-5">
-            <div class="star-rating text-center">
-                <span class="star" v-for="star in 5" :key="star" @click="selectRating(star)">
-                {{ star <= rating ? '★' : '☆' }}
-                </span>
-            </div>
+                <div class="star-rating text-center">
+                    <span class="star" v-for="star in 5" :key="star" @click="rating = star">
+                        {{ star <= rating ? '★' : '☆' }}
+                    </span>
+                </div>
             </div>
             <div class="mb-5">
-            <input type="number" v-model="minimumReviews" class="form-control w-50 input-min-reviews" min="0" placeholder="Numero minimo di recensioni">
+                <input type="number" v-model="minimumReviews" class="form-control w-50 input-min-reviews" min="0" placeholder="Numero minimo di recensioni">
             </div>
             <div class="container d-flex flex-wrap text-center mb-5">
-            <div v-for="(role, index) in allRoles" :key="index" class="mycol-2">
-                <button class="button-roles"
-                        type="button"
-                        :class="{ 'active': isSelected(role.title) }"
-                        @click="toggleRole(role.title)">
-                {{ role.title }}
-                </button>
-            </div>
+                <div v-for="(role, index) in allRoles" :key="index" class="mycol-2">
+                    <button class="button-roles"
+                            type="button"
+                            :class="{ 'active': selectedRoles.includes(role) }"
+                            @click="toggleRole(role)">
+                        {{ role.title }}
+                    </button>
+                </div>
             </div>
         </form>
         <button class="btn btn-secondary" @click="resetFilters">Reset</button>
@@ -157,16 +132,16 @@ export default {
         <div v-if="!loading" class="container-fluid">
             <h2 class="p-5 fw-bold">Artisti in evidenza</h2>
             <div class="row g-3">
-            <div class="col-3" v-for="(singleMusician, index) in filteredMusicians" :key="singleMusician.id">
-                <div class="card">
-                <img :src="getProfilePicture(singleMusician)" class="card-img-top" :alt="'Immagine di ' + singleMusician.name">
-                <div class="card-body">
-                    <h5 class="card-title">{{ singleMusician.name }}</h5>
-                    <p class="card-text">{{ singleMusician.city }}</p>
-                    <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+                <div class="col-3" v-for="(singleMusician, index) in filteredMusicians" :key="singleMusician.id">
+                    <div class="card">
+                        <img :src="getProfilePicture(singleMusician)" class="card-img-top" :alt="'Immagine di ' + singleMusician.name">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ singleMusician.name }}</h5>
+                            <p class="card-text">{{ singleMusician.city }}</p>
+                            <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+                        </div>
+                    </div>
                 </div>
-                </div>
-            </div>
             </div>
         </div>
     </div>
@@ -206,25 +181,25 @@ export default {
 }
 
 .loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.7); /* Trasparenza per un aspetto sfumato */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; /* Assicura che l'overlay di caricamento sia in primo piano */
-}
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7); // Trasparenza per un aspetto sfumato
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; // Assicura che l'overlay di caricamento sia in primo piano
 
-.loading-overlay .spinner-border {
-  width: 3rem;
-  height: 3rem;
-}
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
 
-.loading-overlay p {
-  margin-top: 10px;
-  font-size: 1rem;
+    p {
+        margin-top: 10px;
+        font-size: 1rem;
+    }
 }
 </style>
