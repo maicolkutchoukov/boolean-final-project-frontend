@@ -12,7 +12,10 @@ export default {
 
 <template>
     <div class="not-found-page">
-        404 not-found
+        <div class="box-text">
+            404 not-found
+        </div>
+        
     </div>
 </template>
 
@@ -23,11 +26,16 @@ div.not-found-page{
     position: fixed;
     top:0;
     z-index: 99999;
-    background-color: black;
+    background-color: #21252B;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 200px;
-    color: red;
+    color: #BADFDA;
+}
+
+.box-text {
+   padding: 50px;
+   border: 10px solid #BADFDA;
 }
 </style>
