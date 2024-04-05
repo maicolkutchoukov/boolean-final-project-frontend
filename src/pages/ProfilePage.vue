@@ -13,13 +13,17 @@ export default {
             email: '',
             message: '',
             user_id: '',
-
         },
         reviewForm:{
             firstname: '',
             lastname: '',
             description: '',
             user_id: '',
+        },
+        voteForm: {
+            user_id: '',
+            //label: '', // Assumi che questo valore sia già settato in qualche modo nel tuo componente
+            vote: '' // Assumi che questo valore sia già settato in qualche modo nel tuo componente
         }
     };
 },
@@ -44,12 +48,6 @@ methods: {
     },
 
     submitReview() {
-        // if (!this.reviewForm.description && !this.reviewForm.rating) {
-        //     alert('Per favore, inserisci almeno una recensione o un voto');
-        //     return;
-        // }
-
-        // Invia la richiesta API per salvare la recensione
         if (this.reviewForm.description && this.reviewForm.firstname && this.reviewForm.lastname) {
             axios.post(`${this.apiUrl}reviews`, this.reviewForm)
             .then(response => {
@@ -62,31 +60,22 @@ methods: {
                 alert('Errore durante l\'invio della recensione');
             });
         }
-
-        // Invia la richiesta API per salvare il voto
-        // if (this.reviewForm.rating && this.reviewForm <= 5 && this.reviewForm >= 1 ) {
-        //     axios.post(`${this.apiUrl}votes`, {
-        //     vote: this.reviewForm.rating,
-        //     user_id: this.reviewForm.user_id
-        //     })
-        //     .then(response => {
-        //         console.log('Voto inviato con successo:', response.data);
-        //         this.resetRating();
-        //         alert('Voto inviato con successo');
-        //     })
-        //     .catch(error => {
-        //         console.error('Errore durante l\'invio del voto:', error);
-        //         alert('Errore durante l\'invio del voto');
-        //     });
-        // }
     },
     resetReviewForm() {
         this.reviewForm.firstname = '',
         this.reviewForm.lastname = '',
         this.reviewForm.description = '';
     },
-    resetRating() {
-        this.reviewForm.rating = null;
+    submitVote() {
+        axios.post(`${this.apiUrl}votes`, this.voteForm)
+            .then(response => {
+                console.log('Voto inviato con successo:', response.data);
+                // Aggiungi qui eventuali azioni dopo aver inviato il voto
+            })
+            .catch(error => {
+                console.error('Errore durante l\'invio del voto:', error);
+                // Aggiungi qui eventuali azioni in caso di errore nell'invio del voto
+            });
     }
 },
     created() {
@@ -99,6 +88,7 @@ methods: {
             console.log(this.demoPath);
             this.contactForm.user_id = this.singleMusician.id;
             this.reviewForm.user_id = this.singleMusician.id;
+            this.voteForm.user_id = this.singleMusician.id; // Imposta l'ID dell'utente per il voto
         })
         .catch(error => {
             console.error('Errore durante la chiamata API:', error);
@@ -195,6 +185,13 @@ methods: {
             <!-- <input type="number" v-model="reviewForm.rating" name="vote" placeholder="Voto da 1 a 5"> -->
             <button type="submit">Invia recensione</button>
         </form>
+        <form @submit.prevent="submitVote">
+            <!-- Campi del form per il voto -->
+           <!--  <input type="text" v-model="voteForm.label" name="label" placeholder="Label"> -->
+            <input type="text" v-model="voteForm.vote" name="vote" placeholder="Vote">
+            <button type="submit">Invia voto</button>
+        </form>
+
     </div>
     <section class="contact-section">
         <div class="container">
