@@ -126,14 +126,14 @@ export default {
 
 <template>
     <div>
-        <div v-if="singleMusician && singleMusician.user_details" class="container-fluid user-img d-flex justify-content-center flex-column ps-5 mb-5"
+        <div v-if="singleMusician && singleMusician.user_details" class="container-fluid user-img d-flex justify-content-center flex-column mb-5"
             :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }">
     
             <h1 class="text-white ms-5">{{ singleMusician.name }}</h1>
             <h2 class="text-white ms-5">{{ singleMusician.city }}</h2>
         </div>
-        <div class="container-fluid px-5 mb-5">
-            <div class="row justify-content-between px-5">
+        <div class="container mb-5">
+            <div class="row justify-content-between ">
                 <div class="col-6">
                     <h2 class="fw-bold pt-3 mb-4">Bio</h2>
                     <p v-if="singleMusician && singleMusician.user_details">{{ singleMusician.user_details.bio }}</p>
@@ -142,17 +142,17 @@ export default {
                     <h2 class="fw-bold pt-3 mb-4 ">Competenze</h2>
                     <div>
                     <span v-if="singleMusician && singleMusician.roles" v-for="(role, i) in singleMusician.roles" :key="i" >
-                        <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="instrument-pic px-4">
+                        <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="instrument-pic ">
                     </span>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12 mb-5">
                     <h2 class="fw-bold pt-3 mb-4">Demo</h2>
-                    <audio v-if="singleMusician && singleMusician.user_details" controls class="w-100 px-5">
+                    <audio v-if="singleMusician && singleMusician.user_details" controls class="w-100 ">
                     <source :src="demoPath" type="audio/mpeg">
                     </audio>
                 </div>
-                <div class="col-12">
+                <div class="col-12 mb-5">
                     <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
                     <div v-if="singleMusician && singleMusician.user_details">
                     <i class="fa-solid fa-phone me-3"></i>
@@ -164,23 +164,22 @@ export default {
                     </div>
                 </div>
             </div>
-            <!-- Recensioni CARD-->
-            <section v-if="singleMusician && singleMusician.reviews">
+            <section v-if="singleMusician && singleMusician.reviews" class="full-page-section mb-5">
                 <div class="container">
-                    <div class="row py-5 my-5 justify-content-center">
-                        <!-- Card di esempio -->
-                        <div v-for="(review, index) in singleMusician.reviews" :key="index" class="col-4 mb-4">
-                            <div class="card px-2" style="width: 18rem;">
-                                <div class="card-body">
-                                    <h4 class="card-title py-4">{{ review.firstname + ' ' + review.lastname }}</h4>
-                                    <p class="card-text pe-4">{{ review.description }}</p>
-                                    <!-- Stampa le stelle in base al voto della recensione corrente -->
-                                    <div class="stars-container">
-                                        <span v-for="i in parseInt(singleMusician.votes[index].vote)" class="star-reviews">
-                                            <!-- <i class="fa-solid fa-star"></i> -->
-                                            <span class="star-reviews"></span>
-                                        </span>
-                                        
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <div class="reviews-container">
+                                <div class="reviews-wrapper">
+                                    <!-- Card di esempio -->
+                                    <div v-for="(review, index) in singleMusician.reviews" :key="index" class="review-item" style="background-color: #2E333A;">
+                                        <div class="review-content">
+                                            <h4 class="review-title" style="color: white;">{{ review.firstname + ' ' + review.lastname }}</h4>
+                                            <p class="review-description" style="color: white;">{{ review.description }}</p>
+                                        </div>
+                                        <!-- Stampa le stelle in base al voto della recensione corrente -->
+                                        <div class="stars-container">
+                                            <span v-for="i in parseInt(singleMusician.votes[index].vote)" class="star-reviews"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -190,29 +189,39 @@ export default {
             </section>
 
             <!-- Form per inserire una recensione e un voto -->
-            <section v-if="showReviewForm" id="sectionReviews">
-                <div class="container">
-                    <div class="row justify-content-center py-2 px-3">
-                    <div class="col-12 px-4 py-2 w-50 mb-3">
-                        <form @submit.prevent="submitReview" class="review-form d-flex flex-column p-4 align-items-center">
-                        <input type="text" v-model="reviewForm.firstname" id="firstname" name="firstname" class="text-center" placeholder="Inserisci il tuo nome">
-                        <input type="text" v-model="reviewForm.lastname" id="lastname" name="lastname" class="text-center" placeholder="Inserisci il tuo cognome">
-                        <input type="text" v-model="reviewForm.description" id="description" name="description" class="text-center" placeholder="Inserisci la tua recensione">
-                                            
-                        <!-- Palline per selezionare il voto -->
-                        <div class="rating-input">
-                            <span class="star" v-for="star in 5" :key="star" @click="setVote(star)" @mouseover="setActiveStar(star)">
-                            <span class="star-reviews" :class="{ 'active': star <= activeStar, 'disabled': star > activeStar }"></span>
-                            </span>
+            <section v-if="showReviewForm" id="sectionReviews" class="contact-section" style="background-color: white;">
+                <div class="container-fluid border">
+                    <h2 class="text-black text-center py-5">Scrivi una recensione</h2>
+                    <form @submit.prevent="submitReview" class="contact-form">
+                        <div class="mb-3">
+                            <label for="firstname" class="form-label text-black">Nome*</label>
+                            <input type="text" v-model="reviewForm.firstname" class="form-control" id="firstname"
+                                placeholder="Inserisci il tuo nome..." required maxlength="74">
                         </div>
-                        
-                        <button type="submit" class="form-button btn-send-review mt-3">Invia Recensione</button>
-                        <button type="button" @click="closeReviewForm" class="form-button btn-close-review">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                        </form>
-                    </div>
-                    </div>
+                        <div class="mb-3">
+                            <label for="lastname" class="form-label text-black">Cognome*</label>
+                            <input type="text" v-model="reviewForm.lastname" class="form-control" id="lastname"
+                                placeholder="Inserisci il tuo cognome..." required maxlength="74">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label text-black">Recensione*</label>
+                            <textarea v-model="reviewForm.description" class="form-control" id="description" rows="5" required
+                                maxlength="2048"
+                                placeholder="Inserisci la tua recensione..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-black">Voto*</label>
+                            <div class="rating-input">
+                                <span class="star" v-for="star in 5" :key="star" @click="setVote(star)" @mouseover="setActiveStar(star)">
+                                    <span class="star-reviews" :class="{ 'active': star <= activeStar, 'disabled': star > activeStar }"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="text-center py-5">
+                            <button type="submit" class="btn button-send-review btn-lg">Invia Recensione</button>
+                            <button type="button" @click="closeReviewForm" class="btn button-send-review btn-lg">Annulla</button>
+                        </div>
+                    </form>
                 </div>
             </section>
     
@@ -248,7 +257,7 @@ export default {
                         placeholder="Lascia un messaggio che verrà visualizzato dall'artista..."></textarea>
                     </div>
                     <div class="text-center py-5">
-                        <button type="submit" class="btn px-5 my-button btn-lg">Invia</button>
+                        <button type="submit" class="btn my-button btn-lg">Invia</button>
                     </div>
                 </form>
             </div>
@@ -258,88 +267,130 @@ export default {
 
 <style lang="scss" scoped>
 
-.card{
-    background-color: #21252B;
-    color: white;
-    border-radius: 20px;
-    margin: 0 auto;
-}
-
-.user-img{
+.user-img {
     min-height: 500px;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    
 }
 
-.instrument-pic{
+.instrument-pic {
     max-width: 100px;
 }
 
-.contact-section{
+.contact-section {
     background-color: #21252B;
 
-    h2{
+    h2 {
         font-size: 3rem;
         font-weight: bold;
     }
-    .my-button{
+
+    .my-button {
         background-color: white;
         border-radius: 30px;
         color: #21252B;
         font-weight: bold;
+        padding: 10px 20px;
     }
 }
 
-#sectionReviews{
-    .review-form{
-    margin-bottom: 20px;
-    background-color: #21252B;
-    min-height: 200px;
-    position: relative;
-    input{
-        border-radius: 20px;
-        margin: 10px 0;
-        min-width: 200px;
-    }
-    .btn-send-review{
-        padding: 10px 20px;
-        background-color: white;
-        border-radius: 25px;
-        color: #21252B;
-        font-weight: bold;
-    }
-    .btn-close-review{
-        width: 30px;
-        height: 30px;
-        line-height: 25px;
-        border-radius: 50%;
-        position: absolute;
-        top: 10px;
-        right: 10px;
+#sectionReviews {
+    .review-form {
+        margin-bottom: 20px;
+        background-color: #21252B;
+        min-height: 200px;
+        position: relative;
+
+        input {
+            border-radius: 20px;
+            margin: 10px 0;
+            min-width: 200px;
         }
 
+        .btn-send-review {
+            padding: 10px 20px;
+            background-color: white;
+            border-radius: 25px;
+            color: #21252B;
+            font-weight: bold;
+        }
+
+        .btn-close-review {
+            width: 30px;
+            height: 30px;
+            line-height: 25px;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     }
-    .star-reviews{
-    display: inline-block;
-    margin-right: 8px;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background-color: #BADFDA;
+
+    .star-reviews {
+        display: inline-block;
+        margin-right: 8px;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background-color: #BADFDA;
     }
-    .active{
-        background-color: green;
+
+    .active {
+        background-color: #21252B;
     }
-    
+
+    .button-send-review {
+        background-color: #21252B;
+        color: white;
+        border-radius: 30px;
+        font-weight: bold;
+        margin-right: 15px;
+        padding: 10px 20px;
+    }
 }
-.btn-write-review{
+
+.btn-write-review {
     background-color: #21252B;
     color: white;
     padding: 15px 30px;
     border-radius: 25px;
 }
 
+.full-page-section {
+    height: 280px; // Altezza fissa
+    overflow-y: auto; // Scrolling
+    padding: 30px 0;
+    margin-bottom: 30px;
+}
+
+.review-item {
+    margin-bottom: 20px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+
+    .review-title {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+
+    .review-description {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .stars-container {
+        display: flex;
+
+        .star-reviews {
+            width: 20px;
+            height: 20px;
+            background-color: #BADFDA;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+    }
+}
 
 </style>
