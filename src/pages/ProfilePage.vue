@@ -12,7 +12,7 @@ export default {
             lastname: '',
             email: '',
             message: '',
-            user_id: ''
+            user_id: ''// --------
         },
         reviewForm: {
             firstname: '',
@@ -80,6 +80,11 @@ export default {
                 const response = await axios.post(`${this.apiUrl}votes`, this.voteForm);
                 console.log('Voto inviato con successo:', response.data);
             } catch (error) {
+                if (error.response && error.response.data && error.response.data.message) {
+                    this.errorMessage = error.response.data.message;
+                } else {
+                    this.errorMessage = 'Errore durante l\'invio del voto.';
+                }
                 console.error('Errore durante l\'invio del voto:', error);
             } finally {
                 this.isSubmitting = false;
@@ -178,7 +183,7 @@ export default {
                                         </div>
                                         <!-- Stampa le stelle in base al voto della recensione corrente -->
                                         <div class="stars-container">
-                                            <span v-for="i in parseInt(singleMusician.votes[index].vote)" class="star-reviews"></span>
+                                            <span v-if="singleMusician.votes[index]?.vote" v-for="i in parseInt(singleMusician.votes[index]?.vote)" class="star-reviews"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -212,9 +217,10 @@ export default {
                         <div class="mb-3">
                             <label class="form-label text-black">Voto*</label>
                             <div class="rating-input">
-                                <span class="star" v-for="star in 5" :key="star" @click="setVote(star)" @mouseover="setActiveStar(star)">
+                                <!-- <span class="star" v-for="star in 5" :key="star" @click="setVote(star)" @mouseover="setActiveStar(star)">
                                     <span class="star-reviews" :class="{ 'active': star <= activeStar, 'disabled': star > activeStar }"></span>
-                                </span>
+                                </span> -->
+                                <input type="number" name="vote" v-model="voteForm.vote" id="" min="1" max="5">
                             </div>
                         </div>
                         <div class="text-center py-5">
