@@ -2,115 +2,127 @@
 import axios from 'axios';
 
 export default {
-  data() {
-    return {
-      apiUrl: 'http://127.0.0.1:8000/api/',
-      singleMusician: null,
-      demoPath: '',
-      contactForm: {
-        firstname: '',
-        lastname: '',
-        email: '',
-        message: ''
-      },
-      reviewForm: {
-        firstname: '',
-        lastname: '',
-        description: ''
-      },
-      voteForm: {
-        user_id: '',
-        vote: ''
-      },
-      isSubmitting: false,
-      errorMessage: '',
-      successMessage: '',
-      showReviewForm: false,
-    };
-  },
-  methods: {
-    async fetchUserData() {
-      try {
-        const response = await axios.get(`${this.apiUrl}users/${this.$route.params.name}`);
-        this.singleMusician = response.data.result;
-        this.demoPath = `http://127.0.0.1:8000/storage${this.singleMusician.user_details.demo}`;
-        this.contactForm.user_id = this.singleMusician.id;
-        this.reviewForm.user_id = this.singleMusician.id;
-        this.voteForm.user_id = this.singleMusician.id;
-        console.log(this.singleMusician)
-      } catch (error) {
-        console.error('Errore durante la chiamata API:', error);
-      }
+    data() {
+        return {
+        apiUrl: 'http://127.0.0.1:8000/api/',
+        singleMusician: null,
+        demoPath: '',
+        contactForm: {
+            firstname: '',
+            lastname: '',
+            email: '',
+            message: '',
+            user_id: ''
+        },
+        reviewForm: {
+            firstname: '',
+            lastname: '',
+            description: '',
+            user_id: ''
+        },
+        voteForm: {
+            user_id: '',
+            vote: ''
+        },
+        isSubmitting: false,
+        errorMessage: '',
+        successMessage: '',
+        showReviewForm: false,
+        activeStar: null // Nuova proprietà per gestire la stella attiva
+        };
     },
-    async sendMessage() {
-      this.isSubmitting = true;
-      try {
-        const response = await axios.post(`${this.apiUrl}messages`, this.contactForm);
-        this.successMessage = 'Messaggio inviato con successo';
-        this.resetForm();
-      } catch (error) {
-        this.errorMessage = 'Errore durante l\'invio del messaggio';
-        console.error('Errore durante l\'invio del messaggio:', error);
-      } finally {
-        this.isSubmitting = false;
-      }
-    },
-    async submitReview() {
-      if (this.reviewForm.description && this.reviewForm.firstname && this.reviewForm.lastname) {
-        this.isSubmitting = true;
-        try {
-          const response = await axios.post(`${this.apiUrl}reviews`, this.reviewForm);
-          this.successMessage = 'Recensione inviata con successo';
-          this.resetReviewForm();
-          this.submitVote();
-        } catch (error) {
-          this.errorMessage = 'Errore durante l\'invio della recensione';
-          console.error('Errore durante l\'invio della recensione:', error);
-        } finally {
-          this.isSubmitting = false;
+    methods: {
+        async fetchUserData() {
+            try {
+                const response = await axios.get(`${this.apiUrl}users/${this.$route.params.name}`);
+                this.singleMusician = response.data.result;
+                this.demoPath = `http://127.0.0.1:8000/storage${this.singleMusician.user_details.demo}`;
+                this.contactForm.user_id = this.singleMusician.id;
+                this.reviewForm.user_id = this.singleMusician.id;
+                this.voteForm.user_id = this.singleMusician.id;
+                console.log(this.singleMusician);
+            } catch (error) {
+                console.error('Errore durante la chiamata API:', error);
+            }
+        },
+        async sendMessage() {
+            this.isSubmitting = true;
+            try {
+                const response = await axios.post(`${this.apiUrl}messages`, this.contactForm);
+                this.successMessage = 'Messaggio inviato con successo';
+                this.resetForm();
+            } catch (error) {
+                this.errorMessage = 'Errore durante l\'invio del messaggio';
+                console.error('Errore durante l\'invio del messaggio:', error);
+            } finally {
+                this.isSubmitting = false;
+            }
+        },
+        async submitReview() {
+            if (this.reviewForm.description && this.reviewForm.firstname && this.reviewForm.lastname) {
+                this.isSubmitting = true;
+                try {
+                const response = await axios.post(`${this.apiUrl}reviews`, this.reviewForm);
+                this.successMessage = 'Recensione inviata con successo';
+                this.resetReviewForm();
+                this.submitVote();
+                } catch (error) {
+                this.errorMessage = 'Errore durante l\'invio della recensione';
+                console.error('Errore durante l\'invio della recensione:', error);
+                } finally {
+                this.isSubmitting = false;
+                }
+            }
+        },
+        async submitVote() {
+            this.isSubmitting = true;
+            try {
+                const response = await axios.post(`${this.apiUrl}votes`, this.voteForm);
+                console.log('Voto inviato con successo:', response.data);
+            } catch (error) {
+                console.error('Errore durante l\'invio del voto:', error);
+            } finally {
+                this.isSubmitting = false;
+            }
+        },
+        resetForm() {
+            this.contactForm = {
+                firstname: '',
+                lastname: '',
+                email: '',
+                message: '',
+                user_id: this.singleMusician.id
+            };
+        },
+        resetReviewForm() {
+            this.reviewForm = {
+                firstname: '',
+                lastname: '',
+                description: '',
+                user_id: this.singleMusician.id
+            };
+        },
+        toggleReviewForm() {
+            this.showReviewForm = !this.showReviewForm;
+        },
+        closeReviewForm() {
+            this.showReviewForm = false;
+        },
+        setVote(star) {
+            this.activeStar = star; // Imposta la stella attiva al passaggio del mouse
+        },
+        setActiveStar(star) {
+            if (!this.voteForm.vote) {
+                this.activeStar = star; // Imposta la stella attiva solo se il voto non è stato già assegnato
+            }
         }
-      }
     },
-    async submitVote() {
-      this.isSubmitting = true;
-      try {
-        const response = await axios.post(`${this.apiUrl}votes`, this.voteForm);
-        console.log('Voto inviato con successo:', response.data);
-      } catch (error) {
-        console.error('Errore durante l\'invio del voto:', error);
-      } finally {
-        this.isSubmitting = false;
-      }
-    },
-    resetForm() {
-      this.contactForm = {
-        firstname: '',
-        lastname: '',
-        email: '',
-        message: '',
-        user_id: this.singleMusician.id
-      };
-    },
-    resetReviewForm() {
-      this.reviewForm = {
-        firstname: '',
-        lastname: '',
-        description: '',
-        user_id: this.singleMusician.id
-      };
-    },
-    toggleReviewForm() {
-      this.showReviewForm = !this.showReviewForm;
-    },
-    closeReviewForm() {
-      this.showReviewForm = false;
+    created() {
+        this.fetchUserData();
     }
-  },
-  created() {
-    this.fetchUserData();
-  }
 };
 </script>
+
 
 <template>
     <div>
@@ -164,9 +176,11 @@ export default {
                                     <p class="card-text pe-4">{{ review.description }}</p>
                                     <!-- Stampa le stelle in base al voto della recensione corrente -->
                                     <div class="stars-container">
-                                        <span v-for="i in parseInt(singleMusician.votes[index].vote)">
-                                            <i class="fa-solid fa-star"></i>
+                                        <span v-for="i in parseInt(singleMusician.votes[index].vote)" class="star-reviews">
+                                            <!-- <i class="fa-solid fa-star"></i> -->
+                                            <span class="star-reviews"></span>
                                         </span>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -179,19 +193,25 @@ export default {
             <section v-if="showReviewForm" id="sectionReviews">
                 <div class="container">
                     <div class="row justify-content-center py-2 px-3">
-                        <div class="col-12 px-4 py-2 w-50 mb-3">
-                            <form @submit.prevent="submitReview" class="review-form d-flex flex-column p-4 align-items-center">
-                                <input type="text" v-model="reviewForm.firstname" id="firstname" name="firstname" class="text-center" placeholder="Inserisci il tuo nome">
-                                <input type="text" v-model="reviewForm.lastname" id="lastname" name="lastname" class="text-center" placeholder="Inserisci il tuo cognome">
-                                <input type="text" v-model="reviewForm.description" id="description" name="description" class="text-center" placeholder="Inserisci la tua recensione">
-                                <input type="number" v-model="voteForm.vote" name="vote"  placeholder="Vote" class="form-input" min="1" max="5">
-                                <button type="submit" class="form-button btn-send-review mt-3">Invia Recensione</button>
-                                <button type="button" @click="closeReviewForm" class="form-button btn-close-review">
-                                    <i class="fa-solid fa-xmark"></i>
-                                    <!-- <i class="fa-solid fa-xmark fa-beat-fade hidden"></i> -->
-                                </button>
-                            </form>
+                    <div class="col-12 px-4 py-2 w-50 mb-3">
+                        <form @submit.prevent="submitReview" class="review-form d-flex flex-column p-4 align-items-center">
+                        <input type="text" v-model="reviewForm.firstname" id="firstname" name="firstname" class="text-center" placeholder="Inserisci il tuo nome">
+                        <input type="text" v-model="reviewForm.lastname" id="lastname" name="lastname" class="text-center" placeholder="Inserisci il tuo cognome">
+                        <input type="text" v-model="reviewForm.description" id="description" name="description" class="text-center" placeholder="Inserisci la tua recensione">
+                                            
+                        <!-- Palline per selezionare il voto -->
+                        <div class="rating-input">
+                            <span class="star" v-for="star in 5" :key="star" @click="setVote(star)" @mouseover="setActiveStar(star)">
+                            <span class="star-reviews" :class="{ 'active': star <= activeStar, 'disabled': star > activeStar }"></span>
+                            </span>
                         </div>
+                        
+                        <button type="submit" class="form-button btn-send-review mt-3">Invia Recensione</button>
+                        <button type="button" @click="closeReviewForm" class="form-button btn-close-review">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        </form>
+                    </div>
                     </div>
                 </div>
             </section>
@@ -271,6 +291,7 @@ export default {
         font-weight: bold;
     }
 }
+
 #sectionReviews{
     .review-form{
     margin-bottom: 20px;
@@ -299,6 +320,17 @@ export default {
         right: 10px;
         }
 
+    }
+    .star-reviews{
+    display: inline-block;
+    margin-right: 8px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #BADFDA;
+    }
+    .active{
+        background-color: green;
     }
     
 }
