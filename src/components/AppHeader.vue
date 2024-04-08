@@ -36,6 +36,11 @@ export default {
 <style lang="scss" scoped>
 header{
     background-color: #21252B;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
     .logo-container{
         width: 100%;
         background-image: url('../../public/Img/LogoBMusic.png');
