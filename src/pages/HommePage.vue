@@ -194,9 +194,9 @@ export default {
             </div>
             </div>
         </div>
-        </section>
-        <section class="mt-5">
-        <button @click="openModal" class="btn btn-primary">Filtra per ruolo</button>
+      </section>
+      <section class="mt-5">
+        <button @click="openModal" class="btn btn-dark mb-3">Filtra per ruolo</button>
     
             <!-- Modale -->
             <div class="modal" tabindex="-1" role="dialog" style="display: block;" v-if="modalVisible">
@@ -226,9 +226,15 @@ export default {
                                 <div class="card">
                                     <!-- Contenuto della card -->
                                     <div class="card-body">
-                                    <h5 class="card-title">{{ musician.name }}</h5>
-                                    <p class="card-text">{{ musician.city }}</p>
-                                    <router-link :to="{ name: 'profile', params: { name: musician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+                                      <div class="card-top">
+                                        <h5 class="card-title">{{ musician.name }}</h5>
+                                        <p class="card-text">{{ musician.city }}</p>
+                                      </div>
+                                    
+                                    <div class="card-button">
+                                      <router-link :to="{ name: 'profile', params: { name: musician.name } }" class="btn btn-dark btn-sm">Vedi Profilo</router-link>
+                                    </div>
+                                    
                                     </div>
                                 </div>
                                 </div>
@@ -239,7 +245,7 @@ export default {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="closeModal">Chiudi</button>
+                            <button type="button" class="btn btn-dark" @click="closeModal">Chiudi</button>
                         </div>
                     </div>
                 </div>
@@ -384,5 +390,18 @@ p {
 }
 .card-img-top {
   max-height: 200px;
+}
+
+.card {
+  height: 250px;
+  margin-bottom: 10px;
+}
+
+.card-top {
+  height: 150px;
+}
+
+.card-button {
+  height: 100px;
 }
 </style>
