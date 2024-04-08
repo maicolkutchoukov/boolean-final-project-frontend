@@ -2,28 +2,67 @@
 
 <script>
 import axios from 'axios';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import { Pagination, Navigation } from 'swiper/modules';
 
 export default {
     data() {
         return {
-            allMusicians:[]
+        allMusicians: [],
+        allRoles: [],
+        selectedRole: null,
+        loading: false
+        };
+    },
+    computed: {
+        filteredMusicians() {
+        if (this.selectedRole) {
+            return this.allMusicians.filter(musician => musician.roles.some(role => role.id === this.selectedRole));
+        } else {
+            return [];
+        }
+        }
+    },
+    methods: {
+        async searchByRole() {
+        if (this.selectedRole) {
+            this.loading = true;
+            try {
+            const response = await axios.get('http://127.0.0.1:8000/api/users', {
+                params: {
+                role: this.selectedRole
+                }
+            });
+            this.allMusicians = response.data.results.data;
+            } catch (error) {
+            console.error('Errore durante la chiamata API:', error);
+            } finally {
+            this.loading = false;
             }
+        }
         },
-        mounted(){
-        
-            axios.get('http://127.0.0.1:8000/api/users') // URL DELL'API
-            .then((response) => {
-                console.log(response.data.results.data)
-                this.allMusicians = response.data.results.data
-            })
-        
+        async getRoles() {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/roles');
+            this.allRoles = response.data.results;
+        } catch (error) {
+            console.error('Errore durante la chiamata API:', error);
+        }
+        },
+        getProfilePicture(musician) {
+        return musician.user_details && musician.user_details.picture ? 'http://127.0.0.1:8000/storage/' + musician.user_details.picture : '';
+        },
+        async loadMusicians() {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/users');
+            this.allMusicians = response.data.results.data;
+        } catch (error) {
+            console.error('Errore durante il caricamento dei musicisti:', error);
+        }
+        }
+    },
+    created() {
+        this.getRoles();
+        this.loadMusicians(); // Chiamata per caricare i musicisti all'avvio del componente
     }
-    
 };
 </script>
 
@@ -149,6 +188,46 @@ export default {
             </div>
         </div>
     </section>
+    <div class="container-fluid">
+        <h2 class="p-5 fw-bold">Trova artisti o band per ruolo</h2>
+        <!-- Form per la ricerca per ruolo -->
+        <form @submit.prevent="searchByRole">
+            <div class="mb-5">
+                <!-- Dropdown per selezionare il ruolo -->
+                <select v-model="selectedRole" class="form-select w-50">
+                    <option disabled value="">Seleziona un ruolo</option>
+                    <option v-for="role in allRoles" :key="role.id" :value="role.id">{{ role.title }}</option>
+                </select>
+            </div>
+        </form>
+        <!-- Risultati della ricerca -->
+        <div v-if="!loading" class="container-fluid">
+            <h2 class="p-5 fw-bold">Risultati della ricerca</h2>
+        <div class="row g-3">
+            <div class="col-3" v-for="musician in filteredMusicians" :key="musician.id">
+                <div class="card">
+                    <!-- Immagine del musicista -->
+                    <img :src="getProfilePicture(musician)" class="card-img-top" :alt="'Immagine di ' + musician.name">
+                    <div class="card-body">
+                    <!-- Nome del musicista -->
+                    <h5 class="card-title">{{ musician.name }}</h5>
+                    <!-- Città del musicista -->
+                    <p class="card-text">{{ musician.city }}</p>
+                    <!-- Link al profilo del musicista -->
+                    <router-link :to="{ name: 'profile', params: { name: musician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!-- Messaggio di caricamento -->
+        <div v-if="loading" class="loading-overlay">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Caricamento...</span>
+            </div>
+            <p>Caricamento in corso...</p>
+        </div>
+    </div>
     <div class="scroll-watcher"></div>
 </template>
 
@@ -270,5 +349,32 @@ body {
       transform: translateY(100vh);
     }
   }
+  .loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7); /* Trasparenza per un aspetto sfumato */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Assicura che l'overlay di caricamento sia in primo piano */
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+p {
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.card-img-top {
+  max-height: 200px;
+}
+
 </style>
 
