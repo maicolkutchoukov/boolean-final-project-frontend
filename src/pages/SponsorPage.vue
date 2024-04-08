@@ -6,6 +6,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import braintree from 'braintree-web';
 
 export default {
     components: {
@@ -18,6 +19,53 @@ export default {
         modules: [Autoplay, Pagination, Navigation],
     };
   },
+  methods: {
+    initializeBraintree() {
+      braintree.client.create({
+        authorization: '8gybb77vxwvtd4yc',
+      }, (err, clientInstance) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        braintree.hostedFields.create({
+          client: clientInstance,
+          fields: {
+            number: {
+              selector: '#card-number',
+              placeholder: 'Numero carta di credito',
+            },
+            cvv: {
+              selector: '#cvv',
+              placeholder: 'CVV',
+            },
+            expirationDate: {
+              selector: '#expiration-date',
+              placeholder: 'MM/YY',
+            },
+          },
+        }, (err, hostedFieldsInstance) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          this.hostedFieldsInstance = hostedFieldsInstance;
+        });
+      });
+    },
+    submitPayment() {
+      this.hostedFieldsInstance.tokenize((err, payload) => {
+        if (err) {
+          console.error(err);
+          // Gestisci l'errore
+        } else {
+          // Invia payload.nonce al server per elaborare il pagamento
+          console.log(payload.nonce);
+          // Aggiungi qui la logica per inviare il nonce al tuo server e gestire la transazione
+        }
+      });
+    }
+  },
     created() {
         axios.get('http://127.0.0.1:8000/api/users') // URL DELL'API
             .then((response) => {
@@ -28,8 +76,11 @@ export default {
             .catch(error => {
             console.error('Errore durante la chiamata API:', error);
             });
-    }
+    },
+    mounted() {
+    this.initializeBraintree();
     
+    }
 }
 </script>
 
@@ -148,7 +199,7 @@ export default {
             Da valutare se mantere lo swiper in pagina, perchè i profili
             sponsorizzati verranno riportati già in una sezione apposita in home
         -->
-        <div class="container">
+        <!-- <div class="container">
             <h4 class="fw-bold fs-4">PROFILI SPONSORIZZATI</h4>
 
             <swiper
@@ -178,97 +229,24 @@ export default {
                 
             </swiper>
 
-        </div>
-        <!--
-        <div class="row">
-            
-            <div class="col-3">
-                <div class="sponsor-user mb-3">
-                    <div class="card-result">
-                        
-                        
-                        <div class="card-result-top d-flex justify-content-center">
-                            <div class="user-icon">icon</div>
-                        </div>
-
-                        <div class="card-result-bottom mt-3">
-                            <h5>Nome artista</h5>
-                            <div>Descrizione</div>
-                            <div class="d-flex justify-content-around">
-                                <div>Città</div>
-                                <div>Valutazione</div>
-                            </div>                           
-                        </div>      
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-3">
-                <div class="sponsor-user mb-3">
-                    <div class="card-result">
-                        
-                        
-                        <div class="card-result-top d-flex justify-content-center">
-                            <div class="user-icon">icon</div>
-                        </div>
-
-                        <div class="card-result-bottom mt-3">
-                            <h5>Nome artista</h5>
-                            <div>Descrizione</div>
-                            <div class="d-flex justify-content-around">
-                                <div>Città</div>
-                                <div>Valutazione</div>
-                            </div>                           
-                        </div>      
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-3">
-                <div class="sponsor-user mb-3">
-                    <div class="card-result">
-                        
-                        
-                        <div class="card-result-top d-flex justify-content-center">
-                            <div class="user-icon">icon</div>
-                        </div>
-
-                        <div class="card-result-bottom mt-3">
-                            <h5>Nome artista</h5>
-                            <div>Descrizione</div>
-                            <div class="d-flex justify-content-around">
-                                <div>Città</div>
-                                <div>Valutazione</div>
-                            </div>                           
-                        </div>      
-                    </div>
-                </div>
-            </div> 
-
-            <div class="col-3">
-                <div class="sponsor-user mb-3">
-                    <div class="card-result">
-                        
-                        
-                        <div class="card-result-top d-flex justify-content-center">
-                            <div class="user-icon">icon</div>
-                        </div>
-
-                        <div class="card-result-bottom mt-3">
-                            <h5>Nome artista</h5>
-                            <div>Descrizione</div>
-                            <div class="d-flex justify-content-around">
-                                <div>Città</div>
-                                <div>Valutazione</div>
-                            </div>                           
-                        </div>      
-                    </div>
-                </div>
-            </div> 
-        </div>
-        -->
+        </div> -->
     </div>
-    
+    <div>
+        <div>
+    <form id="payment-form">
+      <div id="card-number">
+        <input type="text" id="card-number-input" placeholder="Numero carta di credito">
+      </div>
+      <div id="cvv">
+        <input type="text" id="cvv-input" placeholder="CVV">
+      </div>
+      <div id="expiration-date">
+        <input type="text" id="expiration-date-input" placeholder="MM/YY">
+      </div>
+      <button type="submit" @click.prevent="submitPayment">Paga</button>
+    </form>
+  </div>
+  </div>
     <!--<div class="scroll-watcher"></div>-->
 
 </template>

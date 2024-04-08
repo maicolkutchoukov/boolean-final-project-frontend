@@ -96,91 +96,91 @@ export default {
 
 <template>
     <div class="container-fluid">
-        <!-- Jumbotron SECTION -->
-        <div class="jumbotron p-0">
+      <!-- Jumbotron SECTION -->
+      <div class="jumbotron p-0">
         <h1 class="py-5 mb-3 display-4 fw-bold text-white px-5">Trova musicisti, gruppi, Dj e band per il tuo evento</h1>
-        </div>
-        <!-- How To Do Section -->
-        <section class="how-section">
+      </div>
+      <!-- How To Do Section -->
+      <section class="how-section">
         <div class="container-lg container-fluid p-5">
-            <h3 class="display-4 fw-bold mb-2">Come funziona?</h3>
-            <div class="row py-5 justify-content-between">
+          <h3 class="display-4 fw-bold mb-2">Come funziona?</h3>
+          <div class="row py-5 justify-content-between">
             <div class="col-lg-7 col-xxl-7 col-auto">
-                <p class="mb-1">
+              <p class="mb-1">
                 Benvenuti su BMusic, il palcoscenico digitale dove il talento musicale si incontra con le opportunità. 
                 Qui, ci impegniamo a promuovere e mettere in mostra musicisti e band di ogni genere e provenienza, 
                 offrendo loro la visibilità e le risorse necessarie per essere scoperti da potenziali fan, 
                 collaboratori e addetti ai lavori.
-                </p>
-                <p>
+              </p>
+              <p>
                 Che tu sia un musicista emergente desideroso di farsi strada nell'industria musicale o un appassionato 
                 alla ricerca di nuove melodie da scoprire, BMusic è il luogo ideale dove esplorare, 
                 connettersi e dare vita alla tua passione per la musica!
-                </p>
-                <p class="mb-5">
+              </p>
+              <p class="mb-5">
                 Attraverso la nostra piattaforma intuitiva e ricca di funzionalità, puoi esplorare un vasto panorama di talenti provenienti da ogni angolo del globo, 
                 ascoltare le loro tracce, leggere le loro esperienze e persino contattarli direttamente per opportunità di collaborazione o assunzione. <br>
                 Unisciti a noi su <strong>BMusic</strong> e immergiti in un mondo di musica senza confini, dove ogni nota racconta una storia e ogni artista ha la possibilità di brillare.
-                </p>
-                <div class="buttons-controller">
+              </p>
+              <div class="buttons-controller">
                 <a href="http://127.0.0.1:8000/login" class="btn-login">Accedi</a>
                 <a href="http://127.0.0.1:8000/register" class="btn-register">Registrati</a>
-                </div>
+              </div>
             </div>
             <div class="col-lg-5 col-xxl-5 col-auto how-section-img">
-                <!-- Qui potrebbe andare un'immagine di rappresentazione -->
+              <!-- Qui potrebbe andare un'immagine di rappresentazione -->
             </div>
-            </div>
+          </div>
         </div>
-        </section>
-        <section class="carousel-section">
+      </section>
+      <section class="carousel-section">
         <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false">
-            <div class="carousel-inner">
+          <div class="carousel-inner">
             <!-- Carosello per gli utenti sponsorizzati -->
             <div class="carousel-item"
-                v-for="(singleMusician, index) in sponsoredMusicians" 
-                :key="singleMusician.id" 
-                :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }"
-                :class="!index ? 'active' : ''">
-                <div class="row px-5 py-3 justify-content-between">
+                 v-for="(singleMusician, index) in sponsoredMusicians" 
+                 :key="singleMusician.id" 
+                 :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }"
+                 :class="!index ? 'active' : ''">
+              <div class="row px-5 py-3 justify-content-between">
                 <div class="col-9">
-                    <div class="text-white px-3 w-75">
+                  <div class="text-white px-3 w-75">
                     <h3 class="mb-4">{{ singleMusician.name }}</h3>
                     <div class="d-flex">
-                        <h6 v-for="(userRole, i) in singleMusician.roles">
+                      <h6 v-for="(userRole, i) in singleMusician.roles">
                         {{ userRole.title }}  
-                        </h6>
+                      </h6>
                     </div>
                     <p>
-                        {{ singleMusician.user_details.bio }}
+                      {{ singleMusician.user_details.bio }}
                     </p>
-                    </div>
+                  </div>
                 </div>
                 <div class="col-3 d-flex align-items-center justify-content-end">
-                    <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn">Vedi Profilo</router-link>
+                  <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn">Vedi Profilo</router-link>
                 </div>
-                </div>
+              </div>
             </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
-            </button>
+          </button>
         </div>
-        </section>
-        <section class="third-section py-5 fade-in">
+      </section>
+      <section class="third-section py-5 fade-in">
         <div class="container-fluid">
-            <div class="row">
+          <div class="row">
             <div class="col-4">
-                <!-- Qui potrebbe andare un'altra sezione o un'inserzione -->
+              <!-- Qui potrebbe andare un'altra sezione o un'inserzione -->
             </div>
             <div class="col-8 px-5">
-                <h2 class="mb-5 fw-bold fs-1">Mettiamoci all'opera!</h2>
-                <p class="mb-5">
+              <h2 class="mb-5 fw-bold fs-1">Mettiamoci all'opera!</h2>
+              <p class="mb-5">
                 Scopri il prossimo grande talento musicale su BMusic! 
                 Esplora una vasta gamma di musicisti e band da tutto il mondo, 
                 pronti a stupirti con le loro melodie uniche e le loro performance coinvolgenti. 
@@ -189,65 +189,47 @@ export default {
                 una fonte inesauribile di ispirazione. Scegli tra una varietà di generi musicali e 
                 lasciati trasportare dalle emozioni e dall'energia di talenti freschi e innovativi. 
                 Entra nel mondo della musica di BMusic oggi stesso e preparati a scoprire il prossimo grande successo!
-                </p>
-                <router-link :to="{ name: 'search' }" class="btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Cerca artisti o band</router-link>
+              </p>
+              <router-link :to="{ name: 'search' }" class="btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Cerca artisti o band</router-link>
             </div>
-            </div>
+          </div>
         </div>
-        </section>
-        <section class="mt-5">
-        <button @click="openModal" class="btn btn-primary">Filtra per ruolo</button>
-    
-            <!-- Modale -->
-            <div class="modal" tabindex="-1" role="dialog" style="display: block;" v-if="modalVisible">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Trova artisti o band per ruolo</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Form per la ricerca per ruolo -->
-                            <form @submit.prevent="searchByRole">
-                                <div class="mb-3">
-                                    <!-- Dropdown per selezionare il ruolo -->
-                                    <select v-model="selectedRole" @change="searchByRole" class="form-select">
-                                    <option disabled value="">Seleziona un ruolo</option>
-                                    <option v-for="role in allRoles" :key="role.id" :value="role.title">{{ role.title }}</option>
-                                    </select>
-                                </div>
-                            </form>
-                            <!-- Lista dei musicisti filtrati -->
-                            <div v-if="filteredMusicians.length > 0">
-                            <div class="row">
-                                <div class="col-3" v-for="(musician, index) in filteredMusicians" :key="index">
-                                <div class="card">
-                                    <!-- Contenuto della card -->
-                                    <div class="card-body">
-                                    <h5 class="card-title">{{ musician.name }}</h5>
-                                    <p class="card-text">{{ musician.city }}</p>
-                                    <router-link :to="{ name: 'profile', params: { name: musician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                            </div>
-                            <div v-else>
-                            Nessun musicista trovato.
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="closeModal">Chiudi</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
+      </section>
+      <section>
+        <div class="modal-body">
+  <!-- Form per la ricerca per ruolo -->
+  <form @submit.prevent="searchByRole">
+    <div class="mb-3">
+      <!-- Dropdown per selezionare il ruolo -->
+      <select v-model="selectedRole" @change="searchByRole" class="form-select">
+        <option disabled value="">Seleziona un ruolo</option>
+        <option v-for="role in allRoles" :key="role.id" :value="role.title">{{ role.title }}</option>
+      </select>
     </div>
-</template>
+  </form>
+  <!-- Lista dei musicisti filtrati -->
+  <div v-if="filteredMusicians.length > 0">
+    <div class="row">
+      <div class="col-3" v-for="(musician, index) in filteredMusicians" :key="index">
+        <div class="card">
+          <!-- Inserisci qui il contenuto della card -->
+          <div class="card-body">
+            <h5 class="card-title">{{ musician.name }}</h5>
+            <p class="card-text">{{ musician.city }}</p>
+            <router-link :to="{ name: 'profile', params: { name: musician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else>
+    Nessun musicista trovato.
+  </div>
+</div>
+      </section>
+      
+    </div>
+  </template>
 <style lang="scss" scoped>
 .jumbotron{
   min-height: 500px;
