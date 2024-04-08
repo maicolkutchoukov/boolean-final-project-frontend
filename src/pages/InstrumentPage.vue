@@ -1,21 +1,32 @@
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
-            instruments :[
-                'Chitarra',
-                'Mandolino',
-                'Basso',
-                'Batteria',
-                'Cantante',
-                'Chitarra',
-                'Mandolino',
-                'Basso',
-                'Batteria',
-                'Cantante'
-            ]
+            instruments: [],
+            instrumentPicPath:'http://127.0.0.1:8000/storage/'
         }
-     },
+    },
+    created() {
+        this.fetchRoles();
+        console.log(this.instruments)
+
+    },
+    methods: {
+        async fetchRoles() {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/roles');
+                this.instruments = response.data.results;
+                console.log(response)
+                /* this.instrumentPicPath = `http://127.0.0.1:8000/storage/${this.instruments.icon}`; */
+                console.log(this.instrumentPicPath)
+                console.log(this.instruments[1].icon)
+            } catch (error) {
+                console.error('Errore durante il recupero dei ruoli:', error);
+            }
+        }
+    }
 }
 </script>
 
@@ -32,12 +43,12 @@ export default {
                 <div class="card mb-3" style="max-width: 540px;">
                     <div class="row g-0">
                         <div class="col-md-4">
-                        <img src="..." class="img-fluid rounded-start" alt="Logo">
+                            <img :src="'http://127.0.0.1:8000/storage/' + instrument.icon" class="img-fluid rounded-start" alt="Logo">
                         </div>
                         <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ instrument }}</h5>
-                        </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ instrument.title }}</h5>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -45,7 +56,6 @@ export default {
         </div>
     </div>
     <div class="scroll-watcher"></div>
-
 </template>
 
 <style lang="scss" scoped>
