@@ -12,7 +12,7 @@ export default {
             lastname: '',
             email: '',
             message: '',
-            user_id: ''// --------
+            user_id: ''
         },
         reviewForm: {
             firstname: '',
@@ -40,8 +40,9 @@ export default {
                 this.contactForm.user_id = this.singleMusician.id;
                 this.reviewForm.user_id = this.singleMusician.id;
                 this.voteForm.user_id = this.singleMusician.id;
-                console.log(this.singleMusician);
+                console.log(this.singleMusician)
             } catch (error) {
+                this.errorMessage = 'Errore durante la chiamata API';
                 console.error('Errore durante la chiamata API:', error);
             }
         },
@@ -120,6 +121,10 @@ export default {
             if (!this.voteForm.vote) {
                 this.activeStar = star; // Imposta la stella attiva solo se il voto non è stato già assegnato
             }
+        },
+        clearMessages() {
+            this.errorMessage = '';
+            this.successMessage = '';
         }
     },
     created() {
@@ -193,6 +198,18 @@ export default {
                 </div>
             </section>
 
+            <div v-if="errorMessage || successMessage" class="message-container">
+                <div v-if="errorMessage" class="alert alert-danger" role="alert">
+                    {{ errorMessage }}
+                    <button @click="clearMessages" class="btn-close">&times;</button>
+                </div>
+                <div v-if="successMessage" class="alert alert-success" role="alert">
+                    {{ successMessage }}
+                    <button @click="clearMessages" class="btn-close">&times;</button>
+                </div>
+            </div>
+
+
             <!-- Form per inserire una recensione e un voto -->
             <section v-if="showReviewForm" id="sectionReviews" class="contact-section" style="background-color: white;">
                 <div class="container-fluid border">
@@ -221,6 +238,9 @@ export default {
                                     <span class="star-reviews" :class="{ 'active': star <= activeStar, 'disabled': star > activeStar }"></span>
                                 </span> -->
                                 <input type="number" name="vote" v-model="voteForm.vote" id="" min="1" max="5">
+                                <!-- <input type="number" v-model="voteForm.vote" min="0" max="5" @input="setActiveStar(parseInt($event.target.value))"> -->
+                                
+
                             </div>
                         </div>
                         <div class="text-center py-5">
@@ -235,7 +255,7 @@ export default {
                 <button @click="toggleReviewForm" v-if="!showReviewForm" class="btn-write-review">Scrivi una recensione</button>
             </div>
         </div>
-
+        
         <!-- Sezione Contatti -->
         <section class="contact-section">
             <div class="container">
@@ -397,6 +417,27 @@ export default {
             margin-right: 5px;
         }
     }
+}
+
+.message-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Assicurati che il messaggio sia in primo piano */
+    text-align: center;
+}
+
+.btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
 }
 
 </style>
