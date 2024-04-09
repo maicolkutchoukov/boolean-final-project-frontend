@@ -320,6 +320,38 @@ export default {
             </div>
       </div>
     </div>
+    <!-- Sezione Contatti -->
+    <section class="contact-section">
+            <div class="container">
+                <h2 class="text-white text-center py-5">Contatta l'utente!</h2>
+                <form @submit.prevent="sendMessage">
+                    <div class="mb-3">
+                        <label for="firstname" class="form-label text-white">Nome*</label>
+                        <input type="text" v-model="contactForm.firstname" class="form-control" id="firstname"
+                        placeholder="Inserisci il tuo nome..." required maxlength="74">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastname" class="form-label text-white">Cognome*</label>
+                        <input type="text" v-model="contactForm.lastname" class="form-control" id="lastname"
+                        placeholder="Inserisci il tuo cognome..." required maxlength="74">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label text-white">Email*</label>
+                        <input type="email" v-model="contactForm.email" class="form-control" id="email"
+                        placeholder="Inserisci la tua mail..." required maxlength="255">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label text-white">Messaggio*</label>
+                        <textarea v-model="contactForm.message" class="form-control" id="message" rows="5" required
+                        maxlength="2048"
+                        placeholder="Lascia un messaggio che verrà visualizzato dall'artista..."></textarea>
+                    </div>
+                    <div class="text-center py-5">
+                        <button type="submit" class="btn my-button btn-lg">Invia</button>
+                    </div>
+                </form>
+            </div>
+        </section>
 </template>
 
 <style lang="scss" scoped>
