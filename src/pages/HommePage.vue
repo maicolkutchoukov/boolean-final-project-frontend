@@ -98,7 +98,7 @@ export default {
     <div class="container-fluid">
         <!-- Jumbotron SECTION -->
         <div class="jumbotron p-0">
-        <h1 class="py-5 mb-3 display-4 fw-bold text-white px-5">Trova musicisti, gruppi, Dj e band per il tuo evento</h1>
+        <h1 class="py-5 mb-3 display-4 fw-bold text-white px-5">Trova musicisti, gruppi, <br> Dj e band per il tuo evento</h1>
         </div>
         <!-- How To Do Section -->
         <section class="how-section">
@@ -202,11 +202,8 @@ export default {
             <div class="modal" tabindex="-1" role="dialog" style="display: block;" v-if="modalVisible">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Trova artisti o band per ruolo</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
+                        <div class="modal-header text-center">
+                            <h2 class="modal-title fw-bold ">Trova artisti o band per ruolo</h2>
                         </div>
                         <div class="modal-body">
                             <!-- Form per la ricerca per ruolo -->
@@ -222,8 +219,11 @@ export default {
                             <!-- Lista dei musicisti filtrati -->
                             <div v-if="filteredMusicians.length > 0">
                             <div class="row">
-                                <div class="col-3" v-for="(musician, index) in filteredMusicians" :key="index">
-                                <div class="card">
+                                <div class="col-6" 
+                                  v-for="(musician, index) in filteredMusicians" 
+                                  :key="index"
+                                >
+                                <div class="card" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + musician.user_details.picture + ')' }">
                                     <!-- Contenuto della card -->
                                     <div class="card-body">
                                       <div class="card-top">
@@ -245,7 +245,7 @@ export default {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-dark" @click="closeModal">Chiudi</button>
+                            <a class="btn btn-dark" @click="closeModal">Chiudi</a>
                         </div>
                     </div>
                 </div>
@@ -255,6 +255,10 @@ export default {
     </div>
 </template>
 <style lang="scss" scoped>
+.container-fluid{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
 .jumbotron{
   min-height: 500px;
   background-image: url("../../public/Img/Hero.jpg");
@@ -347,11 +351,21 @@ export default {
 @keyframes scroll-watcher{
   to { scale: 1 1;}
 }
+.modal{
+  background-color: #21252b50;
+  height: 100vh;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.modal-dialog{
+  max-width: 70% !important;
+  background-color: #BADFDA;
+  border-radius: 50px;
+}
+.modal-content{
+  height: 100%;
+  padding: 50px 0;
 
-body {
-  margin: 0;
-  overflow: hidden;
-  background-color: #000;
 }
 .star {
   position: absolute;
@@ -395,6 +409,10 @@ p {
 .card {
   height: 250px;
   margin-bottom: 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  color: white;
 }
 
 .card-top {
@@ -403,5 +421,16 @@ p {
 
 .card-button {
   height: 100px;
+}
+.modal-footer{
+    .close{
+        width: 30px;
+        height: 30px;
+        line-height: 25px;
+        border-radius: 50%;
+    }
+}
+.modal-header{
+    justify-content: center;
 }
 </style>
