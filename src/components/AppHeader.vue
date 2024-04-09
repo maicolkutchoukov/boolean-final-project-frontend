@@ -48,7 +48,7 @@ export default {
 <style lang="scss" scoped>
 header {
 background-color: #21252B; color: #BADFDA; border: 1px solid #21252B;
-width: 100%; min-height: 90px;
+width: 100%; max-height: 80px;
 display: flex; align-items: center;
 position: sticky; top: 0; left: 0; right: 0; z-index: 999;
 .navbar-nav {
@@ -65,8 +65,6 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
     .header-nav-link {
         background-color: #21252B; color: #BADFDA; border-radius: 25px;
         font-weight: bold; text-decoration: none; padding: 15px 25px; margin: 0 15px;
-        position: relative; // Per consentire l'animazione di scorrere all'interno del link
-        transition: transform 0.5s ease-out;
         &:hover {
             background-color: #BADFDA; color: #21252B; border-color: 1px solid #21252B;
             }
