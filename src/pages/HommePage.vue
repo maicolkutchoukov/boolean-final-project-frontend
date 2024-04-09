@@ -164,7 +164,7 @@ export default {
                                 </div>
                             </div>
                         <div class="col-3 d-flex align-items-center justify-content-end">
-                            <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn">Vedi Profilo</router-link>
+                            <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn btn btn-dark rounded-5">Vedi Profilo</router-link>
                         </div>
                         </div>
                     </div>
