@@ -35,7 +35,7 @@ export default {
         </div>
 
         <p class="fw-bold fs-4">
-            Accendendo al profilo, nell'apposita sezione sponsor, l'utente ha la possibilità si scegliere tre pacchetti promozionali:
+            Accendendo al profilo, nell'apposita sezione sponsor, l'utente ha la possibilità di scegliere tre pacchetti promozionali:
         </p>
 
         <div class="row">
