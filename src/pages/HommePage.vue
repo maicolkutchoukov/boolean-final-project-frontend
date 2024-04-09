@@ -270,8 +270,8 @@ export default {
 </template>
 <style lang="scss" scoped>
 .container-fluid{
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 .jumbotron{
   min-height: 500px;
