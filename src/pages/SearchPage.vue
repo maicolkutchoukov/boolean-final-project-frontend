@@ -6,7 +6,6 @@
         /_____/ U
         
 -->
-
 <script>
 import axios from 'axios';
 
@@ -107,80 +106,85 @@ export default {
 </script>
 
 <template>
-    <div class="container-fluid">
-        <div v-if="loading" class="loading-overlay">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Caricamento...</span>
-            </div>
-            <p>Caricamento in corso...</p>
-        </div>
+    <transition name="fade">
+        <div class="container-fluid" :class="{ 'loading': loading }">
 
-        <h2 class="p-5 fw-bold">Trova artisti o band</h2>
-        <form @submit.prevent="search" class="mb-5">
-            <div class="row">
-                <div class="col-md-6 col-lg-4">
-                    <div class="mb-3">
-                        <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band...">
-                    </div>
+            <!-- Loader pagina -->
+            <div v-if="loading" class="loading-overlay">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Caricamento...</span>
                 </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="mb-3">
-                        <div class="star-rating text-center">
-                            <span class="star" v-for="star in 5" :key="star" @click="rating = star">
-                                {{ star <= rating ? '★' : '☆' }}
-                            </span>
+                <p>Caricamento in corso...</p>
+            </div> 
+
+            <h2 class="p-5 fw-bold">Trova artisti o band</h2>
+            <form @submit.prevent="search" class="mb-5">
+                <div class="row">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="mb-3">
+                            <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band...">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="mb-3">
+                            <div class="star-rating text-center">
+                                <span class="star" v-for="star in 5" :key="star" @click="rating = star">
+                                    {{ star <= rating ? '★' : '☆' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="mb-3">
+                            <input type="number" v-model="minimumReviews" class="form-control input-min-reviews" min="0" placeholder="Numero minimo di recensioni">
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="mb-3">
-                        <input type="number" v-model="minimumReviews" class="form-control input-min-reviews" min="0" placeholder="Numero minimo di recensioni">
+                <div class="container d-flex flex-wrap justify-content-center">
+                    <div v-for="(role, index) in allRoles" :key="index" class="mycol-md-2 my-2">
+                        <button class="button-roles"
+                                type="button"
+                                :class="{ 'active': selectedRoles.includes(role) }"
+                                @click="toggleRole(role)">
+                            {{ role.title }}
+                        </button>
                     </div>
                 </div>
-            </div>
-            <div class="container d-flex flex-wrap justify-content-center">
-                <div v-for="(role, index) in allRoles" :key="index" class="mycol-md-2 my-2">
-                    <button class="button-roles"
-                            type="button"
-                            :class="{ 'active': selectedRoles.includes(role) }"
-                            @click="toggleRole(role)">
-                        {{ role.title }}
-                    </button>
-                </div>
-            </div>
-        </form>
-        <button class="btn btn-secondary" @click="resetFilters">Reset</button>
+            </form>
+            <button class="btn btn-secondary" @click="resetFilters">Reset</button>
 
-        <div v-if="!loading" class="container-fluid">
-            <h2 class="p-5 fw-bold">Artisti in evidenza</h2>
-            <div class="row">
-                <div class="col-6 col-md-4 col-lg-3" v-for="(singleMusician, index) in filteredMusicians" :key="singleMusician.id">
-                    <div class="card">
-                        <img :src="getProfilePicture(singleMusician)" class="card-img-top" :alt="'Immagine di ' + singleMusician.name">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ singleMusician.name }}</h5>
-                            <p class="card-text">{{ singleMusician.city }}</p>
-                            <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+            <div v-if="!loading" class="container-fluid">
+                <h2 class="p-5 fw-bold">Artisti in evidenza</h2>
+                <transition-group name="fade" tag="div" class="row">
+                    <div class="col-6 col-md-4 col-lg-3" v-for="(singleMusician, index) in filteredMusicians" :key="singleMusician.id">
+                        <div class="card animated-card" :class="{ 'show-card': !loading }">
+                            <img :src="getProfilePicture(singleMusician)" class="card-img-top" :alt="'Immagine di ' + singleMusician.name">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ singleMusician.name }}</h5>
+                                <p class="card-text">{{ singleMusician.city }}</p>
+                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+                            </div>
                         </div>
                     </div>
+                </transition-group>
+            </div>
+
+            <!-- Paginazione -->
+            <div class="row justify-content-center mt-4" v-if="!loading">
+                <div class="col-auto">
+                    <button v-if="prevPageUrl" @click="getMusicians(prevPageUrl)" class="btn btn-secondary">Pagina precedente</button>
+                </div>
+                <div class="col-auto">
+                    <button v-if="nextPageUrl" @click="getMusicians(nextPageUrl)" class="btn btn-secondary">Pagina successiva</button>
                 </div>
             </div>
         </div>
-
-        <!-- Paginazione -->
-        <div class="row justify-content-center mt-4" v-if="!loading">
-            <div class="col-auto">
-                <button v-if="prevPageUrl" @click="getMusicians(prevPageUrl)" class="btn btn-secondary">Pagina precedente</button>
-            </div>
-            <div class="col-auto">
-                <button v-if="nextPageUrl" @click="getMusicians(nextPageUrl)" class="btn btn-secondary">Pagina successiva</button>
-            </div>
-        </div>
-    </div>
+    </transition>
 </template>
 
 
 <style lang="scss" scoped>
+
 .mycol-2 {
     width: calc((100% / 5) - 40px );
     margin: 10px 20px;
@@ -234,5 +238,34 @@ export default {
         margin-top: 10px;
         font-size: 1rem;
     }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+.container-fluid {
+    opacity: 1;
+    transition: opacity 2.5s ease; /* Aggiungi transizione per l'opacità */
+}
+
+.loading {
+    opacity: 2.5; /* Opacità ridotta durante il caricamento */
+}
+
+/* Animazione per le card */
+.animated-card {
+    transform: scale(0.8);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    transition-delay: 0.2s; /* Aggiungi un ritardo di 0.2 secondi */
+}
+
+.show-card {
+    transform: scale(1);
+    opacity: 1;
 }
 </style>
