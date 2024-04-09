@@ -1,71 +1,15 @@
 <script>
 
 import axios from 'axios';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-import braintree from 'braintree-web';
 
 export default {
-    components: {
-    Swiper,
-    SwiperSlide,
+    data() {
+        return {
+            allMusicians: [],
+        };
     },
-  data() {
-    return {
-        allMusicians: [],
-        modules: [Autoplay, Pagination, Navigation],
-    };
-  },
-  methods: {
-    initializeBraintree() {
-      braintree.client.create({
-        authorization: '8gybb77vxwvtd4yc',
-      }, (err, clientInstance) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        braintree.hostedFields.create({
-          client: clientInstance,
-          fields: {
-            number: {
-              selector: '#card-number',
-              placeholder: 'Numero carta di credito',
-            },
-            cvv: {
-              selector: '#cvv',
-              placeholder: 'CVV',
-            },
-            expirationDate: {
-              selector: '#expiration-date',
-              placeholder: 'MM/YY',
-            },
-          },
-        }, (err, hostedFieldsInstance) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-          this.hostedFieldsInstance = hostedFieldsInstance;
-        });
-      });
+    methods: {
     },
-    submitPayment() {
-      this.hostedFieldsInstance.tokenize((err, payload) => {
-        if (err) {
-          console.error(err);
-          // Gestisci l'errore
-        } else {
-          // Invia payload.nonce al server per elaborare il pagamento
-          console.log(payload.nonce);
-          // Aggiungi qui la logica per inviare il nonce al tuo server e gestire la transazione
-        }
-      });
-    }
-  },
     created() {
         axios.get('http://127.0.0.1:8000/api/users') // URL DELL'API
             .then((response) => {
@@ -76,10 +20,6 @@ export default {
             .catch(error => {
             console.error('Errore durante la chiamata API:', error);
             });
-    },
-    mounted() {
-    this.initializeBraintree();
-    
     }
 }
 </script>
@@ -231,22 +171,6 @@ export default {
 
         </div> -->
     </div>
-    <div>
-        <div>
-    <form id="payment-form">
-      <div id="card-number">
-        <input type="text" id="card-number-input" placeholder="Numero carta di credito">
-      </div>
-      <div id="cvv">
-        <input type="text" id="cvv-input" placeholder="CVV">
-      </div>
-      <div id="expiration-date">
-        <input type="text" id="expiration-date-input" placeholder="MM/YY">
-      </div>
-      <button type="submit" @click.prevent="submitPayment">Paga</button>
-    </form>
-  </div>
-  </div>
     <!--<div class="scroll-watcher"></div>-->
 
 </template>
