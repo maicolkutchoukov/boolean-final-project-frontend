@@ -42,10 +42,10 @@ export default {
             <div class="col-6" v-for="(instrument, i) in instruments" :key="i">
                 <div class="card mb-3" style="max-width: 540px;">
                     <div class="row g-0">
-                        <div class="col-md-4">
+                        <div class="col-md-4 d-flex align-items-center justify-content-center">
                             <img :src="'http://127.0.0.1:8000/storage/' + instrument.icon" class="img-fluid rounded-start" alt="Logo">
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-8 d-flex align-items-center justify-content-center">
                             <div class="card-body">
                                 <h5 class="card-title">{{ instrument.title }}</h5>
                             </div>
@@ -59,5 +59,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-
+img{
+    max-width: 100px;
+}
 </style>
