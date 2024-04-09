@@ -4,31 +4,32 @@ import axios from 'axios';
 export default {
     data() {
         return {
-        apiUrl: 'http://127.0.0.1:8000/api/',
-        singleMusician: null,
-        demoPath: '',
-        contactForm: {
-            firstname: '',
-            lastname: '',
-            email: '',
-            message: '',
-            user_id: ''
-        },
-        reviewForm: {
-            firstname: '',
-            lastname: '',
-            description: '',
-            user_id: ''
-        },
-        voteForm: {
-            user_id: '',
-            vote: ''
-        },
-        isSubmitting: false,
-        errorMessage: '',
-        successMessage: '',
-        showReviewForm: false,
-        activeStar: null // Nuova proprietà per gestire la stella attiva
+            apiUrl: 'http://127.0.0.1:8000/api/',
+            singleMusician: null,
+            demoPath: '',
+            contactForm: {
+                firstname: '',
+                lastname: '',
+                email: '',
+                message: '',
+                user_id: ''
+            },
+            reviewForm: {
+                firstname: '',
+                lastname: '',
+                description: '',
+                user_id: ''
+            },
+            voteForm: {
+                user_id: '',
+                vote: ''
+            },
+            isSubmitting: false,
+            errorMessage: '',
+            successMessage: '',
+            showReviewForm: false,
+            activeStar: null, // Nuova proprietà per gestire la stella attiva
+            averageVote: 0, // Variabile per memorizzare la media dei voti
         };
     },
     methods: {
@@ -40,7 +41,8 @@ export default {
                 this.contactForm.user_id = this.singleMusician.id;
                 this.reviewForm.user_id = this.singleMusician.id;
                 this.voteForm.user_id = this.singleMusician.id;
-                console.log(this.singleMusician)
+                this.calculateRoundedAverageVote(); // Calcola la media dei voti quando si caricano i dati dell'utente
+                console.log(this.singleMusician);
             } catch (error) {
                 this.errorMessage = 'Errore durante la chiamata API';
                 console.error('Errore durante la chiamata API:', error);
@@ -59,24 +61,41 @@ export default {
                 this.isSubmitting = false;
             }
         },
+        // Metodo per inviare la recensione
         async submitReview() {
-            if (this.reviewForm.description && this.reviewForm.firstname && this.reviewForm.lastname) {
-                this.isSubmitting = true;
+            // Verifica se sono stati inseriti sia la recensione che il voto
+            const hasReview = this.reviewForm.description.trim() !== '';
+            const hasVote = this.voteForm.vote !== '';
+            // Verifica se almeno uno dei due è stato inserito
+            if (!hasReview && !hasVote) {
+                this.errorMessage = 'Inserisci almeno una recensione o un voto.';
+                return;
+            }
+            // Imposta l'id dell'utente nella recensione e nel voto
+            this.reviewForm.user_id = this.singleMusician.id;
+            this.voteForm.user_id = this.singleMusician.id;
+            // Invia la recensione solo se è stata inserita
+            if (hasReview) {
                 try {
-                const response = await axios.post(`${this.apiUrl}reviews`, this.reviewForm);
-                this.successMessage = 'Recensione inviata con successo';
-                this.resetReviewForm();
-                this.submitVote();
+                    const response = await axios.post(`${this.apiUrl}reviews`, this.reviewForm);
+                    this.successMessage = 'Recensione inviata con successo';
+                    // Pulisce il form della recensione dopo l'invio
+                    this.resetReviewForm();
+                    // Invia il voto solo se è stato inserito
+                    if (hasVote) {
+                        await this.submitVote();
+                    }
                 } catch (error) {
-                this.errorMessage = 'Errore durante l\'invio della recensione';
-                console.error('Errore durante l\'invio della recensione:', error);
-                } finally {
-                this.isSubmitting = false;
+                    this.errorMessage = 'Errore durante l\'invio della recensione';
+                    console.error('Errore durante l\'invio della recensione:', error);
                 }
+            } else {
+                // Invia il voto se non è stata inserita la recensione
+                await this.submitVote();
             }
         },
+        // Metodo per inviare il voto
         async submitVote() {
-            this.isSubmitting = true;
             try {
                 const response = await axios.post(`${this.apiUrl}votes`, this.voteForm);
                 console.log('Voto inviato con successo:', response.data);
@@ -87,9 +106,33 @@ export default {
                     this.errorMessage = 'Errore durante l\'invio del voto.';
                 }
                 console.error('Errore durante l\'invio del voto:', error);
-            } finally {
-                this.isSubmitting = false;
             }
+        },
+        // Metodo per calcolare la media dei voti
+        calculateRoundedAverageVote() {
+            if (this.singleMusician && this.singleMusician.votes && this.singleMusician.votes.length > 0) {
+                let totalVotes = 0;
+
+                for (let i = 0; i < this.singleMusician.votes.length; i++) {
+                    const elem = parseInt(this.singleMusician.votes[i].vote);
+                    if (!isNaN(elem)) {
+                        totalVotes += elem;
+                    }
+                }
+
+                const average = totalVotes / this.singleMusician.votes.length;
+                console.log(average)
+                // Arrotonda la media al 0.5 più vicino
+                this.averageVote = Math.round(average * 2) / 2;
+
+                console.log('Media voti:', this.averageVote);
+            } else {
+                console.log('Nessun voto disponibile.');
+            }
+        },
+        // Metodo per arrotondare un numero alla metà più vicina
+        roundToHalf(num) {
+            return Math.round(num * 2) / 2;
         },
         resetForm() {
             this.contactForm = {
@@ -136,112 +179,133 @@ export default {
 
 <template>
     <div>
-        <div v-if="singleMusician && singleMusician.user_details" class="container-fluid user-img d-flex justify-content-center flex-column mb-5"
-            :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }">
-    
-            <h1 class="text-white ms-5">{{ singleMusician.name }}</h1>
-            <h2 class="text-white ms-5">{{ singleMusician.city }}</h2>
-        </div>
-        <div class="container mb-5">
-            <div class="row justify-content-between ">
-                <div class="col-6">
-                    <h2 class="fw-bold pt-3 mb-4">Bio</h2>
-                    <p v-if="singleMusician && singleMusician.user_details">{{ singleMusician.user_details.bio }}</p>
-                </div>
-                <div class="col-4 text-end">
-                    <h2 class="fw-bold pt-3 mb-4 ">Competenze</h2>
-                    <div>
-                    <span v-if="singleMusician && singleMusician.roles" v-for="(role, i) in singleMusician.roles" :key="i" >
-                        <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="instrument-pic ">
+      <!-- Immagine e informazioni sul musicista -->
+      <div
+        v-if="singleMusician && singleMusician.user_details"
+        class="container-fluid user-img d-flex justify-content-center flex-column mb-5 bounce-in"
+        :style="{
+          'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')'
+        }"
+      >
+        <!-- Nome e città -->
+        <h1 class="text-white ms-5 bounce-in">{{ singleMusician.name }}</h1>
+        <h2 class="text-white ms-5 bounce-in">{{ singleMusician.city }}</h2>
+      </div>
+      <!-- Altre informazioni sul musicista -->
+      <div class="container mb-5">
+        <div class="row justify-content-between ">
+            <div class="col-6">
+                <h2 class="fw-bold pt-3 mb-4">Bio</h2>
+                <p v-if="singleMusician && singleMusician.user_details">{{ singleMusician.user_details.bio }}</p>
+            </div>
+            <div class="col-4 text-end">
+                <h2 class="fw-bold pt-3 mb-4 ">Competenze</h2>
+                <div>
+                    <span v-if="singleMusician && singleMusician.roles" v-for="(role, i) in singleMusician.roles" :key="i" class="bounce-in">
+                        <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="instrument-pic">
                     </span>
-                    </div>
-                </div>
-                <div class="col-12 mb-5">
-                    <h2 class="fw-bold pt-3 mb-4">Demo</h2>
-                    <audio v-if="singleMusician && singleMusician.user_details" controls class="w-100 ">
-                    <source :src="demoPath" type="audio/mpeg">
-                    </audio>
-                </div>
-                <div class="col-12 mb-5">
-                    <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
-                    <div v-if="singleMusician && singleMusician.user_details">
-                    <i class="fa-solid fa-phone me-3"></i>
-                    Mail: {{ singleMusician.email }}
-                    </div>
-                    <div v-if="singleMusician && singleMusician.user_details">
-                    <i class="fa-solid fa-envelope me-3"></i>
-                    Cell: {{ singleMusician.user_details.cellphone }}
-                    </div>
                 </div>
             </div>
-            <section v-if="singleMusician && singleMusician.reviews" class="full-page-section mb-5">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12 p-0">
-                            <div class="reviews-container">
-                                <div class="reviews-wrapper">
-                                    <!-- Card di esempio -->
-                                    <div v-for="(review, index) in singleMusician.reviews" :key="index" class="review-item" style="background-color: #2E333A;">
-                                        <div class="review-content">
-                                            <h4 class="review-title" style="color: white;">{{ review.firstname + ' ' + review.lastname }}</h4>
-                                            <p class="review-description" style="color: white;">{{ review.description }}</p>
-                                        </div>
-                                        <!-- Stampa le stelle in base al voto della recensione corrente -->
-                                        <div class="stars-container">
-                                            <span v-if="singleMusician.votes[index]?.vote" v-for="i in parseInt(singleMusician.votes[index]?.vote)" class="star-reviews"></span>
-                                        </div>
+            <div class="col-12 mb-5">
+                <h2 class="fw-bold pt-3 mb-4">Demo</h2>
+                <audio v-if="singleMusician && singleMusician.user_details" controls class="w-100 ">
+                    <source :src="demoPath" type="audio/mpeg">
+                </audio>
+            </div>
+            <div class="col-12 mb-5">
+                <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
+                <div v-if="singleMusician && singleMusician.user_details">
+                    <i class="fa-solid fa-phone me-3"></i>
+                    Mail: {{ singleMusician.email }}
+                </div>
+                <div v-if="singleMusician && singleMusician.user_details">
+                    <i class="fa-solid fa-envelope me-3"></i>
+                    Cell: {{ singleMusician.user_details.cellphone }}
+                </div>
+            </div>
+        </div>
+        <!-- Sezione per le recensioni -->
+        <div class="d-flex justify-content-between" v-if="singleMusician && singleMusician.reviews">
+                            <h2 class="mb-5 fw-bold">Le mie recensioni</h2>
+                            <div>
+                                <div class="vote-rating">
+                                    <!-- Visualizza le palline riempite in base alla media dei voti -->
+                                    <span
+                                        v-for="index in 5"
+                                        :key="index"
+                                        :class="{
+                                        'filled': index <= averageVote,
+                                        'half-filled': index === Math.ceil(averageVote) && averageVote % 1 !== 0
+                                        }"
+                                        class="vote-star"
+                                        @click="setVote(index)"
+                                    >
+                                        ★
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+        <section v-if="singleMusician && singleMusician.reviews" class="full-page-section mb-5">
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 p-0">
+                        
+                        <div class="reviews-container">
+                            
+                            <div class="reviews-wrapper">
+                                <!-- Recensioni -->
+                                <div v-for="(review, index) in singleMusician.reviews" :key="index" class="review-item" style="background-color: #2E333A;">
+                                    <div class="review-content">
+                                        <!-- Nome e descrizione della recensione -->
+                                        <h4 class="review-title" style="color: white;">{{ review.firstname + ' ' + review.lastname }}</h4>
+                                        <p class="review-description" style="color: white;">{{ review.description }}</p>
                                     </div>
+                                    <!-- Voto della recensione -->
+                                    <!-- <div class="stars-container">
+                                        <span v-if="singleMusician.votes[index]?.vote" v-for="i in parseInt(singleMusician.votes[index]?.vote)" class="star-reviews"></span>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <div v-if="errorMessage || successMessage" class="message-container">
-                <div v-if="errorMessage" class="alert alert-danger" role="alert">
-                    {{ errorMessage }}
-                    <button @click="clearMessages" class="btn-close">&times;</button>
-                </div>
-                <div v-if="successMessage" class="alert alert-success" role="alert">
-                    {{ successMessage }}
-                    <button @click="clearMessages" class="btn-close">&times;</button>
-                </div>
             </div>
-
-
-            <!-- Form per inserire una recensione e un voto -->
+        </section>
+        <!-- Messaggi di errore/successo -->
+        <div v-if="errorMessage || successMessage" class="message-container">
+            <div v-if="errorMessage" class="alert alert-danger" role="alert">
+                {{ errorMessage }}
+                <button @click="clearMessages" class="btn-close">&times;</button>
+            </div>
+            <div v-if="successMessage" class="alert alert-success" role="alert">
+                {{ successMessage }}
+                <button @click="clearMessages" class="btn-close">&times;</button>
+            </div>
+        </div>
+            <!-- Form per scrivere una recensione -->
             <section v-if="showReviewForm" id="sectionReviews" class="contact-section" style="background-color: white;">
                 <div class="container-fluid border">
                     <h2 class="text-black text-center py-5">Scrivi una recensione</h2>
                     <form @submit.prevent="submitReview" class="contact-form">
+                        <!-- Input per nome e cognome -->
                         <div class="mb-3">
                             <label for="firstname" class="form-label text-black">Nome*</label>
-                            <input type="text" v-model="reviewForm.firstname" class="form-control" id="firstname"
-                                placeholder="Inserisci il tuo nome..." required maxlength="74">
+                            <input type="text" v-model="reviewForm.firstname" class="form-control" id="firstname" placeholder="Inserisci il tuo nome..." required maxlength="74">
                         </div>
                         <div class="mb-3">
                             <label for="lastname" class="form-label text-black">Cognome*</label>
-                            <input type="text" v-model="reviewForm.lastname" class="form-control" id="lastname"
-                                placeholder="Inserisci il tuo cognome..." required maxlength="74">
+                            <input type="text" v-model="reviewForm.lastname" class="form-control" id="lastname" placeholder="Inserisci il tuo cognome..." required maxlength="74">
                         </div>
+                        <!-- Input per recensione -->
                         <div class="mb-3">
-                            <label for="description" class="form-label text-black">Recensione*</label>
-                            <textarea v-model="reviewForm.description" class="form-control" id="description" rows="5" required
-                                maxlength="2048"
-                                placeholder="Inserisci la tua recensione..."></textarea>
+                            <label for="description" class="form-label text-black">Recensione</label>
+                            <textarea v-model="reviewForm.description" class="form-control" id="description" rows="5" maxlength="2048" placeholder="Inserisci la tua recensione..."></textarea>
                         </div>
+                        <!-- Input per voto -->
                         <div class="mb-3">
-                            <label class="form-label text-black">Voto*</label>
-                            <div class="rating-input">
-                                <!-- <span class="star" v-for="star in 5" :key="star" @click="setVote(star)" @mouseover="setActiveStar(star)">
-                                    <span class="star-reviews" :class="{ 'active': star <= activeStar, 'disabled': star > activeStar }"></span>
-                                </span> -->
-                                <input type="number" name="vote" v-model="voteForm.vote" id="" min="1" max="5">
-                                <!-- <input type="number" v-model="voteForm.vote" min="0" max="5" @input="setActiveStar(parseInt($event.target.value))"> -->
-                                
-
-                            </div>
+                            <label class="form-label text-black">Voto</label>
+                            <input type="number" name="vote" v-model="voteForm.vote" id="" min="1" max="5">
                         </div>
                         <div class="text-center py-5">
                             <button type="submit" class="btn button-send-review btn-lg">Invia Recensione</button>
@@ -250,44 +314,11 @@ export default {
                     </form>
                 </div>
             </section>
-    
+            <!-- Pulsante per scrivere una recensione -->
             <div class="d-flex justify-content-center">
-                <button @click="toggleReviewForm" v-if="!showReviewForm" class="btn-write-review">Scrivi una recensione</button>
+            <button @click="toggleReviewForm" v-if="!showReviewForm" class="btn-write-review">Scrivi una recensione</button>
             </div>
-        </div>
-        
-        <!-- Sezione Contatti -->
-        <section class="contact-section">
-            <div class="container">
-                <h2 class="text-white text-center py-5">Contatta l'utente!</h2>
-                <form @submit.prevent="sendMessage">
-                    <div class="mb-3">
-                        <label for="firstname" class="form-label text-white">Nome*</label>
-                        <input type="text" v-model="contactForm.firstname" class="form-control" id="firstname"
-                        placeholder="Inserisci il tuo nome..." required maxlength="74">
-                    </div>
-                    <div class="mb-3">
-                        <label for="lastname" class="form-label text-white">Cognome*</label>
-                        <input type="text" v-model="contactForm.lastname" class="form-control" id="lastname"
-                        placeholder="Inserisci il tuo cognome..." required maxlength="74">
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label text-white">Email*</label>
-                        <input type="email" v-model="contactForm.email" class="form-control" id="email"
-                        placeholder="Inserisci la tua mail..." required maxlength="255">
-                    </div>
-                    <div class="mb-3">
-                        <label for="message" class="form-label text-white">Messaggio*</label>
-                        <textarea v-model="contactForm.message" class="form-control" id="message" rows="5" required
-                        maxlength="2048"
-                        placeholder="Lascia un messaggio che verrà visualizzato dall'artista..."></textarea>
-                    </div>
-                    <div class="text-center py-5">
-                        <button type="submit" class="btn my-button btn-lg">Invia</button>
-                    </div>
-                </form>
-            </div>
-        </section>
+      </div>
     </div>
 </template>
 
@@ -439,5 +470,47 @@ export default {
     font-size: 1.2rem;
     line-height: 1.2rem;
 }
+
+.vote-rating {
+  display: flex;
+}
+
+.vote-star {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.filled {
+  color: gold;
+}
+
+.half-filled {
+  position: relative;
+}
+
+.half-filled::before {
+  content: '★';
+  position: absolute;
+  color: gold;
+  overflow: hidden;
+  width: 50%;
+  white-space: nowrap;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bounce-in {
+  animation: bounceIn 1.5s ease forwards;
+}
+
 
 </style>
