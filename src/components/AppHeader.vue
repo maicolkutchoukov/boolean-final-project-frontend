@@ -63,7 +63,7 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
 .my-navbar {
     display: flex; align-items: center; justify-content: space-between; flex-grow: 1;
     .header-nav-link {
-        background-color: #21252B; color: #BADFDA; border-radius: 25px; border: 1px solid #BADFDA;
+        background-color: #21252B; color: #BADFDA; border-radius: 25px;
         font-weight: bold; text-decoration: none; padding: 15px 25px; margin: 0 15px;
         position: relative; // Per consentire l'animazione di scorrere all'interno del link
         transition: transform 0.5s ease-out;
