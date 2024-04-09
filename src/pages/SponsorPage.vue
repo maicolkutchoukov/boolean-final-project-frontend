@@ -130,7 +130,7 @@ export default {
             </div>
 
             <div class="text-center">
-                <router-link :to="{ name: 'login' }" class="btn my-4 fw-bold">ACCEDI O REGISTRATI</router-link>
+                <a href="http://127.0.0.1:8000/login" class="btn btn-dark my-4 fw-bold">Accedi</a>
             </div>
         </div>
 
