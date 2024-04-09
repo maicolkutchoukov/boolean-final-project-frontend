@@ -13,7 +13,7 @@ export default {
 </script>
 
 <template>
-    <header>
+    <header class="">
       <nav class="navbar navbar-expand-lg navbar-dark my-navbar">
         <div class="container">
           <router-link :to="{ name: 'homme' }" class="navbar-brand">
@@ -48,7 +48,7 @@ export default {
 <style lang="scss" scoped>
 header {
 background-color: #21252B; color: #BADFDA; border: 1px solid #21252B;
-width: 100%; min-height: 100px;
+width: 100%; min-height: 90px;
 display: flex; align-items: center;
 position: sticky; top: 0; left: 0; right: 0; z-index: 999;
 .navbar-nav {
