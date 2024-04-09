@@ -2,27 +2,29 @@
 import axios from 'axios';
 
 export default {
-  data() {
-    return {
-      allMusicians: [],
-      allRoles: [],
-      sponsoredMusicians: [],
-      selectedRole: null,
-      loading: false,
-      modalVisible: false, // Aggiunta variabile di stato per gestire la visibilità della modale
-      filteredMusicians: []
-    };
-  },
+    data() {
+        return {
+            allMusicians: [],
+            allRoles: [],
+            sponsoredMusicians: [],
+            selectedRole: null,
+            loading: false,
+            modalVisible: false, // Aggiunta variabile di stato per gestire la visibilità della modale
+            filteredMusicians: [],
+            nextPageUrl: null,
+            prevPageUrl: null,
+        };
+    },
   computed: {
-    filteredMusicians() {
-      let filtered = this.allMusicians;
+        filteredMusicians() {
+        let filtered = this.allMusicians;
 
-      if (this.selectedRole) {
-        filtered = filtered.filter(musician => musician.roles.some(role => role.title === this.selectedRole));
-      }
+        if (this.selectedRole) {
+            filtered = filtered.filter(musician => musician.roles.some(role => role.title === this.selectedRole));
+        }
 
-      return filtered;
-    }
+        return filtered;
+        }
   },
   methods: {
     async getMusicians() {
@@ -58,24 +60,28 @@ export default {
     },
 
     async searchByRole() {
-  if (this.selectedRole) {
-    this.loading = true;
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/api/users', {
-        params: {
-          role: this.selectedRole
+        if (this.selectedRole) {
+            this.loading = true;
+            try {
+            const response = await axios.get('http://127.0.0.1:8000/api/users', {
+                params: {
+                role: this.selectedRole
+                }
+            });
+            this.filteredMusicians = response.data.results.data;
+            this.nextPageUrl = response.data.results.next_page_url;
+            this.prevPageUrl = response.data.results.prev_page_url;
+            } catch (error) {
+            console.error('Errore durante la chiamata API:', error);
+            } finally {
+            this.loading = false;
+            }
+        } else {
+            this.filteredMusicians = []; // Resetta la lista se il ruolo selezionato è vuoto
+            this.nextPageUrl = null; // Resetta i link di paginazione
+            this.prevPageUrl = null;
         }
-      });
-      this.filteredMusicians = response.data.results.data;
-    } catch (error) {
-      console.error('Errore durante la chiamata API:', error);
-    } finally {
-      this.loading = false;
-    }
-  } else {
-    this.filteredMusicians = []; // Resetta la lista se il ruolo selezionato è vuoto
-  }
-},
+    },
 
     openModal() {
       this.modalVisible = true; // Metodo per aprire la modale
@@ -104,7 +110,7 @@ export default {
         <section class="how-section">
         <div class="container-lg container-fluid p-5">
             <h3 class="display-4 fw-bold mb-2">Come funziona?</h3>
-            <div class="row py-5 justify-content-between">
+            <div class="row g-0 py-5 justify-content-between">
             <div class="col-lg-7 col-xxl-7 col-auto">
                 <p class="mb-1">
                 Benvenuti su BMusic, il palcoscenico digitale dove il talento musicale si incontra con le opportunità. 
@@ -136,32 +142,32 @@ export default {
         <section class="carousel-section">
             <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false">
                 <div class="carousel-inner">
-                <!-- Carosello per gli utenti sponsorizzati -->
-                <div class="carousel-item"
-                    v-for="(singleMusician, index) in sponsoredMusicians" 
-                    :key="singleMusician.id" 
-                    :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }"
-                    :class="!index ? 'active' : ''">
-                    <div class="row px-5 py-3 justify-content-between">
-                    <div class="col-9">
-                        <div class="text-white px-3 w-75">
-                        <h3 class="mb-4">{{ singleMusician.name }}</h3>
-                        <div class="d-flex">
-                            <h6 v-for="(userRole, i) in singleMusician.roles">
-                                {{ userRole.title }}<span v-if="i !== singleMusician.roles.length - 1">, </span>  
+                    <!-- Carosello per gli utenti sponsorizzati -->
+                    <div class="carousel-item"
+                        v-for="(singleMusician, index) in sponsoredMusicians" 
+                        :key="singleMusician.id" 
+                        :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }"
+                        :class="!index ? 'active' : ''">
+                        <div class="row g-0 px-5 py-3 justify-content-between">
+                            <div class="col-9">
+                                <div class="text-white px-3 w-75">
+                                    <h3 class="mb-4">{{ singleMusician.name }}</h3>
+                                    <div class="d-flex">
+                                        <h6 v-for="(userRole, i) in singleMusician.roles">
+                                            {{ userRole.title }}<span v-if="i !== singleMusician.roles.length - 1">, </span>  
 
-                            </h6>
+                                        </h6>
+                                    </div>
+                                    <p>
+                                        {{ singleMusician.user_details.bio }}
+                                    </p>
+                                </div>
+                            </div>
+                        <div class="col-3 d-flex align-items-center justify-content-end">
+                            <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn">Vedi Profilo</router-link>
                         </div>
-                        <p>
-                            {{ singleMusician.user_details.bio }}
-                        </p>
                         </div>
                     </div>
-                    <div class="col-3 d-flex align-items-center justify-content-end">
-                        <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn">Vedi Profilo</router-link>
-                    </div>
-                    </div>
-                </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -175,7 +181,7 @@ export default {
         </section>
         <section class="third-section py-5 fade-in">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row g-0">
             <div class="col-4">
                 <!-- Qui potrebbe andare un'altra sezione o un'inserzione -->
             </div>
@@ -219,30 +225,37 @@ export default {
                             </form>
                             <!-- Lista dei musicisti filtrati -->
                             <div v-if="filteredMusicians.length > 0">
-                            <div class="row">
-                                <div class="col-6" 
-                                  v-for="(musician, index) in filteredMusicians" 
-                                  :key="index"
-                                >
-                                <div class="card" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + musician.user_details.picture + ')' }">
-                                    <!-- Contenuto della card -->
-                                    <div class="card-body">
-                                      <div class="card-top">
-                                        <h5 class="card-title">{{ musician.name }}</h5>
-                                        <p class="card-text">{{ musician.city }}</p>
-                                      </div>
-                                    
-                                    <div class="card-button">
-                                      <router-link :to="{ name: 'profile', params: { name: musician.name } }" class="btn btn-dark btn-sm">Vedi Profilo</router-link>
-                                    </div>
-                                    
+                                <div class="row g-0">
+                                    <div class="col-6" 
+                                    v-for="(musician, index) in filteredMusicians" 
+                                    :key="index"
+                                    >
+                                        <div class="card" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + musician.user_details.picture + ')' }">
+                                            <!-- Contenuto della card -->
+                                            <div class="card-body">
+                                                <div class="card-top">
+                                                    <h5 class="card-title">{{ musician.name }}</h5>
+                                                    <p class="card-text">{{ musician.city }}</p>
+                                                </div>
+                                                <div class="card-button">
+                                                    <router-link :to="{ name: 'profile', params: { name: musician.name } }" class="btn btn-dark btn-sm">Vedi Profilo</router-link>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                </div>
-                            </div>
                             </div>
                             <div v-else>
                             Nessun musicista trovato.
+                            </div>
+                        </div>
+                        <!-- Paginazione -->
+                        <div class="row g-0 justify-content-center mt-4" v-if="!loading">
+                            <div class="col-auto">
+                                <button v-if="prevPageUrl" @click="getMusicians(prevPageUrl)" class="btn btn-secondary">Pagina precedente</button>
+                            </div>
+                            <div class="col-auto">
+                                <button v-if="nextPageUrl" @click="getMusicians(nextPageUrl)" class="btn btn-secondary">Pagina successiva</button>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -304,7 +317,7 @@ export default {
   background-position: center;
   position: relative;
   z-index: 0;
-  .row{
+  .row g-0{
     position: absolute;
     bottom: 0;
     z-index: 10;
