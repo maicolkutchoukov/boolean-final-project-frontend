@@ -27,36 +27,36 @@ export default {
         }
   },
   methods: {
-    async getMusicians() {
-      this.loading = true;
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/api/users');
-        this.allMusicians = response.data.results.data;
-      } catch (error) {
-        console.error('Errore durante la chiamata API:', error);
-      } finally {
-        this.loading = false;
-      }
+        async getMusicians() {
+        this.loading = true;
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/users');
+            this.allMusicians = response.data.results.data;
+        } catch (error) {
+            console.error('Errore durante la chiamata API:', error);
+        } finally {
+            this.loading = false;
+        }
     },
 
     async getRoles() {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/api/roles');
-        this.allRoles = response.data.results;
-        console.log(response)
-      } catch (error) {
-        console.error('Errore durante la chiamata API:', error);
-      }
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/roles');
+            this.allRoles = response.data.results;
+            console.log(response)
+        } catch (error) {
+            console.error('Errore durante la chiamata API:', error);
+        }
     },
 
     async getSponsoredMusicians() {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/api/sponsor');
-        console.log(response)
-        this.sponsoredMusicians = response.data.results;
-      } catch (error) {
-        console.error('Errore durante la chiamata API:', error);
-      }
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/sponsor');
+            console.log(response)
+            this.sponsoredMusicians = response.data.results;
+        } catch (error) {
+            console.error('Errore durante la chiamata API:', error);
+        }
     },
 
     async searchByRole() {
@@ -72,9 +72,9 @@ export default {
             this.nextPageUrl = response.data.results.next_page_url;
             this.prevPageUrl = response.data.results.prev_page_url;
             } catch (error) {
-            console.error('Errore durante la chiamata API:', error);
+                console.error('Errore durante la chiamata API:', error);
             } finally {
-            this.loading = false;
+                this.loading = false;
             }
         } else {
             this.filteredMusicians = []; // Resetta la lista se il ruolo selezionato è vuoto
@@ -108,47 +108,47 @@ export default {
         </div>
         <!-- How To Do Section -->
         <section class="how-section">
-        <div class="container-lg container-fluid p-5">
-            <h3 class="display-4 fw-bold mb-2">Come funziona?</h3>
-            <div class="row g-0 py-5 justify-content-between">
-            <div class="col-lg-7 col-xxl-7 col-auto">
-                <p class="mb-1">
-                Benvenuti su BMusic, il palcoscenico digitale dove il talento musicale si incontra con le opportunità. 
-                Qui, ci impegniamo a promuovere e mettere in mostra musicisti e band di ogni genere e provenienza, 
-                offrendo loro la visibilità e le risorse necessarie per essere scoperti da potenziali fan, 
-                collaboratori e addetti ai lavori.
-                </p>
-                <p>
-                Che tu sia un musicista emergente desideroso di farsi strada nell'industria musicale o un appassionato 
-                alla ricerca di nuove melodie da scoprire, BMusic è il luogo ideale dove esplorare, 
-                connettersi e dare vita alla tua passione per la musica!
-                </p>
-                <p class="mb-5">
-                Attraverso la nostra piattaforma intuitiva e ricca di funzionalità, puoi esplorare un vasto panorama di talenti provenienti da ogni angolo del globo, 
-                ascoltare le loro tracce, leggere le loro esperienze e persino contattarli direttamente per opportunità di collaborazione o assunzione. <br>
-                Unisciti a noi su <strong>BMusic</strong> e immergiti in un mondo di musica senza confini, dove ogni nota racconta una storia e ogni artista ha la possibilità di brillare.
-                </p>
-                <div class="buttons-controller">
-                <a href="http://127.0.0.1:8000/login" class="btn-login">Accedi</a>
-                <a href="http://127.0.0.1:8000/register" class="btn-register">Registrati</a>
+            <div class="container-lg container-fluid p-5">
+                <h3 class="display-4 fw-bold mb-2">Come funziona?</h3>
+                <div class="row g-0 py-5 justify-content-between">
+                    <div class="col-lg-7 col-xxl-7 col-auto">
+                        <p class="mb-1">
+                        Benvenuti su BMusic, il palcoscenico digitale dove il talento musicale si incontra con le opportunità. 
+                        Qui, ci impegniamo a promuovere e mettere in mostra musicisti e band di ogni genere e provenienza, 
+                        offrendo loro la visibilità e le risorse necessarie per essere scoperti da potenziali fan, 
+                        collaboratori e addetti ai lavori.
+                        </p>
+                        <p>
+                        Che tu sia un musicista emergente desideroso di farsi strada nell'industria musicale o un appassionato 
+                        alla ricerca di nuove melodie da scoprire, BMusic è il luogo ideale dove esplorare, 
+                        connettersi e dare vita alla tua passione per la musica!
+                        </p>
+                        <p class="mb-5">
+                        Attraverso la nostra piattaforma intuitiva e ricca di funzionalità, puoi esplorare un vasto panorama di talenti provenienti da ogni angolo del globo, 
+                        ascoltare le loro tracce, leggere le loro esperienze e persino contattarli direttamente per opportunità di collaborazione o assunzione. <br>
+                        Unisciti a noi su <strong>BMusic</strong> e immergiti in un mondo di musica senza confini, dove ogni nota racconta una storia e ogni artista ha la possibilità di brillare.
+                        </p>
+                        <div class="buttons-controller">
+                        <a href="http://127.0.0.1:8000/login" class="btn-login">Accedi</a>
+                        <a href="http://127.0.0.1:8000/register" class="btn-register">Registrati</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-xxl-5 col-auto how-section-img">
+                        <!-- Qui potrebbe andare un'immagine di rappresentazione -->
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-5 col-xxl-5 col-auto how-section-img">
-                <!-- Qui potrebbe andare un'immagine di rappresentazione -->
-            </div>
-            </div>
-        </div>
         </section>
         <section class="carousel-section">
             <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false">
                 <div class="carousel-inner">
                     <!-- Carosello per gli utenti sponsorizzati -->
-                    <div class="carousel-item"
+                    <div class="carousel-item position-relative"
                         v-for="(singleMusician, index) in sponsoredMusicians" 
                         :key="singleMusician.id" 
                         :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }"
                         :class="!index ? 'active' : ''">
-                        <div class="row g-0 px-5 py-3 justify-content-between">
+                        <div class="row g-0 px-5 py-3 justify-content-between position-absolute bottom-0">
                             <div class="col-9">
                                 <div class="text-white px-3 w-75">
                                     <h3 class="mb-4">{{ singleMusician.name }}</h3>
@@ -170,12 +170,12 @@ export default {
                     </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
                 </button>
             </div>
         </section>
