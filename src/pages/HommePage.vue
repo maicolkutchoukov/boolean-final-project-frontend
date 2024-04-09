@@ -134,43 +134,44 @@ export default {
         </div>
         </section>
         <section class="carousel-section">
-        <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false">
-            <div class="carousel-inner">
-            <!-- Carosello per gli utenti sponsorizzati -->
-            <div class="carousel-item"
-                v-for="(singleMusician, index) in sponsoredMusicians" 
-                :key="singleMusician.id" 
-                :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }"
-                :class="!index ? 'active' : ''">
-                <div class="row px-5 py-3 justify-content-between">
-                <div class="col-9">
-                    <div class="text-white px-3 w-75">
-                    <h3 class="mb-4">{{ singleMusician.name }}</h3>
-                    <div class="d-flex">
-                        <h6 v-for="(userRole, i) in singleMusician.roles">
-                        {{ userRole.title }}  
-                        </h6>
+            <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false">
+                <div class="carousel-inner">
+                <!-- Carosello per gli utenti sponsorizzati -->
+                <div class="carousel-item"
+                    v-for="(singleMusician, index) in sponsoredMusicians" 
+                    :key="singleMusician.id" 
+                    :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }"
+                    :class="!index ? 'active' : ''">
+                    <div class="row px-5 py-3 justify-content-between">
+                    <div class="col-9">
+                        <div class="text-white px-3 w-75">
+                        <h3 class="mb-4">{{ singleMusician.name }}</h3>
+                        <div class="d-flex">
+                            <h6 v-for="(userRole, i) in singleMusician.roles">
+                                {{ userRole.title }}<span v-if="i !== singleMusician.roles.length - 1">, </span>  
+
+                            </h6>
+                        </div>
+                        <p>
+                            {{ singleMusician.user_details.bio }}
+                        </p>
+                        </div>
                     </div>
-                    <p>
-                        {{ singleMusician.user_details.bio }}
-                    </p>
+                    <div class="col-3 d-flex align-items-center justify-content-end">
+                        <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn">Vedi Profilo</router-link>
+                    </div>
                     </div>
                 </div>
-                <div class="col-3 d-flex align-items-center justify-content-end">
-                    <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn">Vedi Profilo</router-link>
                 </div>
-                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+                </button>
             </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-            </button>
-        </div>
         </section>
         <section class="third-section py-5 fade-in">
         <div class="container-fluid">

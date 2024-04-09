@@ -31,10 +31,10 @@ export default {
                 <router-link :to="{ name: 'sponsor' }" class="header-nav-link">Sponsor</router-link>
               </li>
               <li class="nav-item">
-                <a href="http://127.0.0.1:8000/login" class="header-nav-link" @click.prevent="startAnimation($event)">Accedi</a>
+                <a href="http://127.0.0.1:8000/login" class="header-nav-link">Accedi</a>
               </li>
               <li class="nav-item">
-                <a href="http://127.0.0.1:8000/register" class="header-nav-link" @click.prevent="startAnimation($event)">Registrati</a>
+                <a href="http://127.0.0.1:8000/register" class="header-nav-link">Registrati</a>
               </li>
               <li class="nav-item">
                 <router-link :to="{ name: 'search' }" class="header-nav-link">Cerca</router-link>
