@@ -37,8 +37,8 @@ export default {
 
             if (this.rating !== null) {
                 filtered = filtered.filter(musician => {
-                    const averageRating = musician.votes.reduce((acc, vote) => acc + parseInt(vote.vote), 0) / musician.votes.length;
-                    return averageRating >= this.rating;
+                const averageRating = musician.votes.reduce((acc, vote) => acc + parseInt(vote.vote), 0) / musician.votes.length;
+                return averageRating >= this.rating;
                 });
             }
 
@@ -54,218 +54,154 @@ export default {
             this.loading = true;
             try {
                 const response = await axios.get(url, {
-                    params: {
-                        name: this.searchQuery,
-                        roles: this.selectedRoles.join(',')
-                    }
+                params: {
+                    name: this.searchQuery,
+                    roles: this.selectedRoles.join(',')
+                }
                 });
-                this.allMusicians = response.data.results.data;
-                this.nextPageUrl = response.data.results.next_page_url;
-                this.prevPageUrl = response.data.results.prev_page_url;
+                this.updateMusicians(response);
             } catch (error) {
                 console.error('Errore durante la chiamata API:', error);
             } finally {
                 this.loading = false;
             }
-        },
-        async getMusicians(url = 'http://127.0.0.1:8000/api/users') {
+            },
+            async getMusicians(url = 'http://127.0.0.1:8000/api/users') {
             this.loading = true;
             try {
                 const response = await axios.get(url);
-                this.allMusicians = response.data.results.data;
-                this.nextPageUrl = response.data.results.next_page_url;
-                this.prevPageUrl = response.data.results.prev_page_url;
+                this.updateMusicians(response);
             } catch (error) {
                 console.error('Errore durante la chiamata API:', error);
             } finally {
                 this.loading = false;
             }
-        },
-        resetFilters() {
-            this.selectedRoles = [];
-            this.searchQuery = '';
-            this.rating = null;
-            this.minimumReviews = null;
-        },
-        getProfilePicture(musician) {
-            return musician.user_details && musician.user_details.picture ? 'http://127.0.0.1:8000/storage/' + musician.user_details.picture : '';
-        },
-        toggleRole(role) {
-            const index = this.selectedRoles.indexOf(role);
-            if (index !== -1) {
-                this.selectedRoles.splice(index, 1);
-            } else {
-                this.selectedRoles.push(role);
-            }
+            },
+            updateMusicians(response) {
+                this.allMusicians = response.data.results.data;
+                this.nextPageUrl = response.data.results.next_page_url;
+                this.prevPageUrl = response.data.results.prev_page_url;
+            },
+            resetFilters() {
+                this.selectedRoles = [];
+                this.searchQuery = '';
+                this.rating = null;
+                this.minimumReviews = null;
+            },
+            getProfilePicture(musician) {
+                return musician.user_details && musician.user_details.picture ? 'http://127.0.0.1:8000/storage/' + musician.user_details.picture : '';
+            },
+            lazyLoadImages() {
+                const lazyImages = document.querySelectorAll('.lazy');
+                lazyImages.forEach(image => {
+                    if (this.isElementInViewport(image)) {
+                    image.src = image.dataset.src;
+                    image.onload = () => {
+                        image.classList.add('loaded');
+                    };
+                    }
+                });
+            },
+            isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
         }
     },
-    created() {
+    mounted() {
         this.getMusicians();
+        window.addEventListener('scroll', this.lazyLoadImages);
+    },
+    destroyed() {
+        window.removeEventListener('scroll', this.lazyLoadImages);
     }
 };
 </script>
 
 <template>
-    <transition name="fade">
-        <div class="container-fluid" :class="{ 'loading': loading }">
-
-            <!-- Loader pagina -->
-            <div v-if="loading" class="loading-overlay">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Caricamento...</span>
-                </div>
-                <p>Caricamento in corso...</p>
-            </div> 
-
-            <h2 class="p-5 fw-bold">Trova artisti o band</h2>
-            <form @submit.prevent="search" class="mb-5">
-                <div class="row">
-                    <div class="col-md-6 col-lg-4">
-                        <div class="mb-3">
-                            <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band...">
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="mb-3">
-                            <div class="star-rating text-center">
-                                <span class="star" v-for="star in 5" :key="star" @click="rating = star">
-                                    {{ star <= rating ? '★' : '☆' }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="mb-3">
-                            <input type="number" v-model="minimumReviews" class="form-control input-min-reviews" min="0" placeholder="Numero minimo di recensioni">
-                        </div>
-                    </div>
-                </div>
-                <div class="container d-flex flex-wrap justify-content-center">
-                    <div v-for="(role, index) in allRoles" :key="index" class="mycol-md-2 my-2">
-                        <button class="button-roles"
-                                type="button"
-                                :class="{ 'active': selectedRoles.includes(role) }"
-                                @click="toggleRole(role)">
-                            {{ role.title }}
-                        </button>
-                    </div>
-                </div>
-            </form>
-            <button class="btn btn-secondary" @click="resetFilters">Reset</button>
-
-            <div v-if="!loading" class="container-fluid">
-                <h2 class="p-5 fw-bold">Artisti in evidenza</h2>
-                <transition-group name="fade" tag="div" class="row">
-                    <div class="col-6 col-md-4 col-lg-3" v-for="(singleMusician, index) in filteredMusicians" :key="singleMusician.id">
-                        <div class="card animated-card" :class="{ 'show-card': !loading }">
-                            <img :src="getProfilePicture(singleMusician)" class="card-img-top" :alt="'Immagine di ' + singleMusician.name">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ singleMusician.name }}</h5>
-                                <p class="card-text">{{ singleMusician.city }}</p>
-                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
-                            </div>
-                        </div>
-                    </div>
-                </transition-group>
+    <div class="container">
+        <!-- Loader pagina -->
+        <div v-if="loading" class="loading-overlay">
+            <div class="spinner-border me-4" role="status">
+                <span class="visually-hidden">Caricamento...</span>
             </div>
-
-            <!-- Paginazione -->
-            <div class="row justify-content-center mt-4" v-if="!loading">
-                <div class="col-auto">
-                    <button v-if="prevPageUrl" @click="getMusicians(prevPageUrl)" class="btn btn-secondary">Pagina precedente</button>
+            <p class="fw-bold fs-3">Caricamento in corso...</p>
+        </div>
+    
+        <h2 class="p-5 fw-bold">Trova artisti o band</h2>
+    
+        <form @submit.prevent="search" class="mb-5">
+            <div class="row">
+                <div class="col-md-6 col-lg-4">
+                    <div class="mb-3">
+                        <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band...">
+                    </div>
                 </div>
-                <div class="col-auto">
-                    <button v-if="nextPageUrl" @click="getMusicians(nextPageUrl)" class="btn btn-secondary">Pagina successiva</button>
+                <div class="col-md-6 col-lg-4">
+                    <div class="mb-3">
+                    <div class="star-rating text-center">
+                        <span class="star" v-for="star in 5" :key="star" @click="rating = star">
+                        {{ star <= rating ? '★' : '☆' }}
+                        </span>
+                    </div>
+                    </div>
                 </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="mb-3">
+                        <input type="number" v-model="minimumReviews" class="form-control input-min-reviews" min="0" placeholder="Numero minimo di recensioni">
+                    </div>
+                </div>
+                </div>
+        
+                <div class="container d-flex flex-wrap justify-content-center">
+                <div v-for="(role, index) in allRoles" :key="index" class="mycol-md-2 my-2">
+                    <button class="button-roles"
+                            type="button"
+                            :class="{ 'active': selectedRoles.includes(role) }"
+                            @click="toggleRole(role)">
+                    {{ role.title }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    
+        <button class="btn btn-secondary" @click="resetFilters">Reset</button>
+    
+        <div v-if="!loading" class="container">
+            <h2 class="p-5 fw-bold">Artisti in evidenza</h2>
+            <transition-group name="fade" tag="div" class="row">
+            <div class="col-6 col-md-4 col-lg-4" v-for="(singleMusician, index) in filteredMusicians" :key="singleMusician.id">
+                <div class="card animated-card" :class="{ 'show-card': !loading }">
+                <!-- Utilizzo del lazy loading per le immagini degli artisti -->
+                <img :src="getProfilePicture(singleMusician)" class="card-img-top lazy" :data-src="getProfilePicture(singleMusician)" :alt="'Immagine di ' + singleMusician.name">
+                <div class="card-body">
+                    <h5 class="card-title">{{ singleMusician.name }}</h5>
+                    <p class="card-text">{{ singleMusician.city }}</p>
+                    <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn btn-primary btn-sm">Vedi Profilo</router-link>
+                </div>
+                </div>
+            </div>
+            </transition-group>
+        </div>
+    
+        <!-- Paginazione -->
+        <div class="row justify-content-center mt-4" v-if="!loading">
+            <div class="col-auto">
+            <button v-if="prevPageUrl" @click="getMusicians(prevPageUrl)" class="btn btn-secondary">Pagina precedente</button>
+            </div>
+            <div class="col-auto">
+            <button v-if="nextPageUrl" @click="getMusicians(nextPageUrl)" class="btn btn-secondary">Pagina successiva</button>
             </div>
         </div>
-    </transition>
+    </div>
 </template>
 
 
 <style lang="scss" scoped>
+@import '../assets/scss/partials/SearchPage.scss'
 
-.mycol-2 {
-    width: calc((100% / 5) - 40px );
-    margin: 10px 20px;
-    .button-roles {
-        width: 90%;
-        background-color: white;
-        color: grey;
-        border: 1px solid grey;
-        padding: 10px 0;
-        border-radius: 20px;
-    }
-    .active {
-        background-color: black; /* Cambia lo stile del bottone quando è selezionato */
-        color: white;
-    }
-}
-
-.card-img-top {
-    max-height: 200px;
-}
-.input-searchbar, .input-min-reviews{
-    margin: 0 auto;
-}
-
-.star-rating {
-    font-size: 24px;
-}
-
-.star {
-    cursor: pointer;
-}
-
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.7); // Trasparenza per un aspetto sfumato
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; // Assicura che l'overlay di caricamento sia in primo piano
-
-    .spinner-border {
-        width: 3rem;
-        height: 3rem;
-    }
-
-    p {
-        margin-top: 10px;
-        font-size: 1rem;
-    }
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s;
-}
-
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-.container-fluid {
-    opacity: 1;
-    transition: opacity 2.5s ease; /* Aggiungi transizione per l'opacità */
-}
-
-.loading {
-    opacity: 2.5; /* Opacità ridotta durante il caricamento */
-}
-
-/* Animazione per le card */
-.animated-card {
-    transform: scale(0.8);
-    opacity: 0;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-    transition-delay: 0.2s; /* Aggiungi un ritardo di 0.2 secondi */
-}
-
-.show-card {
-    transform: scale(1);
-    opacity: 1;
-}
 </style>
