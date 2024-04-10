@@ -80,7 +80,7 @@ export default {
                             </ul>
                         </h5>
                     </div>
-                    <div class="footer-column">
+                    <div class="footer-column display-none">
                         <h4>Titolo</h4>
                         <h5>
                             <ul class="footer-list">
@@ -222,4 +222,51 @@ BMusic. All rights reserved</p>
     opacity: 0.4;
 }
 
+@media (max-width: 425px) {
+    .container-footer-top {
+        display: flex;
+        flex-direction: column; 
+        align-items: center; 
+    }
+
+    .container-footer-right {
+        display: flex;
+        flex-direction: row; 
+        justify-content: center; 
+    }
+
+    .footer-column {
+        width: auto;
+        margin: 10px;
+    }
+
+    .footer-list > li {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .container-footer-left {
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: center; 
+        text-align: center;
+        min-width: 100%;
+    }
+
+    .footer-social {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 0;
+    }
+
+    .social-list {
+        display: flex; 
+        justify-content: center;
+    }
+
+    .social-text {
+        margin: 0 0 0 0;
+    }
+}
 </style>
