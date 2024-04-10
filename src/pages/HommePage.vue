@@ -108,7 +108,7 @@ export default {
         </div>
         <!-- How To Do Section -->
         <section class="how-section">
-            <div class="container-lg container-fluid p-5">
+            <div class="container-lg container-fluid py-5">
                 <h3 class="display-4 fw-bold mb-2">Come funziona?</h3>
                 <div class="row g-0 py-5 justify-content-between">
                     <div class="col-lg-7 col-xxl-7 col-auto">
@@ -135,7 +135,7 @@ export default {
                     </div>
                     <div class="col-lg-5 col-xxl-5 col-auto how-section-img">
                         <!-- Qui potrebbe andare un'immagine di rappresentazione -->
-                        ciao
+                        <!--ciao -->
                     </div>
                 </div>
             </div>
@@ -152,20 +152,20 @@ export default {
                         <div class="row g-0 px-5 py-3 justify-content-between position-absolute bottom-0">
                             <div class="col-9">
                                 <div class="text-white px-3 w-75">
-                                    <h3 class="mb-4">{{ singleMusician.name }}</h3>
-                                    <div class="d-flex">
+                                    <h3 class="carousel-title">{{ singleMusician.name }}</h3>
+                                    <div class="d-flex carousel-role">
                                         <h6 v-for="(userRole, i) in singleMusician.roles">
                                             {{ userRole.title }}<span v-if="i !== singleMusician.roles.length - 1">, </span>  
 
                                         </h6>
                                     </div>
-                                    <p>
+                                    <p class="display-none" >
                                         {{ singleMusician.user_details.bio }}
                                     </p>
                                 </div>
                             </div>
                             <div class="col-3 d-flex align-items-center justify-content-end">
-                                <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile-btn btn btn-dark rounded-5">Vedi Profilo</router-link>
+                                <router-link :to="{ name: 'profile', params: { name: singleMusician.name} }" class="show-profile btn">Vedi Profilo</router-link>
                             </div>
                         </div>
                     </div>
@@ -198,7 +198,7 @@ export default {
                         lasciati trasportare dalle emozioni e dall'energia di talenti freschi e innovativi. 
                         Entra nel mondo della musica di BMusic oggi stesso e preparati a scoprire il prossimo grande successo!
                         </p>
-                        <router-link :to="{ name: 'search' }" class="btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Cerca artisti o band</router-link>
+                        <router-link :to="{ name: 'search' }" class="button-show btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Cerca artisti o band</router-link>
                     </div>
                 </div>
             </div>
@@ -228,7 +228,7 @@ export default {
                             <div v-if="filteredMusicians.length > 0">
                                 <div class="row g-0">
                                     <div class="col-6" 
-                                    v-for="(musician, index) in filteredMusicians" 
+                                    v-for="(musician, index) in filteredMusicians"
                                     :key="index"
                                     >
                                         <div class="card" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + musician.user_details.picture + ')' }">
@@ -270,5 +270,83 @@ export default {
     </div>
 </template>
 <style lang="scss" scoped>
-@import '../assets/scss/partials/HomePage.scss'
+
+@import '../assets/scss/partials/HomePage.scss';
+
+.show-profile {
+    font-weight: bolder;
+    text-decoration: none;
+    color:#424649;
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: 20px;
+    &:hover {
+    background-color: #424649;
+    color: white;
+  }
+}
+
+.carousel-title {
+    padding-bottom: 20px;
+}
+
+.carousel-role {
+    h6{
+        margin-bottom: 0;
+    }  
+}
+@media (max-width: 425px) {
+  .display-none{
+    display: none;
+  }
+  .how-section {
+    padding: 0 20px;
+    .buttons-controller {
+        display: flex;
+        justify-content: center;
+    }
+  }
+  .show-profile {
+    border-radius: 10px;
+    padding: 0 50px;
+  }
+  .third-section {
+    .row {
+    display: flex;
+    justify-content: center;
+    .col-8 {
+        width: 100%;
+    }
+    .col-4{
+        display: none;
+    }
+  }
+}
+}
+
+@media (max-width: 768px) {
+    .display-none{
+    display: none;
+  }
+
+  .how-section {
+    padding: 0 50px;
+    .buttons-controller {
+        display: flex;
+        justify-content: center;
+    }
+  }
+
+  .carousel-item {
+   .row{
+        width: 100%;
+        margin-bottom: 20px;
+   }
+   .carousel-title {
+        padding-bottom: 0px;
+    }
+}
+
+  
+}
 </style>
