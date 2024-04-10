@@ -223,50 +223,63 @@ BMusic. All rights reserved</p>
 }
 
 @media (max-width: 425px) {
+    .footer-top {
+        display: flex;
+        justify-content: center;
+    }
     .container-footer-top {
         display: flex;
-        flex-direction: column; 
-        align-items: center; 
+        flex-direction: column;
+        align-items: center;
     }
 
     .container-footer-right {
         display: flex;
         flex-direction: row; 
-        justify-content: center; 
+        justify-content: center;
+        order: 1;
     }
 
     .footer-column {
+        display: flex;
+        justify-content: center;
         width: auto;
-        margin: 10px;
-    }
-
-    .footer-list > li {
-        display: block;
-        margin: 5px 0;
+        margin: 10px 10px;
+        h4 {
+            margin: 0;
+            margin-bottom: 10px;
+        }
+        ul{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
     }
 
     .container-footer-left {
         display: flex;
         flex-wrap: wrap; 
-        justify-content: center; 
-        text-align: center;
+        justify-content: center;
         min-width: 100%;
+        order: 2;
     }
 
     .footer-social {
         display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
         margin-top: 0;
     }
 
-    .social-list {
-        display: flex; 
-        justify-content: center;
+    .social-text {
+        margin: 0;
+        margin-top: 10px;
     }
 
-    .social-text {
-        margin: 0 0 0 15px;
+    .logo-container {
+        margin-top: 20px;
     }
 }
 </style>
