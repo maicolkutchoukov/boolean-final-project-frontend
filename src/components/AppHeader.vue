@@ -23,7 +23,7 @@ export default {
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 split-menu">
               <li class="nav-item">
                 <router-link :to="{ name: 'instrumental' }" class="header-nav-link">Strumenti</router-link>
               </li>
@@ -48,7 +48,7 @@ export default {
 <style lang="scss" scoped>
 header {
 background-color: #21252B; color: #BADFDA; border: 1px solid #21252B;
-width: 100%; max-height: 80px;
+width: 100%; max-height: 180px;
 display: flex; align-items: center;
 position: sticky; top: 0; left: 0; right: 0; z-index: 999;
 .navbar-nav {
@@ -89,6 +89,11 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
     }
 }
 
+.split-menu {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
 
 @keyframes slideOutRight {
   0% {
@@ -99,5 +104,15 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
   }
 }
 
+@media (max-width: 425px) { /* Regola per dispositivi con larghezza massima di 991px (tablet e smartphone) */
+  .split-menu {
+    flex-direction: row; /* Imposta la direzione della flessione a riga */
+    flex-wrap: wrap; /* Permette il wrapping degli elementi su più righe */
+  }
+
+  .split-menu .nav-item {
+    width: 50%; /* Imposta la larghezza del 50% per gli elementi del menu */
+  }
+}
 
 </style>
