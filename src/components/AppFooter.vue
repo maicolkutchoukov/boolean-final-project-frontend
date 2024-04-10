@@ -266,7 +266,7 @@ BMusic. All rights reserved</p>
     }
 
     .social-text {
-        margin: 0 0 0 0;
+        margin: 0 0 0 15px;
     }
 }
 </style>
