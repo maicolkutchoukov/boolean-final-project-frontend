@@ -40,8 +40,8 @@ export default {
 
         <div class="row">
             <!--CARD1-->
-            <div class="col-4">
-                <div class="card">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
                     <!--Card Top-->
                     <div class="card-top text-center mb-2">
                         <div class="icon">
@@ -69,8 +69,8 @@ export default {
             </div>
             
             <!--CARD2-->
-            <div class="col-4">
-                <div class="card">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
                     <div class="badge">
                         Most Popular
                     </div>
@@ -101,8 +101,8 @@ export default {
             </div>
 
             <!--CARD3-->
-            <div class="col-4">
-                <div class="card">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
                     <!--Card Top-->
                     <div class="card-top text-center mb-2">
                         <div class="icon">
