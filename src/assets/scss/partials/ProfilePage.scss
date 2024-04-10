@@ -1,0 +1,349 @@
+.user-img {
+    min-height: 500px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+  
+  .instrument-pic {
+    max-width: 100px;
+  }
+  
+  .contact-section {
+    background-color: #21252B;
+  
+    h2 {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+  
+    .my-button {
+      background-color: white;
+      border-radius: 30px;
+      color: #21252B;
+      font-weight: bold;
+      padding: 10px 20px;
+    }
+  }
+  
+  #sectionReviews {
+    .review-form {
+      margin-bottom: 20px;
+      background-color: #21252B;
+      min-height: 200px;
+      position: relative;
+  
+      input {
+        border-radius: 20px;
+        margin: 10px 0;
+        min-width: 200px;
+      }
+  
+      .btn-send-review {
+        padding: 10px 20px;
+        background-color: white;
+        border-radius: 25px;
+        color: #21252B;
+        font-weight: bold;
+      }
+  
+      .btn-close-review {
+        width: 30px;
+        height: 30px;
+        line-height: 25px;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+    }
+  
+    .star-reviews {
+      display: inline-block;
+      margin-right: 8px;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background-color: #BADFDA;
+    }
+  
+    .active {
+      background-color: #21252B;
+    }
+  
+    .button-send-review {
+      background-color: #21252B;
+      color: white;
+      border-radius: 30px;
+      font-weight: bold;
+      margin-right: 15px;
+      padding: 10px 20px;
+    }
+  }
+  
+  .btn-write-review {
+    background-color: #21252B;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 25px;
+  }
+  
+  .full-page-section {
+    height: 280px; // Altezza fissa
+    overflow-y: auto; // Scrolling
+    padding: 30px 0;
+    margin-bottom: 30px;
+  }
+  
+  .review-item {
+    margin-bottom: 20px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+  
+    .review-title {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+  
+    .review-description {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+  
+    .stars-container {
+      display: flex;
+  
+      .star-reviews {
+        width: 20px;
+        height: 20px;
+        background-color: #BADFDA;
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+    }
+  }
+  
+  .modal {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 9999; /* Assicura che la modale sia sovrapposta a tutti gli altri elementi */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .message-container {
+      width: 50%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999; /* Assicurati che il messaggio sia in primo piano */
+    text-align: center;
+  }
+  .alert{
+      padding: 50px 0;
+      font-size: 2rem;
+      font-weight: bold;
+  }
+  .btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+  }
+  
+  .vote-rating {
+    display: flex;
+  }
+  
+  .vote-star {
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .filled {
+    color: gold;
+  }
+  
+  .half-filled {
+    position: relative;
+  }
+  
+  .half-filled::before {
+    content: '★';
+    position: absolute;
+    color: gold;
+    overflow: hidden;
+    width: 50%;
+    white-space: nowrap;
+  }
+  
+  @keyframes bounceInX {
+    0% {
+        opacity: 0;
+        transform: translateX(-80px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.offcanvas{
+    background-color: #21252B;
+    .my-button{
+      border: 2px solid #BADFDA;
+      color: white;
+      border-radius: 25px;
+      padding: 10px 50px;
+      font-weight: bold;
+      &:hover{
+        background-color: #BADFDA;
+        color: #21252B;
+      }
+    }
+    .btn-close{
+      background-color: #BADFDA;
+      color: black;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ANIMAZIONI */
+.bounce-in-x {
+    animation: bounceInX 1.5s ease forwards;
+}
+  @keyframes bounceIn {
+      0% {
+          opacity: 0;
+          transform: translateY(150px);
+      }
+      100% {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+  
+  .bounce-in {
+    animation: bounceIn 1.5s ease forwards;
+  }
+  
+  @keyframes bounceInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Animazione per far scomparire il messaggio di successo */
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  
+  /* Applica l'animazione di bounceInDown al messaggio di successo quando appare */
+  .message-container .alert-success {
+    animation: bounceInDown 0.75s ease forwards;
+  }
+  
+  /* Applica la transizione al messaggio di successo per farlo scomparire piano piano */
+  .message-container .alert-success.fade-out {
+    animation: fadeOut 0.5s ease forwards;
+  }
+  
+  /* Applica l'animazione di bounceInDown al messaggio quando appare */
+  .message-container .alert {
+    animation: bounceInDown 0.75s ease forwards;
+  }
+  
+  /* Applica la transizione al messaggio per farlo scomparire piano piano */
+  .message-container .alert.fade-out {
+    animation: fadeOut 0.5s ease forwards;
+  }
+
+
+
+
+  /* 
+  input stelline della ProfilePage
+
+  <!-- Input per voto -->
+  <!-- <div class="mb-3">
+      <label for="vote" class="form-label text-black">Voto</label>
+      <div class="star-rating">
+          <span v-for="index in 5" :key="index" @click="setVote(index)">
+              <i v-if="index <= selectedStars" class="fas fa-star" style="color: yellow;"></i>
+              <i v-else class="far fa-star" style="color: grey;"></i>
+          </span>
+      </div>
+  </div> -->
+  
+  
+  
+  */
