@@ -256,8 +256,14 @@ export default {
             </aside>
             <div v-if="!loading" class="col-7 card-section">
                 <h2 class="fw-bold px-4 py-3 fs-1">Artisti in evidenza</h2>
-                <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
-                    <div class="row mb-5 card-content position-relative" :class="{ 'show-card': !loading }" v-for="(singleMusician, index) in filteredMusicians" :key="singleMusician.id">
+                <!-- <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;"> -->
+                <transition-group name="fade" tag="div" class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
+                    <div 
+                        class="row mb-5 card-content position-relative" 
+                        :class="{ 'show-card': !loading, 'filtered': filteredMusicians.length < allMusicians.length }"
+                        v-for="(singleMusician, index) in filteredMusicians" 
+                        :key="singleMusician.id"
+                    >
                         <div class="col-4 img-artist" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')', 'background-position': 'center', 'background-size': 'cover' }">     
                         </div>
                         <div class="col-8 border my-bg-grey">
@@ -271,7 +277,8 @@ export default {
                             </div>
                         </div>
                     </div>
-                </div>
+                </transition-group>
+                <!-- </div> -->
             </div>
         </div>
     </section>
@@ -371,6 +378,27 @@ export default {
             overflow: hidden;
             border-radius: 10px;
             overflow: hidden;
+            &:hover{
+                .sponsor-badge{
+                    
+                    opacity: 1;
+                }
+            }
+            .sponsor-badge{
+                position: absolute;
+                top: 10px;
+                right: 0;
+                z-index: 100;
+                background-color: green;
+                color: white;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                border-radius: 20px 0 0 20px;
+                opacity: 0; /* Il badge è nascosto per impostazione predefinita */
+                transition: opacity 1s ease; /* Aggiungi una transizione per rendere l'animazione fluida */
+            }
             .img-artist {
                 background-position: center;
                 background-size: 100%;
@@ -425,12 +453,31 @@ export default {
     cursor: pointer;
 }
 
-.sponsor-badge{
-    position: absolute;
-    top: 10px;
-    left: 20px;
-    z-index: 100;
-    color: gold;
+.card-content.show-card {
+    animation: fadeIn 2.5s ease forwards; /* Applica l'animazione fadeIn solo alle card quando vengono visualizzate */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Parti con opacità 0 */
+    }
+    to {
+        opacity: 1; /* Arriva a opacità 1 */
+    }
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: all 0.5s ease-out
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+    transform: translateX(-120%);
+}
+
+.card-container{
+    box-shadow: 0 0 15px 10px #21252B;
+    border-radius: 20px;
 }
 </style>
 
