@@ -263,7 +263,7 @@ export default {
 
 
 <template>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
     <!-- Sezione con tutte le informazioni del musicista -->
     <section>
         <!-- Immagine e informazioni sul musicista -->
@@ -354,9 +354,14 @@ export default {
                                 </div>
                             </div>
                         </div>
-
                         <!-- Button to open offcanvas -->
-                        <button v-if="singleMusician.reviews.length > 3" class="btn btn-primary mt-3" @click="openOffcanvas">Visualizza tutte le recensioni</button>
+                            <div class="text-end mt-3">
+                                <button v-if="singleMusician.reviews.length > 3" class="btn btn-dark ms-auto" @click="openOffcanvas">
+                                    <i class="bi bi-box-arrow-down-left"></i>
+                                </button>
+                            </div>
+
+                        
 
                         <!-- Offcanvas -->
                         <div class="offcanvas offcanvas-end" :class="{ 'show': showOffcanvas }" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
@@ -535,9 +540,16 @@ export default {
         padding-top: 20px;
         padding-bottom: 20px; 
     }
-
     .margin {
         margin-bottom: 15px;
+    }
+    .card {
+        min-height: 200px;
+    }
+}
+@media (max-width: 768px) {
+    .card {
+        min-height: 400px;
     }
 }
 </style>
