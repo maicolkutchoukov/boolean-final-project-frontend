@@ -39,8 +39,20 @@ export default {
             numericVote: null, // Aggiungi questa variabile per memorizzare il voto numerico
             selectedStars: 0, // Aggiungi questa proprietà per tracciare il numero di stelle selezionate
             showReviewForm: false,
+            showOffcanvas: false,
+            reviews: [], // Tutta la lista delle review
             
         };
+    },
+    computed: {
+        visibleReviews() {
+        // Return only the first 3 reviews to display on the page
+        return this.singleMusician.reviews.slice(0, 3);
+        },
+        remainingReviews() {
+        // Return all reviews after the first 3
+        return this.singleMusician.reviews.slice(3);
+        }
     },
     methods: {
         async fetchUserData() {
@@ -233,6 +245,14 @@ export default {
         clearMessages() {
             this.errorMessage = '';
             this.successMessage = '';
+        },
+        openOffcanvas() {
+        // Open the offcanvas
+            this.showOffcanvas = true;
+        },
+        closeOffcanvas() {
+        // Close the offcanvas
+            this.showOffcanvas = false;
         }
     },
     created() {
@@ -289,40 +309,87 @@ export default {
                 </div>
             </div>
         </div>
+
+
         <!-- Sezione per le recensioni -->
-        <section>
+        <section class="reviews-section">
             <div v-if="singleMusician && singleMusician.reviews" class="d-flex justify-content-between mb-5">
                 <h2 class="mb-5 fw-bold">Le mie recensioni</h2>
-                <div>
-                    <div class="vote-rating">
+                <div class="hover-container">
+                    <div class="d-flex align-items-center">
+                        <!-- Numero totale delle recensioni -->
+                        <small class="me-2 number-reviews">{{ singleMusician.reviews.length }} recensioni</small>
                         <!-- Visualizza le palline riempite in base alla media dei voti -->
                         <span
                             v-for="index in 5"
                             :key="index"
                             :class="{
-                            'filled': index <= averageVote,
-                            'half-filled': index === Math.ceil(averageVote) && averageVote % 1 !== 0,
-                            'bounce-in': isHovered
+                                'filled': index <= averageVote,
+                                'half-filled': index === Math.ceil(averageVote) && averageVote % 1 !== 0
                             }"
                             class="vote-star"
-                            
                         >
-                            ★
+                            <!-- Utilizzo delle icone di Font Awesome -->
+                            <i v-if="index <= averageVote" class="fa-solid fa-circle"></i>
+                            <i v-else class="fa-regular fa-circle"></i>
                         </span>
                     </div>
                 </div>
             </div>
-        </section>
-        <section v-if="singleMusician && singleMusician.reviews" class="full-page-section mb-5">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 p-0">
                         <div class="reviews-container">
                             <div class="reviews-wrapper">
-                                <!-- Recensioni -->
+                                <!-- Display the first 3 reviews in a row -->
+                                <div class="row">
+                                    <div v-for="(review, index) in singleMusician.reviews.slice(0, 3)" :key="index" class="col-md-4">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ review.firstname + ' ' + review.lastname }}</h5>
+                                                <p class="card-text">{{ review.description }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Button to open offcanvas -->
+                        <button v-if="singleMusician.reviews.length > 3" class="btn btn-primary mt-3" @click="openOffcanvas">Visualizza tutte le recensioni</button>
+
+                        <!-- Offcanvas -->
+                        <div class="offcanvas offcanvas-end" :class="{ 'show': showOffcanvas }" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                            <div class="offcanvas-header text-white">
+                                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Tutte le Recensioni</h5>
+                                <button type="button" class="btn-close text-reset" @click="closeOffcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <div class="row">
+                                    <!-- Display all reviews starting from the 4th -->
+                                    <div v-for="(review, index) in singleMusician.reviews.slice(3)" :key="index" class="col-md-12 card mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ review.firstname + ' ' + review.lastname }}</h5>
+                                            <p class="card-text">{{ review.description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- <section v-if="singleMusician && singleMusician.reviews" class="full-page-section mb-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 p-0">
+                        <div class="reviews-container">
+                            <div class="reviews-wrapper">
+                                
                                 <div v-for="(review, index) in singleMusician.reviews" :key="index" class="review-item" style="background-color: #2E333A;">
                                     <div class="review-content">
-                                        <!-- Nome e descrizione della recensione -->
+                                        
                                         <h4 class="review-title" style="color: white;">{{ review.firstname + ' ' + review.lastname }}</h4>
                                         <p class="review-description" style="color: white;">{{ review.description }}</p>
                                     </div>
@@ -332,12 +399,8 @@ export default {
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
-        
-
-
-        <!-- Pulsante per scrivere una recensione -->
             <div class="d-flex justify-content-center">
                 <button @click="toggleReviewForm" v-if="!showReviewForm" class="btn-write-review">Scrivi una recensione</button>
             </div>
@@ -443,5 +506,15 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import '../assets/scss/partials/ProfilePage.scss'
+@import '../assets/scss/partials/ProfilePage.scss';
+
+
+.hover-container .number-reviews {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.hover-container:hover .number-reviews {
+    opacity: 1;
+}
 </style>
