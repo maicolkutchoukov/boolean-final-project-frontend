@@ -279,11 +279,11 @@ export default {
         <!-- Altre informazioni sul musicista -->
         <div class="container mb-5">
             <div class="row justify-content-between">
-                <div class="col-6">
+                <div class="col-6 biography-section">
                     <h2 class="fw-bold pt-3 mb-4">Bio</h2>
                     <p v-if="singleMusician && singleMusician.user_details">{{ singleMusician.user_details.bio }}</p>
                 </div>
-            <div class="col-4 text-end">
+            <div class="col-4 text-end skills-container">
                 <h2 class="fw-bold pt-3 mb-4 ">Competenze</h2>
                 <div>
                     <span v-if="singleMusician && singleMusician.roles" v-for="(role, i) in singleMusician.roles" :key="i" class="bounce-in">
@@ -313,7 +313,7 @@ export default {
 
         <!-- Sezione per le recensioni -->
         <section class="reviews-section">
-            <div v-if="singleMusician && singleMusician.reviews" class="d-flex justify-content-between mb-5">
+            <div v-if="singleMusician && singleMusician.reviews" class="d-flex justify-content-between mb-5 padding">
                 <h2 class="mb-5 fw-bold">Le mie recensioni</h2>
                 <div class="hover-container">
                     <div class="d-flex align-items-center">
@@ -401,7 +401,7 @@ export default {
             </div>
         </section> -->
 
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center margin">
                 <button @click="toggleReviewForm" v-if="!showReviewForm" class="btn-write-review">Scrivi una recensione</button>
             </div>
         </div>
@@ -516,5 +516,28 @@ export default {
 
 .hover-container:hover .number-reviews {
     opacity: 1;
+}
+
+@media (max-width: 425px) {
+    .user-img {
+        min-height: 300px;
+    }
+    .skills-container {
+        display: none;
+    }
+    .biography-section {
+        width: 100%;
+    }
+    .mb-5 {
+        margin: 0 !important;
+    }
+    .padding {
+        padding-top: 20px;
+        padding-bottom: 20px; 
+    }
+
+    .margin {
+        margin-bottom: 15px;
+    }
 }
 </style>
