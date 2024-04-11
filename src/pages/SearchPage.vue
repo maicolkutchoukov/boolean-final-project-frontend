@@ -256,8 +256,8 @@ export default {
             </aside>
             <div v-if="!loading" class="col-7 card-section">
                 <h2 class="fw-bold px-4 py-3 fs-1">Artisti in evidenza</h2>
-                <!-- <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;"> -->
-                <transition-group name="fade" tag="div" class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
+                <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
+                <!-- <transition-group name="fade" tag="div" class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;"> -->
                     <div 
                         class="row mb-5 card-content position-relative" 
                         :class="{ 'show-card': !loading, 'filtered': filteredMusicians.length < allMusicians.length }"
@@ -277,8 +277,8 @@ export default {
                             </div>
                         </div>
                     </div>
-                </transition-group>
-                <!-- </div> -->
+                <!-- </transition-group> -->
+                </div>
             </div>
         </div>
     </section>
@@ -466,8 +466,8 @@ export default {
     }
 }
 
-.fade-enter-active, .fade-leave-active {
-    transition: all 0.5s ease-out
+/* .fade-enter-active, .fade-leave-active {
+    transition: all 0.5s ease
 }
 
 .fade-enter, .fade-leave-to {
@@ -476,9 +476,8 @@ export default {
 }
 
 .card-container{
-    box-shadow: 0 0 15px 10px #21252B;
     border-radius: 20px;
-}
+} */
 </style>
 
 
