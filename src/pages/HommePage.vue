@@ -1,9 +1,11 @@
 <script>
 import axios from 'axios';
+import { store } from '../store.js';
 
 export default {
     data() {
         return {
+            store,
             allMusicians: [],
             allRoles: [],
             sponsoredMusicians: [],
@@ -80,6 +82,14 @@ export default {
                 this.filteredMusicians = []; // Resetta la lista se il ruolo selezionato è vuoto
                 this.nextPageUrl = null; // Resetta i link di paginazione
                 this.prevPageUrl = null;
+            }
+        },
+        advancedSearch() {
+            if (this.selectedRole) {
+                store.roleFromHome = this.selectedRole;
+                this.$router.push({ name: 'search', query: { role: this.selectedRole } });
+            } else {
+                console.log('Errore: nessun ruolo selezionato');
             }
         },
 
@@ -249,8 +259,9 @@ export default {
                             <div v-else>
                             Nessun musicista trovato.
                             </div>
+                            <button @click="advancedSearch" class="btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Ricerca Avanzata</button>
                         </div>
-                        <!-- Paginazione -->
+                        <!-- Paginazione 
                         <div class="row g-0 justify-content-center mt-4" v-if="!loading">
                             <div class="col-auto">
                                 <button v-if="prevPageUrl" @click="getMusicians(prevPageUrl)" class="btn btn-secondary">Pagina precedente</button>
@@ -262,6 +273,7 @@ export default {
                         <div class="modal-footer">
                             <a class="btn btn-dark" @click="closeModal">Chiudi</a>
                         </div>
+                         Paginazione-->
                     </div>
                 </div>
             </div>
