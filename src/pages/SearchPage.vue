@@ -20,6 +20,8 @@ export default {
     },
     computed: {
         filteredMusicians() {
+            store.roleFromHome = null
+
             /* let filtered = this.allMusiciansFiltred !== null ? this.allMusiciansFiltred : this.allMusicians; */
             let filtered = this.allMusicians;
 
@@ -43,12 +45,11 @@ export default {
             if (this.minimumReviews !== null) {
                 filtered = filtered.filter(musician => musician.reviews.length >= this.minimumReviews);
             }
-            console.log('Chiamata filtredMusicians', filtered)
             return filtered;
         }
     },
     methods: {
-        async advancedSearch() {
+        /* async advancedSearch() {
         if (this.selectedRole) {
             store.roleFromHome = this.selectedRole;
             await this.getMusiciansByRole(); // Aggiornamento dei musicisti in base al ruolo selezionato
@@ -56,7 +57,19 @@ export default {
         } else {
             console.log('Errore: nessun ruolo selezionato');
         }
-    },
+    }, */
+    /* updateMusicians(response) {
+            this.allMusicians = response.data.results.data;
+            if (response.data.results.next_page_url || response.data.results.prev_page_url) {
+                this.nextPageUrl = response.data.results.next_page_url;
+                this.prevPageUrl = response.data.results.prev_page_url;
+            console.log('Chiamata updateMusicians')
+
+            } else {
+                this.nextPageUrl = null;
+                this.prevPageUrl = null;
+            }
+        }, */
         async search(url = 'http://127.0.0.1:8000/api/users') {
             this.loading = true;
             try {
@@ -67,7 +80,6 @@ export default {
                     }
                 });
                 this.updateMusicians(response);
-                console.log('Chiamata search')
 
             } catch (error) {
                 console.error('Errore durante la chiamata API:', error);
@@ -75,12 +87,18 @@ export default {
                 this.loading = false;
             }
         },
+        updateFilterMusicians(){
+            this.filteredMusicians
+            this.$router.push({ query: null });
+
+        },
         async getMusicians(url = 'http://127.0.0.1:8000/api/users') {
             this.loading = true;
             try {
                 const response = await axios.get(url);
-                this.updateMusicians(response);
-                console.log('Chiamata getMusicians', this.allMusicians)
+                /* this.updateMusicians(response); */
+                this.allMusicians = response.data.results.data
+                return this.allMusicians
 
             } catch (error) {
                 console.error('Errore durante la chiamata API:', error);
@@ -98,6 +116,7 @@ export default {
         },
         async getMusiciansByRole() {
             this.loading = true;
+            this.getMusicians()
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/users');
                 const musicians = response.data.results.data;
@@ -106,7 +125,6 @@ export default {
                 this.allMusiciansFiltered = musicians.filter(musician =>
                     musician.roles.some(role => role.title === this.selectedRole)
                 );
-                console.log('Chiamata getMusiciansByRole', this.allMusicians);
                 return this.allMusiciansFiltered
             } catch (error) {
                 console.error('Errore durante la chiamata API:', error);
@@ -114,27 +132,11 @@ export default {
                 this.loading = false;
             }
         },
-        updateMusicians(response) {
-            this.allMusicians = response.data.results.data;
-            if (response.data.results.next_page_url || response.data.results.prev_page_url) {
-                this.nextPageUrl = response.data.results.next_page_url;
-                this.prevPageUrl = response.data.results.prev_page_url;
-            console.log('Chiamata updateMusicians')
-
-            } else {
-                this.nextPageUrl = null;
-                this.prevPageUrl = null;
-            }
-        },
         resetFilters() {
             this.selectedRole = null;
             this.searchQuery = '';
             this.rating = null;
             this.minimumReviews = null;
-            store.roleFromHome = null
-            console.log('reset this.allMusiciansFiltered', this.allMusiciansFiltered)
-            console.log('reset this.allMusicians', this.allMusicians)
-            console.log('reset store.roleFromHome', store.roleFromHome)
             this.filteredMusicians
 
 
@@ -163,18 +165,17 @@ export default {
             );
         }
     },
+    clearQueryParams() {
+        /* this.$router.push({ query: null }); */
+    },
     created(){
         this.getRoles(); // Carica prima i ruoli
         window.addEventListener('scroll', this.lazyLoadImages);
-        console.log('created-1',this.allMusicians)
         // Verifica se store.roleFromHome è diverso da null
         if (store.roleFromHome != null) {
             // Se store.roleFromHome non è null, imposta selectedRole e avvia la ricerca per ruolo
             this.selectedRole = store.roleFromHome;
             this.getMusiciansByRole();
-            console.log('created-2',this.allMusicians)
-
-            console.log('store', store.roleFromHome, this.selectedRole)
         } else {
             // Altrimenti, esegui una ricerca standard
             this.getMusicians();
@@ -203,13 +204,13 @@ export default {
         <div class="row">
             <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
-                    <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band...">
+                    <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                     <div class="star-rating text-center">
-                        <span class="star" v-for="star in 5" :key="star" @click="rating = star">
+                        <span class="star" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
                             {{ star <= rating ? '★' : '☆' }}
                         </span>
                     </div>
@@ -226,7 +227,7 @@ export default {
             <div v-for="(role, index) in allRoles" :key="index" class="mycol-md-2 my-2">
                 <button class="button-roles"
                         type="button"
-                        @click="selectedRole = role"
+                        @click="selectedRole = role, updateFilterMusicians()"
                         :class="{ 'active': selectedRole === role }">
                     {{ role.title }}
                 </button>
