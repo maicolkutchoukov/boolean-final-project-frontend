@@ -48,7 +48,7 @@ export default {
 <style lang="scss" scoped>
 header {
 background-color: #21252B; color: #BADFDA; border: 1px solid #21252B;
-width: 100%; max-height: 180px;
+width: 100%; max-height: 80px;
 display: flex; align-items: center;
 position: sticky; top: 0; left: 0; right: 0; z-index: 999;
 .navbar-nav {

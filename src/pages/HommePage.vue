@@ -208,13 +208,15 @@ export default {
                         lasciati trasportare dalle emozioni e dall'energia di talenti freschi e innovativi. 
                         Entra nel mondo della musica di BMusic oggi stesso e preparati a scoprire il prossimo grande successo!
                         </p>
-                        <router-link :to="{ name: 'search' }" class="button-show btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Cerca artisti o band</router-link>
+                        <button @click="openModal" class="button-show btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Filtra per ruolo</button>
+                        <!-- <router-link :to="{ name: 'search' }" class="button-show btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Cerca artisti o band</router-link> -->
                     </div>
                 </div>
             </div>
         </section>
+        
         <section class="mt-5">
-            <button @click="openModal" class="btn btn-dark mb-3">Filtra per ruolo</button>
+            
     
             <!-- Modale -->
             <div class="modal" tabindex="-1" role="dialog" style="display: block;" v-if="modalVisible">

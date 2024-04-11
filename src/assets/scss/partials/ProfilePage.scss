@@ -174,26 +174,27 @@
   }
   
   .filled {
-    color: gold;
-  }
-  
-  .half-filled {
-    position: relative;
-  }
-  
-  .half-filled::before {
-    content: '★';
-    position: absolute;
-    color: gold;
-    overflow: hidden;
-    width: 50%;
-    white-space: nowrap;
-  }
+    color: gold; /* Colore per le palline piene */
+}
+
+.half-filled {
+    position: relative; /* Posizione relativa per le palline parzialmente piene */
+}
+
+.half-filled::before {
+    content: '\f111'; /* Unicode per l'icona della pallina piena di Font Awesome */
+    font-family: 'Font Awesome 5 Free'; /* Font family per Font Awesome */
+    position: absolute; /* Posizione assoluta rispetto al contenitore */
+    color: gold; /* Colore per l'icona della pallina piena */
+    overflow: hidden; /* Nasconde l'eventuale overflow */
+    width: 50%; /* Larghezza del contenitore per l'icona */
+    white-space: nowrap; /* Evita il wrap del testo */
+}
   
   @keyframes bounceInX {
     0% {
         opacity: 0;
-        transform: translateX(-80px);
+        transform: translateX(-300px);
     }
     100% {
         opacity: 1;
