@@ -337,7 +337,7 @@ export default {
                 </div>
             </div>
             <div class="container">
-                <div class="row">
+                <div class="row" v-if="singleMusician && singleMusician.reviews">
                     <div class="col-md-12 p-0">
                         <div class="reviews-container">
                             <div class="reviews-wrapper">
