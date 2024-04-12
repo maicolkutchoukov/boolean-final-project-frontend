@@ -17,7 +17,8 @@ export default {
             loading: false,
             nextPageUrl: null,
             prevPageUrl: null,
-            sponsoredMusicians: []
+            sponsoredMusicians: [],
+            showFiltersModal: false
         };
     },
     computed: {
@@ -109,6 +110,7 @@ export default {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/roles');
                 this.allRoles = response.data.results;
+                console.log(this.allRoles)
             } catch (error) {
                 console.error('Errore durante la chiamata API:', error);
             }
@@ -169,10 +171,16 @@ export default {
                 rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
                 rect.right <= (window.innerWidth || document.documentElement.clientWidth)
             );
+        },
+        toggleFiltersModal() {
+            console.log(this.showFiltersModal)
+            this.showFiltersModal = !this.showFiltersModal;
         }
+        
     },
     created(){
         this.getRoles();
+        console.log(this.allRoles)
         window.addEventListener('scroll', this.lazyLoadImages);
 
         if (store.roleFromHome != null) {
@@ -190,9 +198,42 @@ export default {
 </script>
 <template>
     <section class="search-section container-xl mb-5">
+        <!-- ------------------------------- -->
+        <div class="row d-md-none">
+            <div class="col-12">
+                <div class="input-container position-relative mb-4 d-flex align-items-center justify-content-between">
+                    <input type="text" v-model="searchQuery" class="form-control input-searchbar w-50 mx-2" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
+                    <input type="number" v-model="minimumReviews" class="form-control input-min-reviews w-50 mx-2 px-4" min="0" placeholder="Numero minimo di recensioni">
+                </div>
+                
+                <div class="text-center mb-3">
+                    
+                    <span class="star mx-3" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
+                    <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle fs-3\'></i>' : '<i class=\'fa-regular fa-circle fs-3\'></i>'"></span>
+                </span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="row justify-content-between">
+                    <div v-for="(role, index) in allRoles" :key="index" class="col-2 my-2 mx-2">
+                        <div
+                            class="logo-instrument-container"
+                            @click="toggleRoleSelection(role)"
+                            
+                            >
+                            <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="w-50 border logo-instrument bischero-leonardo" :class="{ 'active-roles-resp': isRoleSelected(role) }">
+                            <div class="title-hover">
+                                {{ role.title }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ------------------------------- -->
         <div class="search-container">
-            <h1 class="fw-bold">Trova artisti o band {{ store.roleFromHome }}</h1>
-            <div class="input-container position-relative">
+            <h1 class="fw-bold  d-none d-md-block">Trova artisti o band {{ store.roleFromHome }}</h1>
+            <div class="input-container position-relative  d-none d-md-block">
                 <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
                 <span class="search-icon">
                     <i class="fa-solid fa-magnifying-glass position-absolute"></i>
@@ -200,21 +241,23 @@ export default {
             </div>
             
             <div class="container d-flex flex-wrap justify-content-center mb-5">
-                <div v-for="(role, index) in allRoles" :key="index" class="mycol-2 my-2">
+                <div v-for="(role, index) in allRoles" :key="index" class="mycol-2 my-2 d-none d-md-block">
                     <button
                     class="button-roles"
                     type="button"
                     @click="toggleRoleSelection(role)"
                     :class="{ 'active': isRoleSelected(role) }"
+                    
                     >
                     {{ role.title }}
                     </button>
+                    
                 </div>
             </div>
         </div>
 
         <div class="wrapper row justify-content-between">
-            <aside class="col-4 border my-bg-grey py-5 px-4">
+            <aside class="col-4 border my-bg-grey py-5 px-4 d-none d-md-block">
                 <h2 class="fw-bold fs-1 mb-4">Filtri</h2>
                 <div class="filter-container">
                     <div class="roles-container p-4 mb-5 bg-white">
@@ -223,10 +266,13 @@ export default {
                         <div v-if="selectedRoles.length > 0">
                             <div class="row justify-content-between">
                                 <div class="col-6 text-center mb-3" v-for="(role, index) in selectedRoles" :key="index">
-                                    <button class="button-roles px-4 active" type="button" @click="removeRole(role)">{{ role.title }}</button>
+                                    <button class="button-roles-filters px-4 active" type="button" @click="removeRole(role)">{{ role.title }}
+                                    <div class="fire-overlay"></div> <!-- Sovrapposizione semi-trasparente -->
+                                    
+                                    </button>
                                 </div>
                             </div>
-                            <span class="remove-roles" @click="removeSelectedRoles">X Rimuovi filtri</span>
+                            <span class="remove-roles" @click="removeSelectedRoles"><i class="fa-solid fa-xmark me-3 fs-3"></i></span>
                         </div>
 
                         <div v-else>
@@ -254,7 +300,7 @@ export default {
                 </div>
                 <div class="button-search my-button"></div>
             </aside>
-            <div v-if="!loading" class="col-7 card-section">
+            <div v-if="!loading" class="col-12 col-md-7 card-section">
                 <h2 class="fw-bold px-4 py-3 fs-1">Artisti in evidenza</h2>
                 <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
                 <!-- <transition-group name="fade" tag="div" class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;"> -->
@@ -271,10 +317,14 @@ export default {
                                 <h5 class="card-title fw-bold fs-4 ps-3 pt-4 mb-3">{{ singleMusician.name }}</h5>
                                 <p class="card-text h-50 overflow-hidden ps-3 bio-text">{{ singleMusician.user_details.bio }}</p>
                                 
-                                <div v-if="singleMusician.isSponsored" class="sponsor-badge"><i class="fa-solid fa-bolt fa-beat"></i></div>
+                                <div v-if="singleMusician.isSponsored" class="sponsor-badge">
+                                    <i class="fa-solid fa-bolt fa-beat"></i>
+                                </div>
                                 
                                 <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn my-btn text-white inline-block h-25 border">Vedi Profilo</router-link>
                             </div>
+                            
+
                         </div>
                     </div>
                 <!-- </transition-group> -->
@@ -282,6 +332,7 @@ export default {
             </div>
         </div>
     </section>
+
     <div v-if="loading" class="loading-overlay">
         <div class="spinner-border me-4" role="status">
             <span class="visually-hidden">Caricamento...</span>
@@ -331,7 +382,7 @@ export default {
                 overflow-y: auto;
                 .remove-roles{
                     position: absolute;
-                    bottom: 20px;
+                    bottom: 5px;
                     left: 20px;
                     cursor: pointer;
                 }
@@ -466,96 +517,76 @@ export default {
     }
 }
 
-/* .fade-enter-active, .fade-leave-active {
-    transition: all 0.5s ease
+
+@keyframes fireAnimation {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
 }
 
-.fade-enter, .fade-leave-to {
-    opacity: 0;
-    transform: translateX(-120%);
-}
-
-.card-container{
+.button-roles-filters {
+  position: relative;
+  background-color: #21252B;
+    color: white;
+    font-weight: bold;
+    border: 1px solid grey;
+    padding: 10px 0;
     border-radius: 20px;
+  overflow: hidden; /* Nasconde eventuali contenuti che fuoriescono dalla card */
+}
+
+.fire-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://usagif.com/wp-content/uploads/gifs/fire-23.gif'); /* Imposta l'immagine di fuoco come sfondo */
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 10px; /* Arrotonda i bordi della sovrapposizione */
+  opacity: 0.5; /* Opacità della sovrapposizione semi-trasparente */
+  animation: fireSpread 2s infinite alternate; /* Applica l'animazione al fuoco */
+}
+
+@keyframes fireSpread {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+/* ----------------------------------- */
+/* RESPONSIVE WIP*/
+.logo-instrument{
+    border-radius: 50%;
+    padding: 10px;
+    &:hover{
+        .title-hover{
+            display: block;
+        }
+    }
+}
+.title-hover{
+    display: none;
+}
+
+/* .logo-instrument:hover .title-hover{
+    display: block;
 } */
+
+.bischero-leonardo:hover+.title-hover{
+    display: block;
+}
+
+.active-roles-resp{
+    border: 1px solid #21252B;
+    background-color: #BADFDA;
+}
 </style>
-
-
-
-
-
-        //<!-- Paginazione -->
-        //<!-- <div class="row justify-content-center mt-4" v-if="!loading && (prevPageUrl || nextPageUrl)">
-        //    <div class="col-auto">
-        //        <button v-if="prevPageUrl" @click="getMusicians(prevPageUrl)" class="btn btn-secondary">Pagina precedente</button>
-        //    </div>
-        //    <div class="col-auto">
-        //        <button v-if="nextPageUrl" @click="getMusicians(nextPageUrl)" class="btn btn-secondary">Pagina successiva</button>
-        //    </div>
-        //</div> -->
-
-        async getRoles() {
-            try {
-                const response = await axios.get('http://127.0.0.1:8000/api/roles');
-                this.allRoles = response.data.results;
-            } catch (error) {
-                console.error('Errore durante la chiamata API:', error);
-            }
-        },
-        async getMusicians(url = 'http://127.0.0.1:8000/api/users') {
-            this.loading = true;
-            try {
-                const response = await axios.get(url);
-                this.updateMusicians(response);
-                console.log('Chiamata getMusicians')
-
-            } catch (error) {
-                console.error('Errore durante la chiamata API:', error);
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        <!-- <div class="container d-flex flex-wrap justify-content-center">
-                <div v-for="(role, index) in allRoles" :key="index" class="mycol-md-2 my-2">
-                    <button class="button-roles"
-                            type="button"
-                            @click="selectedRole = role"
-                            :class="{ 'active': selectedRole === role }">
-                        {{ role.title }}
-                    </button>
-                </div>
-            </div> -->
-
-
-            filtro con sponsorizzati da testare 
-            filteredMusicians() {
-                let filteredNonSponsored = this.allMusicians.filter(musician => !musician.isSponsored);
-                let filteredSponsored = this.allMusicians.filter(musician => musician.isSponsored);
-            
-                if (this.selectedRoles.length > 0) {
-                    filteredNonSponsored = filteredNonSponsored.filter(musician =>
-                        this.selectedRoles.every(selectedRole =>
-                            musician.roles.some(role => role.id === selectedRole.id)
-                        )
-                    );
-                }
-            
-                if (this.searchQuery.trim() !== '') {
-                    filteredNonSponsored = filteredNonSponsored.filter(musician => musician.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
-                }
-            
-                if (this.rating !== null) {
-                    filteredNonSponsored = filteredNonSponsored.filter(musician => {
-                        const averageRating = musician.votes.reduce((acc, vote) => acc + parseInt(vote.vote), 0) / musician.votes.length;
-                        return averageRating >= this.rating;
-                    });
-                }
-            
-                if (this.minimumReviews !== null) {
-                    filteredNonSponsored = filteredNonSponsored.filter(musician => musician.reviews.length >= this.minimumReviews);
-                }
-            
-                return [...filteredSponsored, ...filteredNonSponsored];
-            }
-            
