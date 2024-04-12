@@ -113,8 +113,8 @@ export default {
 <template>
     <div class="container-fluid">
         <!-- Jumbotron SECTION -->
-        <div class="jumbotron p-0">
-            <h1 class="py-5 mb-3 display-4 fw-bold text-white px-5">Trova musicisti, gruppi, <br> Dj e band per il tuo evento</h1>
+        <div class="jumbotron p-0 d-flex align-items-center">
+            <h1 class="container p-0 py-5 mb-3 display-4 fw-bold text-white">Trova musicisti, gruppi <br> e band per il tuo evento</h1>
         </div>
         <!-- How To Do Section -->
         <section class="how-section">
