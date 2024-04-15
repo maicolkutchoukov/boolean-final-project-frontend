@@ -33,10 +33,12 @@ export default {
                 <!-- Container-left -->
                 <div class="col-md-6 container-left">
                     <div id="container-social" class="container d-flex flex-column justify-content-center">
+                        <!-- Logo -->
                         <div class="container-img">
                             <img src="../../public/Img/LogoBMusic.png" alt="">
                         </div>
                        
+                        <!-- Social Icon -->
                         <div class="social-text">
                             <div class="color text">seguici su</div>
                             <nav>
@@ -69,6 +71,7 @@ export default {
 
                 <!-- Container-right -->
                 <div class="col-md-6 container-right d-flex flex-row-reverse">
+                    <!-- Link Footer -->
                     <div class="px-3" v-for="footerLink in footerLinks" :key="footerLink.category">
                         <h5 class="color" >{{ footerLink.category }}</h5>
                         <ul>
@@ -78,6 +81,7 @@ export default {
                 </div>
 
                 <div class="col-ms-12 mt-5">
+                    <!-- Text Footer -->
                     <p class="text-center color-grey">
                         BMusic asserts its exclusive rights over all content featured on this website. Unauthorized use, reproduction, distribution, display, or transmission of any content is strictly prohibited without prior authorization from \BMusic. All rights reserved
                     </p>
@@ -102,6 +106,29 @@ export default {
     height: 200px;
 }
 
+.container-img {
+    height: 75px;
+    width: 150px;
+}
+
+.container-img > img {
+    width: 100%;
+}
+
+//Social Icon
+ul li a {
+    margin-bottom: 10px;
+    color: #BADFDA;
+}
+
+ul li a i {
+    font-size: 2rem;
+}
+
+.social-item {
+    padding: 0 5px;
+}
+//Link Footer
 ul {
     margin: 0;
     padding: 0;
@@ -112,28 +139,7 @@ ul li {
     margin-top: 10px;
 }
 
-.container-img {
-    height: 75px;
-    width: 150px;
-}
-
-.container-img > img {
-    width: 100%;
-}
-
-.social-item {
-    padding: 0 5px;
-}
-
-ul li a {
-    margin-bottom: 10px;
-    color: #BADFDA;
-}
-
-ul li a i {
-    font-size: 2rem;
-}
-
+//Text Style
 .text {
     margin-left: 45px;
     margin-bottom: 10px;
