@@ -25,12 +25,6 @@ export default {
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 split-menu">
               <li class="nav-item">
-                <router-link :to="{ name: 'instrumental' }" class="header-nav-link">Strumenti</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link :to="{ name: 'sponsor' }" class="header-nav-link">Sponsor</router-link>
-              </li>
-              <li class="nav-item">
                 <a href="http://127.0.0.1:8000/login" class="header-nav-link">Accedi</a>
               </li>
               <li class="nav-item">

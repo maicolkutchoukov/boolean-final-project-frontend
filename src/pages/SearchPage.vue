@@ -5,6 +5,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            // Variabili di stato
             store,
             allMusicians: [],
             allMusiciansFiltered: [],
@@ -23,6 +24,7 @@ export default {
         };
     },
     computed: {
+        // Metodo di calcolo per filtrare gli artisti
         filteredMusicians() {
             let filtered = [];
             
@@ -62,84 +64,61 @@ export default {
         }
     },
     methods: {
+        // Metodo per ottenere gli artisti
         async getMusicians(url = 'http://127.0.0.1:8000/api/users') {
-            this.loading = true;
-            try {
-                const response = await axios.get(url);
-                const allUsers = response.data.results.data;
-                console.log(this.allMusicians)
-                // Carica solo gli utenti sponsorizzati dalla chiamata a 'sponsor'
-                const sponsoredResponse = await axios.get('http://127.0.0.1:8000/api/sponsor');
-                const sponsoredMusicians = sponsoredResponse.data.results;
-                console.log('getMusicians chiamata sponsor', sponsoredMusicians)
+    try {
+        this.loading = true;
 
-                // Segna tutti gli utenti sponsorizzati
-                sponsoredMusicians.forEach(musician => {
-                    musician.isSponsored = true;
-                });
+        // Effettua la chiamata API per ottenere tutti gli utenti
+        const response = await axios.get(url);
+        const allUsers = response.data.results.data;
 
-                // Aggiungi solo gli utenti non sponsorizzati all'array
-                const nonSponsoredUsers = allUsers.filter(user => !user.isSponsored);
-                nonSponsoredUsers.forEach(user => {
-                    if (!this.allMusicians.some(existingUser => existingUser.id === user.id)) {
-                        this.allMusicians.push(user);
-                    }
-                });
+        // Effettua la chiamata API per ottenere gli artisti sponsorizzati
+        const sponsoredResponse = await axios.get('http://127.0.0.1:8000/api/sponsor');
+        const sponsoredMusicians = sponsoredResponse.data.results;
 
-                // Aggiungi gli utenti sponsorizzati solo se non sono già presenti
-                sponsoredMusicians.forEach(musician => {
-                    if (!this.allMusicians.some(existingUser => existingUser.id === musician.id)) {
-                        this.allMusicians.unshift(musician);
-                    }
-                });
-            } catch (error) {
-                console.error('Errore durante la chiamata API:', error);
-            } finally {
-                this.loading = false;
-            }
-        },
+        // Segna tutti gli utenti sponsorizzati
+        sponsoredMusicians.forEach(musician => {
+            musician.isSponsored = true;
+        });
 
-        async getSponsoredMusicians() {
-            try {
-                const response = await axios.get('http://127.0.0.1:8000/api/sponsor');
-                const sponsoredMusicians = response.data.results;
+        // Filtra gli utenti non sponsorizzati per rimuovere eventuali duplicati
+        const nonSponsoredUsers = allUsers.filter(user => !sponsoredMusicians.some(sponsored => sponsored.id === user.id));
 
-                // Segna tutti gli utenti sponsorizzati
-                sponsoredMusicians.forEach(musician => {
-                    musician.isSponsored = true;
-                });
+        // Unisci gli utenti sponsorizzati e non sponsorizzati, mettendo gli sponsorizzati all'inizio
+        this.allMusicians = [...sponsoredMusicians, ...nonSponsoredUsers];
 
-                // Rimuovi gli utenti sponsorizzati già presenti in allMusicians
-                this.allMusicians = this.allMusicians.filter(musician => !musician.isSponsored);
-
-                // Aggiungi gli utenti sponsorizzati all'inizio dell'array
-                this.allMusicians.unshift(...sponsoredMusicians);
-            } catch (error) {
-                console.error('Errore durante la chiamata API:', error);
-            }
-        },
+    } catch (error) {
+        console.error('Errore durante la chiamata API:', error);
+    } finally {
+        this.loading = false;
+    }
+},
         async getRoles() {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/roles');
                 this.allRoles = response.data.results;
-                console.log(this.allRoles)
             } catch (error) {
                 console.error('Errore durante la chiamata API:', error);
             }
         },
+        // Metodo per aggiornare i filtri degli artisti
         updateFilterMusicians(){
             this.filteredMusicians;
             this.$router.push({ query: null });
         }, 
+        // Metodo per ripristinare i filtri degli artisti
         resetFilters() {
             this.selectedRoles = [];
             this.searchQuery = '';
             this.rating = null;
             this.minimumReviews = null;
         },
+        // Verifica se un ruolo è selezionato
         isRoleSelected(role) {
             return this.selectedRoles.some(selectedRole => selectedRole.id === role.id);
         },
+        // Metodo per selezionare/deselezionare un ruolo
         toggleRoleSelection(role) {
             const index = this.selectedRoles.findIndex(selectedRole => selectedRole.id === role.id);
             if (index !== -1) {
@@ -148,22 +127,27 @@ export default {
                 this.selectedRoles.push(role);
             }
         },
+        // Ripristina il rating dei filtri
         resetRating() {
             this.rating = null;
             this.updateFilterMusicians();
         },
+        // Rimuove un ruolo dai filtri
         removeRole(roleToRemove) {
             this.selectedRoles = this.selectedRoles.filter(role => role !== roleToRemove);
             this.updateFilterMusicians();
         },
+        // Rimuove tutti i ruoli selezionati
         removeSelectedRoles() {
             this.selectedRoles = [];
             this.updateFilterMusicians();
         },
+        // Ripristina il numero minimo di recensioni
         resetMinimumReviews() {
             this.minimumReviews = null;
             this.updateFilterMusicians();
         },
+        // Ripristina tutti i filtri
         resetFilters() {
             this.selectedRoles = [];
             this.searchQuery = '';
@@ -172,47 +156,42 @@ export default {
             store.selectedRoleHome = null
             store.filteredMusicians = [];
         },
+        // Mostra o nasconde il modal dei filtri
         toggleFiltersModal() {
-            console.log(this.showFiltersModal)
             this.showFiltersModal = !this.showFiltersModal;
         }
-        
     },
     created() {
-    this.getRoles();
-    console.log(this.allRoles);
-    
-    console.log('ruolo selezionato nella home:', store.selectedRoleHome);
-
-    // Se selectedRoleHome non è null, imposta il ruolo selezionato e aggiungilo ai ruoli selezionati
-    if (store.selectedRoleHome !== null) {
-        const selectedRole = this.allRoles.find(role => role.title === store.selectedRoleHome);
-        if (selectedRole) {
-            this.selectedRoles.push(selectedRole);
+        // Ottieni i ruoli, ottieni gli artisti sponsorizzati, ottieni tutti gli artisti
+        this.getRoles();
+        if (store.selectedRoleHome !== null) {
+            const selectedRole = this.allRoles.find(role => role.title === store.selectedRoleHome);
+            if (selectedRole) {
+                this.selectedRoles.push(selectedRole);
+            }
         }
+        this.getMusicians();
     }
-
-    this.getSponsoredMusicians(); // Chiamata diretta a getSponsoredMusicians
-    this.getMusicians();
-
-    console.log('allMusicians', this.allMusicians);
-}
 };
 </script>
 <template>
+    <!-- Sezione di ricerca -->
     <section class="search-section container-xl mb-5">
         <div class="search-container">
-            <button class="btn btn-danger" @click="resetFilters">Annulla Filtri</button>
-            <h1 class="fw-bold  d-none d-md-block">Trova artisti o band {{ store.selectedRoleHome }}</h1>
-            <div class="input-container position-relative  d-none d-md-block">
+            <!-- Titolo della sezione di ricerca -->
+            <h1 class="fw-bold d-none d-md-block">Trova artisti o band {{ store.selectedRoleHome }}</h1>
+            <!-- Input per la ricerca -->
+            <div class="input-container position-relative d-none d-md-block">
                 <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
                 <span class="search-icon">
                     <i class="fa-solid fa-magnifying-glass position-absolute"></i>
                 </span>
             </div>
             
+            <!-- Container dei ruoli -->
             <div class="container d-flex flex-wrap justify-content-center mb-5">
                 <div v-for="(role, index) in allRoles" :key="index" class="mycol-2 my-2 d-none d-md-block">
+                    <!-- Bottone per selezionare i ruoli -->
                     <button
                         class="button-roles"
                         type="button"
@@ -225,83 +204,104 @@ export default {
             </div>
         </div>
 
+        <!-- Sidebar dei filtri -->
         <div class="wrapper row justify-content-between">
             <aside class="col-4 border my-bg-grey py-5 px-4 d-none d-md-block">
+                <!-- Titolo della sezione dei filtri -->
                 <h2 class="fw-bold fs-1 mb-4">Filtri</h2>
                 <div class="filter-container">
+                    <!-- Contenitore dei ruoli selezionati -->
                     <div class="roles-container p-4 mb-5 bg-white">
                         <h4 class="mb-4 fw-bold fs-4">Ruoli selezionati</h4>
 
+                        <!-- Mostra i ruoli selezionati -->
                         <div v-if="selectedRoles.length > 0">
                             <div class="row justify-content-between">
                                 <div class="col-6 text-center mb-3" v-for="(role, index) in selectedRoles" :key="index">
+                                    <!-- Bottone per rimuovere un ruolo selezionato -->
                                     <button class="button-roles-filters px-4 active" type="button" @click="removeRole(role)">{{ role.title }}
                                     <div class="fire-overlay"></div> <!-- Sovrapposizione semi-trasparente -->
-                                    
                                     </button>
                                 </div>
                             </div>
+                            <!-- Bottone per rimuovere tutti i ruoli selezionati -->
                             <span class="remove-roles" @click="removeSelectedRoles"><i class="fa-solid fa-xmark me-3 fs-3"></i></span>
                         </div>
 
+                        <!-- Messaggio se non ci sono ruoli selezionati -->
                         <div v-else>
                             <p>Nessun ruolo selezionato</p>
                         </div>
                     </div>
+                    <!-- Contenitore per il filtro del numero minimo di recensioni -->
                     <div class="reviews-container p-4 mb-5 bg-white">
                         <h4 class="mb-4 fw-bold fs-4">N. Minimo Recensioni</h4>
+                        <!-- Input per inserire il numero minimo di recensioni -->
                         <input type="number" v-model="minimumReviews" class="form-control input-min-reviews w-100 px-4 mb-3" min="0" placeholder="Numero minimo di recensioni">
+                        <!-- Bottone per resettare il filtro delle recensioni minime -->
                         <span class="fs-3" @click="resetMinimumReviews"><i class="fa-solid fa-xmark me-3"></i></span>
                     </div>
+                    <!-- Contenitore per il filtro della media delle votazioni -->
                     <div class="vote-container p-4 mb-5 bg-white">
                         <h4 class="mb-4 fw-bold fs-4">Media votazioni</h4>
+                        <!-- Visualizzazione delle stelle per selezionare la media delle votazioni -->
                         <div class="row align-items-center">
                             <div class="col-11 px-0 mb-2">
                                 <span class="star" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
                                     <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle\'></i>' : '<i class=\'fa-regular fa-circle\'></i>'"></span>
                                 </span>
                             </div>
+                            <!-- Bottone per resettare il filtro della media delle votazioni -->
                             <div class="col">
                                 <span class="fs-3" @click="resetRating"><i class="fa-solid fa-xmark me-3"></i></span>
                             </div>
                         </div>
                     </div>
+                    <!-- Bottone per annullare tutti i filtri -->
+                    <button class="btn btn-danger" @click="resetFilters">Annulla Filtri</button>
                 </div>
+                <!-- Pulsante di ricerca -->
                 <div class="button-search my-button"></div>
             </aside>
+            
+            <!-- Contenitore dei risultati della ricerca -->
             <div v-if="!loading" class="col-12 col-md-7 card-section">
+                <!-- Titolo degli artisti in evidenza -->
                 <h2 class="fw-bold px-4 py-3 fs-1">Artisti in evidenza</h2>
                 <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
-                <!-- <transition-group name="fade" tag="div" class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;"> -->
                     <div 
                         class="row mb-5 card-content position-relative" 
                         :class="{ 'show-card': !loading, 'filtered': filteredMusicians.length < allMusicians.length }"
                         v-for="(singleMusician, index) in filteredMusicians" 
                         :key="singleMusician.id"
                     >
+                        <!-- Immagine dell'artista -->
                         <div class="col-4 img-artist" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')', 'background-position': 'center', 'background-size': 'cover' }">     
                         </div>
+                        <!-- Contenitore delle informazioni dell'artista -->
                         <div class="col-8 border my-bg-grey">
                             <div class="card-body">
+                                <!-- Nome dell'artista -->
                                 <h5 class="card-title fw-bold fs-4 ps-3 pt-4 mb-3">{{ singleMusician.name }}</h5>
+                                <!-- Biografia dell'artista -->
                                 <p class="card-text h-50 overflow-hidden ps-3 bio-text">{{ singleMusician.user_details.bio }}</p>
                                 
+                                <!-- Badge per gli artisti sponsorizzati -->
                                 <div v-if="singleMusician.isSponsored" class="sponsor-badge">
                                     <i class="fa-solid fa-bolt fa-beat"></i>
                                 </div>
                                 
+                                <!-- Link al profilo dell'artista -->
                                 <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn my-btn text-white inline-block h-25 border">Vedi Profilo</router-link>
                             </div>
-                            
-
                         </div>
                     </div>
-                <!-- </transition-group> -->
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Overlay di caricamento -->
     <div v-if="loading" class="loading-overlay">
         <div class="spinner-border me-4" role="status">
             <span class="visually-hidden">Caricamento...</span>
