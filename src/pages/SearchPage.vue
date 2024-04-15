@@ -10,7 +10,8 @@ export default {
             allMusiciansFiltered: [],
             allRoles: [],
             selectedRoles: [],
-            selectedRole: store.roleFromHome,
+            selectedRole: null,
+            selectedRoleHome: store.selectedRoleHome,
             searchQuery: '',
             rating: null,
             minimumReviews: null,
@@ -23,8 +24,17 @@ export default {
     },
     computed: {
         filteredMusicians() {
-            let filtered = this.allMusicians;
-            console.log(this.allMusicians)
+            let filtered = [];
+            
+            if (store.filteredMusicians && store.filteredMusicians.length > 0) {
+                // Se ci sono musicisti filtrati nello store, li usiamo come base per i filtri
+                filtered = [...store.filteredMusicians];
+            } else {
+                // Altrimenti, usiamo tutti i musicisti disponibili
+                filtered = [...this.allMusicians];
+            }
+            
+            // Applica i filtri aggiuntivi, se necessario
             if (this.selectedRoles.length > 0) {
                 filtered = filtered.filter(musician =>
                     this.selectedRoles.every(selectedRole =>
@@ -47,6 +57,7 @@ export default {
             if (this.minimumReviews !== null) {
                 filtered = filtered.filter(musician => musician.reviews.length >= this.minimumReviews);
             }
+            
             return filtered;
         }
     },
@@ -60,6 +71,7 @@ export default {
                 // Carica solo gli utenti sponsorizzati dalla chiamata a 'sponsor'
                 const sponsoredResponse = await axios.get('http://127.0.0.1:8000/api/sponsor');
                 const sponsoredMusicians = sponsoredResponse.data.results;
+                console.log('getMusicians chiamata sponsor', sponsoredMusicians)
 
                 // Segna tutti gli utenti sponsorizzati
                 sponsoredMusicians.forEach(musician => {
@@ -152,25 +164,13 @@ export default {
             this.minimumReviews = null;
             this.updateFilterMusicians();
         },
-        lazyLoadImages() {
-            const lazyImages = document.querySelectorAll('.lazy');
-            lazyImages.forEach(image => {
-                if (this.isElementInViewport(image)) {
-                    image.src = image.dataset.src;
-                    image.onload = () => {
-                        image.classList.add('loaded');
-                    };
-                }
-            });
-        },
-        isElementInViewport(el) {
-            const rect = el.getBoundingClientRect();
-            return (
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-            );
+        resetFilters() {
+            this.selectedRoles = [];
+            this.searchQuery = '';
+            this.rating = null;
+            this.minimumReviews = null;
+            store.selectedRoleHome = null
+            store.filteredMusicians = [];
         },
         toggleFiltersModal() {
             console.log(this.showFiltersModal)
@@ -178,61 +178,32 @@ export default {
         }
         
     },
-    created(){
-        this.getRoles();
-        console.log(this.allRoles)
-        window.addEventListener('scroll', this.lazyLoadImages);
+    created() {
+    this.getRoles();
+    console.log(this.allRoles);
+    
+    console.log('ruolo selezionato nella home:', store.selectedRoleHome);
 
-        if (store.roleFromHome != null) {
-            this.selectedRoles.push(store.roleFromHome);
-        } else {
-            this.getSponsoredMusicians(); // Chiamata diretta a getSponsoredMusicians
-            this.getMusicians();
+    // Se selectedRoleHome non è null, imposta il ruolo selezionato e aggiungilo ai ruoli selezionati
+    if (store.selectedRoleHome !== null) {
+        const selectedRole = this.allRoles.find(role => role.title === store.selectedRoleHome);
+        if (selectedRole) {
+            this.selectedRoles.push(selectedRole);
         }
-        console.log('allMusicians', this.allMusicians)
-    },
-    destroyed() {
-        window.removeEventListener('scroll', this.lazyLoadImages);
     }
+
+    this.getSponsoredMusicians(); // Chiamata diretta a getSponsoredMusicians
+    this.getMusicians();
+
+    console.log('allMusicians', this.allMusicians);
+}
 };
 </script>
 <template>
     <section class="search-section container-xl mb-5">
-        <!-- ------------------------------- -->
-        <div class="row d-md-none">
-            <div class="col-12">
-                <div class="input-container position-relative mb-4 d-flex align-items-center justify-content-between">
-                    <input type="text" v-model="searchQuery" class="form-control input-searchbar w-50 mx-2" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
-                    <input type="number" v-model="minimumReviews" class="form-control input-min-reviews w-50 mx-2 px-4" min="0" placeholder="Numero minimo di recensioni">
-                </div>
-                
-                <div class="text-center mb-3">
-                    
-                    <span class="star mx-3" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
-                    <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle fs-3\'></i>' : '<i class=\'fa-regular fa-circle fs-3\'></i>'"></span>
-                </span>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="row justify-content-between">
-                    <div v-for="(role, index) in allRoles" :key="index" class="col-3 col-sm-2 my-2 mx-2">
-                        <div
-                            class="logo-instrument-container"
-                            @click="toggleRoleSelection(role)"
-                            
-                            >
-                            <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="w-50 border logo-instrument bischero-leonardo" :class="{ 'active-roles-resp': isRoleSelected(role) }">
-                            <div class="title-hover">
-                                {{ role.title }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- ------------------------------- -->
         <div class="search-container">
-            <h1 class="fw-bold  d-none d-md-block">Trova artisti o band {{ store.roleFromHome }}</h1>
+            <button class="btn btn-danger" @click="resetFilters">Annulla Filtri</button>
+            <h1 class="fw-bold  d-none d-md-block">Trova artisti o band {{ store.selectedRoleHome }}</h1>
             <div class="input-container position-relative  d-none d-md-block">
                 <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
                 <span class="search-icon">
@@ -243,15 +214,13 @@ export default {
             <div class="container d-flex flex-wrap justify-content-center mb-5">
                 <div v-for="(role, index) in allRoles" :key="index" class="mycol-2 my-2 d-none d-md-block">
                     <button
-                    class="button-roles"
-                    type="button"
-                    @click="toggleRoleSelection(role)"
-                    :class="{ 'active': isRoleSelected(role) }"
-                    
+                        class="button-roles"
+                        type="button"
+                        @click="toggleRoleSelection(role)"
+                        :class="{ 'active': isRoleSelected(role) || (store.selectedRoleHome !== null && role.title === store.selectedRoleHome) }"
                     >
-                    {{ role.title }}
+                        {{ role.title }}
                     </button>
-                    
                 </div>
             </div>
         </div>
@@ -590,3 +559,42 @@ export default {
     background-color: #BADFDA;
 }
 </style>
+
+
+
+<!-- 
+
+<div class="row d-md-none">
+            <div class="col-12">
+                <div class="input-container position-relative mb-4 d-flex align-items-center justify-content-between">
+                    <input type="text" v-model="searchQuery" class="form-control input-searchbar w-50 mx-2" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
+                    <input type="number" v-model="minimumReviews" class="form-control input-min-reviews w-50 mx-2 px-4" min="0" placeholder="Numero minimo di recensioni">
+                </div>
+                
+                <div class="text-center mb-3">
+                    
+                    <span class="star mx-3" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
+                    <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle fs-3\'></i>' : '<i class=\'fa-regular fa-circle fs-3\'></i>'"></span>
+                </span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="row justify-content-between">
+                    <div v-for="(role, index) in allRoles" :key="index" class="col-3 col-sm-2 my-2 mx-2">
+                        <div
+                            class="logo-instrument-container"
+                            @click="toggleRoleSelection(role)"
+                            
+                            >
+                            <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="w-50 border logo-instrument bischero-leonardo" :class="{ 'active-roles-resp': isRoleSelected(role) }">
+                            <div class="title-hover">
+                                {{ role.title }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+ -->
