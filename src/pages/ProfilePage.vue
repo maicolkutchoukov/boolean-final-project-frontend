@@ -318,7 +318,7 @@ export default {
                 <div class="hover-container">
                     <div class="d-flex align-items-center">
                         <!-- Numero totale delle recensioni -->
-                        <small class="me-2 number-reviews">{{ singleMusician.reviews.length }} recensioni</small>
+                        <small class="me-2 number-reviews">{{ singleMusician.votes.length }} recensioni</small>
                         <!-- Visualizza le palline riempite in base alla media dei voti -->
                         <span
                             v-for="index in 5"
@@ -337,7 +337,7 @@ export default {
                 </div>
             </div>
             <div class="container">
-                <div class="row" v-if="singleMusician && singleMusician.reviews">
+                <div class="row" v-if="singleMusician && singleMusician.reviews && singleMusician.reviews.length > 0">
                     <div class="col-md-12 p-0">
                         <div class="reviews-container">
                             <div class="reviews-wrapper">
@@ -382,6 +382,9 @@ export default {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div v-else>
+                    Non ci sono recensioni
                 </div>
             </div>
         </section>

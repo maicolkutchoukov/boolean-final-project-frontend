@@ -24,7 +24,7 @@ export default {
     computed: {
         filteredMusicians() {
             let filtered = this.allMusicians;
-
+            console.log(this.allMusicians)
             if (this.selectedRoles.length > 0) {
                 filtered = filtered.filter(musician =>
                     this.selectedRoles.every(selectedRole =>
@@ -56,7 +56,7 @@ export default {
             try {
                 const response = await axios.get(url);
                 const allUsers = response.data.results.data;
-
+                console.log(this.allMusicians)
                 // Carica solo gli utenti sponsorizzati dalla chiamata a 'sponsor'
                 const sponsoredResponse = await axios.get('http://127.0.0.1:8000/api/sponsor');
                 const sponsoredMusicians = sponsoredResponse.data.results;
@@ -215,7 +215,7 @@ export default {
             </div>
             <div class="col-12">
                 <div class="row justify-content-between">
-                    <div v-for="(role, index) in allRoles" :key="index" class="col-2 my-2 mx-2">
+                    <div v-for="(role, index) in allRoles" :key="index" class="col-3 col-sm-2 my-2 mx-2">
                         <div
                             class="logo-instrument-container"
                             @click="toggleRoleSelection(role)"

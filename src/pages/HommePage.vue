@@ -6,15 +6,15 @@ export default {
     data() {
         return {
             store,
-            allMusicians: [],
-            allRoles: [],
-            sponsoredMusicians: [],
+            allMusicians: [],           // Aggiungere allo store
+            allRoles: [],               // Aggiungere allo store
+            sponsoredMusicians: [],     // Aggiungere allo store 
             selectedRole: null,
-            loading: false,
+            loading: false,             // Aggiungere allo store (?)
             modalVisible: false, // Aggiunta variabile di stato per gestire la visibilità della modale
             filteredMusicians: [],
-            nextPageUrl: null,
-            prevPageUrl: null,
+            nextPageUrl: null,          // Aggiungere allo store
+            prevPageUrl: null,          // Aggiungere allo store
         };
     },
     computed: {
@@ -29,11 +29,12 @@ export default {
         }
     },
     methods: {
-        async getMusicians() {
+        async getMusicians() {                  // Aggiungere allo store
             this.loading = true;
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/users');
                 this.allMusicians = response.data.results.data;
+                console.log(this.allMusicians)
             } catch (error) {
                 console.error('Errore durante la chiamata API:', error);
             } finally {
@@ -41,7 +42,7 @@ export default {
             }
         },
 
-        async getRoles() {
+        async getRoles() {                      // Aggiungere allo store
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/roles');
                 this.allRoles = response.data.results;
@@ -51,7 +52,7 @@ export default {
             }
         },
 
-        async getSponsoredMusicians() {
+        async getSponsoredMusicians() {         // Aggiungere allo store
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/sponsor');
                 console.log(response)
@@ -61,7 +62,7 @@ export default {
             }
         },
 
-        async searchByRole() {
+        async searchByRole() {                  // Aggiungere allo store
             if (this.selectedRole) {
                 this.loading = true;
                 try {
@@ -105,6 +106,7 @@ export default {
         this.getMusicians();
         this.getRoles();
         this.getSponsoredMusicians();
+        
     }
 };
 </script>
@@ -243,7 +245,7 @@ export default {
                                     v-for="(musician, index) in filteredMusicians"
                                     :key="index"
                                     >
-                                        <div class="card" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + musician.user_details.picture + ')' }">
+                                        <div v-if="index < 4" class="card" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + musician.user_details.picture + ')' }">
                                             <!-- Contenuto della card -->
                                             <div class="card-body">
                                                 <div class="card-top">
@@ -262,6 +264,7 @@ export default {
                             Nessun musicista trovato.
                             </div>
                             <button @click="advancedSearch" class="btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Ricerca Avanzata</button>
+                            <button @click="closeModal()" class="btn btn-success"> Chiudi</button>
                         </div>
                         <!-- Paginazione 
                         <div class="row g-0 justify-content-center mt-4" v-if="!loading">
