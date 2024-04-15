@@ -52,11 +52,17 @@ export default {
       }
     },
     saveSelectedRoleHome() {
-      if (this.selectedRole) {
-        store.selectedRoleHome = this.selectedRole;
-      } else {
-        console.error('Errore: nessun ruolo selezionato');
-      }
+        if (this.selectedRole) {
+            const selectedRoleId = store.allRoles.find(role => role.title === this.selectedRole)?.id;
+            if (selectedRoleId) {
+            store.selectedRoleHome = this.selectedRole;
+            store.selectedRoleId = selectedRoleId; // Salva l'ID del ruolo selezionato
+            } else {
+            console.error('Errore: ID del ruolo selezionato non trovato');
+            }
+        } else {
+            console.error('Errore: nessun ruolo selezionato');
+        }
     },
     openModal() {
       this.modalVisible = true;

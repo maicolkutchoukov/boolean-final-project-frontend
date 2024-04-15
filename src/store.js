@@ -9,4 +9,5 @@ export const store = reactive({
   prevPageUrl: null,
   roleFromHome: null,
   selectedRoleHome: null,
+  selectedRoleId: null,
 });

@@ -5,37 +5,40 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            // Variabili di stato
             store,
             allMusicians: [],
-            allMusiciansFiltered: [],
             allRoles: [],
             selectedRoles: [],
-            selectedRole: null,
-            selectedRoleHome: store.selectedRoleHome,
             searchQuery: '',
             rating: null,
             minimumReviews: null,
             loading: false,
-            nextPageUrl: null,
-            prevPageUrl: null,
-            sponsoredMusicians: [],
-            showFiltersModal: false
+            selectedRoleHome: store.selectedRoleHome,
+            selectedIdHome: store.selectedRoleId
         };
     },
     computed: {
         // Metodo di calcolo per filtrare gli artisti
         filteredMusicians() {
             let filtered = [];
-            
+
+            if (store.selectedRoleHome !== null) {
+                // Trova il ruolo corrispondente a selectedRoleHome
+                const selectedRole = this.allRoles.find(role => role.title === store.selectedRoleHome);
+                // Se il ruolo corrisponde, aggiungilo ai filtri esistenti
+                if (selectedRole && !this.selectedRoles.some(role => role.id === selectedRole.id)) {
+                    this.selectedRoles.push(selectedRole);
+                }
+                // Rimuovi selectedRoleHome dopo averlo utilizzato
+                store.selectedRoleHome = null;
+            }
+
             if (store.filteredMusicians && store.filteredMusicians.length > 0) {
-                // Se ci sono musicisti filtrati nello store, li usiamo come base per i filtri
                 filtered = [...store.filteredMusicians];
             } else {
-                // Altrimenti, usiamo tutti i musicisti disponibili
                 filtered = [...this.allMusicians];
             }
-            
+
             // Applica i filtri aggiuntivi, se necessario
             if (this.selectedRoles.length > 0) {
                 filtered = filtered.filter(musician =>
@@ -59,41 +62,29 @@ export default {
             if (this.minimumReviews !== null) {
                 filtered = filtered.filter(musician => musician.reviews.length >= this.minimumReviews);
             }
-            
+
             return filtered;
         }
     },
     methods: {
-        // Metodo per ottenere gli artisti
         async getMusicians(url = 'http://127.0.0.1:8000/api/users') {
-    try {
-        this.loading = true;
-
-        // Effettua la chiamata API per ottenere tutti gli utenti
-        const response = await axios.get(url);
-        const allUsers = response.data.results.data;
-
-        // Effettua la chiamata API per ottenere gli artisti sponsorizzati
-        const sponsoredResponse = await axios.get('http://127.0.0.1:8000/api/sponsor');
-        const sponsoredMusicians = sponsoredResponse.data.results;
-
-        // Segna tutti gli utenti sponsorizzati
-        sponsoredMusicians.forEach(musician => {
-            musician.isSponsored = true;
-        });
-
-        // Filtra gli utenti non sponsorizzati per rimuovere eventuali duplicati
-        const nonSponsoredUsers = allUsers.filter(user => !sponsoredMusicians.some(sponsored => sponsored.id === user.id));
-
-        // Unisci gli utenti sponsorizzati e non sponsorizzati, mettendo gli sponsorizzati all'inizio
-        this.allMusicians = [...sponsoredMusicians, ...nonSponsoredUsers];
-
-    } catch (error) {
-        console.error('Errore durante la chiamata API:', error);
-    } finally {
-        this.loading = false;
-    }
-},
+            try {
+                this.loading = true;
+                const response = await axios.get(url);
+                const allUsers = response.data.results.data;
+                const sponsoredResponse = await axios.get('http://127.0.0.1:8000/api/sponsor');
+                const sponsoredMusicians = sponsoredResponse.data.results;
+                sponsoredMusicians.forEach(musician => {
+                    musician.isSponsored = true;
+                });
+                const nonSponsoredUsers = allUsers.filter(user => !sponsoredMusicians.some(sponsored => sponsored.id === user.id));
+                this.allMusicians = [...sponsoredMusicians, ...nonSponsoredUsers];
+            } catch (error) {
+                console.error('Errore durante la chiamata API:', error);
+            } finally {
+                this.loading = false;
+            }
+        },
         async getRoles() {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/roles');
@@ -102,23 +93,13 @@ export default {
                 console.error('Errore durante la chiamata API:', error);
             }
         },
-        // Metodo per aggiornare i filtri degli artisti
-        updateFilterMusicians(){
-            this.filteredMusicians;
+        updateFilterMusicians() {
+            store.filteredMusicians = this.filteredMusicians;
             this.$router.push({ query: null });
         }, 
-        // Metodo per ripristinare i filtri degli artisti
-        resetFilters() {
-            this.selectedRoles = [];
-            this.searchQuery = '';
-            this.rating = null;
-            this.minimumReviews = null;
-        },
-        // Verifica se un ruolo è selezionato
         isRoleSelected(role) {
             return this.selectedRoles.some(selectedRole => selectedRole.id === role.id);
         },
-        // Metodo per selezionare/deselezionare un ruolo
         toggleRoleSelection(role) {
             const index = this.selectedRoles.findIndex(selectedRole => selectedRole.id === role.id);
             if (index !== -1) {
@@ -126,50 +107,42 @@ export default {
             } else {
                 this.selectedRoles.push(role);
             }
+            this.updateFilterMusicians();
         },
-        // Ripristina il rating dei filtri
         resetRating() {
             this.rating = null;
             this.updateFilterMusicians();
         },
-        // Rimuove un ruolo dai filtri
         removeRole(roleToRemove) {
-            this.selectedRoles = this.selectedRoles.filter(role => role !== roleToRemove);
-            this.updateFilterMusicians();
-        },
-        // Rimuove tutti i ruoli selezionati
+    console.log(this.selectedRoles);
+    this.selectedRoles = this.selectedRoles.filter(role => role.id !== roleToRemove.id);
+    if (this.selectedRoles.length === 0) {
+        this.resetFilters();
+    } else {
+        this.updateFilterMusicians();
+    }
+},
         removeSelectedRoles() {
             this.selectedRoles = [];
+            store.selectedRoleHome = null;
+            store.filteredMusicians = [];
             this.updateFilterMusicians();
         },
-        // Ripristina il numero minimo di recensioni
         resetMinimumReviews() {
             this.minimumReviews = null;
             this.updateFilterMusicians();
         },
-        // Ripristina tutti i filtri
         resetFilters() {
             this.selectedRoles = [];
             this.searchQuery = '';
             this.rating = null;
             this.minimumReviews = null;
-            store.selectedRoleHome = null
+            store.selectedRoleHome = null;
             store.filteredMusicians = [];
         },
-        // Mostra o nasconde il modal dei filtri
-        toggleFiltersModal() {
-            this.showFiltersModal = !this.showFiltersModal;
-        }
     },
     created() {
-        // Ottieni i ruoli, ottieni gli artisti sponsorizzati, ottieni tutti gli artisti
         this.getRoles();
-        if (store.selectedRoleHome !== null) {
-            const selectedRole = this.allRoles.find(role => role.title === store.selectedRoleHome);
-            if (selectedRole) {
-                this.selectedRoles.push(selectedRole);
-            }
-        }
         this.getMusicians();
     }
 };
@@ -220,6 +193,7 @@ export default {
                                 <div class="col-6 text-center mb-3" v-for="(role, index) in selectedRoles" :key="index">
                                     <!-- Bottone per rimuovere un ruolo selezionato -->
                                     <button class="button-roles-filters px-4 active" type="button" @click="removeRole(role)">{{ role.title }}
+
                                     <div class="fire-overlay"></div> <!-- Sovrapposizione semi-trasparente -->
                                     </button>
                                 </div>
