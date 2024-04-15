@@ -258,6 +258,9 @@ export default {
     }  
 }
 @media (max-width: 425px) {
+  h1 {
+    text-align: center;
+  }
   .display-none{
     display: none;
   }
