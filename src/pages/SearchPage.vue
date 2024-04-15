@@ -202,7 +202,6 @@ export default {
 <template>
     <section class="search-section container-xl mb-5">
         <div class="search-container">
-            <button class="btn btn-danger" @click="resetFilters">Annulla Filtri</button>
             <h1 class="fw-bold  d-none d-md-block">Trova artisti o band {{ store.selectedRoleHome }}</h1>
             <div class="input-container position-relative  d-none d-md-block">
                 <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
@@ -265,7 +264,10 @@ export default {
                                 <span class="fs-3" @click="resetRating"><i class="fa-solid fa-xmark me-3"></i></span>
                             </div>
                         </div>
+                        
                     </div>
+                    <button class="btn btn-danger" @click="resetFilters">Annulla Filtri</button>
+
                 </div>
                 <div class="button-search my-button"></div>
             </aside>
