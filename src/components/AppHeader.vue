@@ -37,7 +37,7 @@ export default {
                 <a href="http://127.0.0.1:8000/register" class="header-nav-link">Registrati</a>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'search' }" class="header-nav-link">Cerca</router-link>
+                <router-link :to="{ name: 'search' }" id="hover-link" class="header-nav-link">Cerca</router-link>
               </li>
             </ul>
           </div>
@@ -66,11 +66,19 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
         background-color: #21252B; color: #BADFDA; border-radius: 25px;
         font-weight: bold; text-decoration: none; padding: 15px 25px; margin: 0 15px;
         &:hover {
-            background-color: #BADFDA; color: #21252B; border-color: 1px solid #21252B;
+            color: white; border-color: 1px solid #21252B;
             }
         }
-        
-        .navbar-toggler {
+      #hover-link {
+        background-color: #BADFDA;
+        color: #21252B;
+        &:hover {
+            background-color: #21252B;
+             color: #BADFDA;
+             border: 1px solid #BADFDA;
+            }
+      }        
+      .navbar-toggler {
             border: 1px solid #BADFDA; background-color: #21252B; color: #BADFDA;
             &:focus {
                 outline: none;
@@ -104,15 +112,18 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
   }
 }
 
-@media (max-width: 425px) { /* Regola per dispositivi con larghezza massima di 991px (tablet e smartphone) */
+@media (max-width: 425px) {
   .split-menu {
-    flex-direction: row; /* Imposta la direzione della flessione a riga */
-    flex-wrap: wrap; /* Permette il wrapping degli elementi su più righe */
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
   .split-menu .nav-item {
-    width: 50%; /* Imposta la larghezza del 50% per gli elementi del menu */
+    width: 50%;
+  }
+  #hover-link { 
+    background-color: transparent !important;
+    color: #BADFDA !important;
   }
 }
-
 </style>
