@@ -526,6 +526,11 @@ export default {
     opacity: 1;
 }
 
+.instrument-pic {
+    max-width: 75px;
+    max-height: 75px;
+}
+
 @media (max-width: 425px) {
     .user-img {
         min-height: 300px;
@@ -550,9 +555,5 @@ export default {
         min-height: 200px;
     }
 }
-@media (max-width: 768px) {
-    .card {
-        min-height: 400px;
-    }
-}
+
 </style>
