@@ -107,6 +107,7 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
 }
 
 @media (max-width: 425px) {
+
   .split-menu {
     flex-direction: row;
     flex-wrap: wrap;
@@ -118,6 +119,16 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
   #hover-link { 
     background-color: transparent !important;
     color: #BADFDA !important;
+  }
+
+  ul {
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-nav {
+    justify-content: flex-end;
   }
 }
 </style>
