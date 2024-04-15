@@ -13,7 +13,7 @@ export default {
                 },
                 {
                     category: 'Link Utili',
-                    links: ['Garanzia', 'Dichiarazione', 'Privacy Policy', 'Cookie Policy', 'Impostazioni Cookie']
+                    links: ['Garanzia', 'Dichiarazione', 'Privacy Policy', 'Cookie Policy', 'Cookie']
                 }
             ]
         };
@@ -69,7 +69,7 @@ export default {
 
                 <!-- Container-right -->
                 <div class="col-md-6 container-right d-flex flex-row-reverse">
-                    <div class="px-2" v-for="footerLink in footerLinks" :key="footerLink.category">
+                    <div class="px-3" v-for="footerLink in footerLinks" :key="footerLink.category">
                         <h5 class="color" >{{ footerLink.category }}</h5>
                         <ul>
                             <li v-for="link in footerLink.links" :key="link">{{ link }}</li>
@@ -119,10 +119,6 @@ ul li {
 
 .container-img > img {
     width: 100%;
-}
-
-.social-text {
-    text-align: center;
 }
 
 .social-item {
