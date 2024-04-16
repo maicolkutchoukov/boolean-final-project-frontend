@@ -148,6 +148,38 @@ export default {
 };
 </script>
 <template>
+    <div class="row d-md-none">
+            <div class="col-12">
+                <div class="input-container position-relative mb-4 d-flex align-items-center justify-content-between">
+                    <input type="text" v-model="searchQuery" class="form-control input-searchbar w-50 mx-2" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
+                    <input type="number" v-model="minimumReviews" class="form-control input-min-reviews w-50 mx-2 px-4" min="0" placeholder="Numero minimo di recensioni">
+                </div>
+                
+                <div class="text-center mb-3">
+                    
+                    <span class="star mx-3" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
+                    <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle fs-3\'></i>' : '<i class=\'fa-regular fa-circle fs-3\'></i>'"></span>
+                </span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="row justify-content-between">
+                    <div v-for="(role, index) in allRoles" :key="index" class="col-3 col-sm-2 my-2 mx-2">
+                        <div
+                            class="logo-instrument-container"
+                            @click="toggleRoleSelection(role)"
+                            
+                            >
+                            <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="w-50 border logo-instrument bischero-leonardo" :class="{ 'active-roles-resp': isRoleSelected(role) }">
+                            <div class="title-hover">
+                                {{ role.title }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     <!-- Sezione di ricerca -->
     <section class="search-section container-xl mb-5">
         <div class="search-container">
