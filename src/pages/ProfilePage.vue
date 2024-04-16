@@ -32,7 +32,6 @@ export default {
             ratings: [], // Dichiarazione della proprietà ratings
             successMessage: '',
             showError: '',
-            showReviewForm: false,
             activeStar: null,
             averageVote: 0,
             isHovered: false,
@@ -283,68 +282,96 @@ export default {
                     <h2 class="fw-bold pt-3 mb-4">Bio</h2>
                     <p v-if="singleMusician && singleMusician.user_details">{{ singleMusician.user_details.bio }}</p>
                 </div>
-            <div class="col-4 text-end skills-container">
-                <h2 class="fw-bold pt-3 mb-4 ">Competenze</h2>
-                <div>
-                    <span v-if="singleMusician && singleMusician.roles" v-for="(role, i) in singleMusician.roles" :key="i" class="bounce-in">
-                        <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="instrument-pic">
-                    </span>
-                </div>
-            </div>
-            <div class="col-12 mb-5">
-                <h2 class="fw-bold pt-3 mb-4">Demo</h2>
-                <audio v-if="singleMusician && singleMusician.user_details" controls class="w-100">
-                    <source :src="demoPath" type="audio/mpeg">
-                </audio>
-            </div>
-            <div class="col-12 mb-5">
-                <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
-                <div v-if="singleMusician && singleMusician.user_details">
-                    <i class="fa-solid fa-phone me-3"></i>
-                    Mail: {{ singleMusician.email }}
-                    </div>
-                    <div v-if="singleMusician && singleMusician.user_details">
-                    <i class="fa-solid fa-envelope me-3"></i>
-                    Cell: {{ singleMusician.user_details.cellphone }}
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Sezione per le recensioni -->
-        <section class="reviews-section">
-            <div v-if="singleMusician && singleMusician.reviews" class="d-flex justify-content-between mb-5 padding">
-                <h2 class="mb-5 fw-bold">Le mie recensioni</h2>
-                <div class="hover-container">
-                    <div class="d-flex align-items-center">
-                        <!-- Numero totale delle recensioni -->
-                        <small class="me-2 number-reviews">{{ singleMusician.votes.length }} recensioni</small>
-                        <!-- Visualizza le palline riempite in base alla media dei voti -->
-                        <span
-                            v-for="index in 5"
-                            :key="index"
-                            :class="{
-                                'filled': index <= averageVote,
-                                'half-filled': index === Math.ceil(averageVote) && averageVote % 1 !== 0
-                            }"
-                            class="vote-star"
-                        >
-                            <!-- Utilizzo delle icone di Font Awesome -->
-                            <i v-if="index <= averageVote" class="fa-solid fa-circle"></i>
-                            <i v-else class="fa-regular fa-circle"></i>
+                <div class="col-4 text-end skills-container">
+                    <h2 class="fw-bold pt-3 mb-4 ">Competenze</h2>
+                    <div>
+                        <span v-if="singleMusician && singleMusician.roles" v-for="(role, i) in singleMusician.roles" :key="i" class="bounce-in">
+                            <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="instrument-pic">
                         </span>
                     </div>
                 </div>
+                <div class="col-12 mb-5">
+                    <h2 class="fw-bold pt-3 mb-4">Demo</h2>
+                    <audio v-if="singleMusician && singleMusician.user_details" controls class="w-100">
+                        <source :src="demoPath" type="audio/mpeg">
+                    </audio>
+                </div>
+                <div class="col-12 mb-5">
+                    <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
+                    <div v-if="singleMusician && singleMusician.user_details">
+                        <i class="fa-solid fa-phone me-3"></i>
+                        Mail: {{ singleMusician.email }}
+                    </div>
+                    <div v-if="singleMusician && singleMusician.user_details">
+                        <i class="fa-solid fa-envelope me-3"></i>
+                        Cell: {{ singleMusician.user_details.cellphone }}
+                    </div>
+                </div>
             </div>
-            <div class="container">
-                <div class="row" v-if="singleMusician && singleMusician.reviews && singleMusician.reviews.length > 0">
-                    <div class="col-md-12 p-0">
-                        <div class="reviews-container">
-                            <div class="reviews-wrapper">
-                                <!-- Display the first 3 reviews in a row -->
-                                <div class="row">
-                                    <div v-for="(review, index) in singleMusician.reviews.slice(0, 3)" :key="index" class="col-md-4">
-                                        <div class="card mb-3">
+
+
+            <!-- Sezione per le recensioni -->
+            <section class="reviews-section">
+                <div v-if="singleMusician && singleMusician.reviews" class="d-flex justify-content-between mb-5 padding">
+                    <h2 class="mb-5 fw-bold">Recensioni:</h2>
+                    <div class="hover-container">
+                        <div class="d-flex align-items-center">
+                            <!-- Numero totale delle recensioni -->
+                            <small class="me-2 number-reviews">{{ singleMusician.votes.length }} voti</small>
+                            <!-- Visualizza le palline riempite in base alla media dei voti -->
+                            <span
+                                v-for="index in 5"
+                                :key="index"
+                                :class="{
+                                    'filled': index <= averageVote,
+                                    'half-filled': index === Math.ceil(averageVote) && averageVote % 1 !== 0
+                                }"
+                                class="vote-star"
+                            >
+                                <!-- Utilizzo delle icone di Font Awesome -->
+                                <i v-if="index <= averageVote" class="fa-solid fa-circle"></i>
+                                <i v-else class="fa-regular fa-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row" v-if="singleMusician && singleMusician.reviews && singleMusician.reviews.length > 0">
+                        <div class="col-md-12 p-0">
+                            <div class="reviews-container">
+                                <div class="reviews-wrapper">
+                                    <!-- Display the first 3 reviews in a row -->
+                                    <div class="row">
+                                        <div v-for="(review, index) in singleMusician.reviews.slice(0, 3)" :key="index" class="col-md-4">
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ review.firstname + ' ' + review.lastname }}</h5>
+                                                    <p class="card-text">{{ review.description }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Button to open offcanvas -->
+                                <div class="text-end mt-3">
+                                    <button v-if="singleMusician.reviews.length > 3" class="btn btn-dark ms-auto" @click="openOffcanvas">
+                                        <i class="bi bi-box-arrow-down-left"></i>
+                                    </button>
+                                </div>
+
+                            
+
+                            <!-- Offcanvas -->
+                            <div class="offcanvas offcanvas-end" :class="{ 'show': showOffcanvas }" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                                <div class="offcanvas-header text-white">
+                                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Tutte le Recensioni</h5>
+                                    <button type="button" class="btn-close text-reset" @click="closeOffcanvas" aria-label="Close"></button>
+                                </div>
+                                <div class="offcanvas-body">
+                                    <div class="row">
+                                        <!-- Display all reviews starting from the 4th -->
+                                        <div v-for="(review, index) in singleMusician.reviews.slice(3)" :key="index" class="col-md-12 card mb-3">
                                             <div class="card-body">
                                                 <h5 class="card-title">{{ review.firstname + ' ' + review.lastname }}</h5>
                                                 <p class="card-text">{{ review.description }}</p>
@@ -354,61 +381,12 @@ export default {
                                 </div>
                             </div>
                         </div>
-                        <!-- Button to open offcanvas -->
-                            <div class="text-end mt-3">
-                                <button v-if="singleMusician.reviews.length > 3" class="btn btn-dark ms-auto" @click="openOffcanvas">
-                                    <i class="bi bi-box-arrow-down-left"></i>
-                                </button>
-                            </div>
-
-                        
-
-                        <!-- Offcanvas -->
-                        <div class="offcanvas offcanvas-end" :class="{ 'show': showOffcanvas }" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-                            <div class="offcanvas-header text-white">
-                                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Tutte le Recensioni</h5>
-                                <button type="button" class="btn-close text-reset" @click="closeOffcanvas" aria-label="Close"></button>
-                            </div>
-                            <div class="offcanvas-body">
-                                <div class="row">
-                                    <!-- Display all reviews starting from the 4th -->
-                                    <div v-for="(review, index) in singleMusician.reviews.slice(3)" :key="index" class="col-md-12 card mb-3">
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ review.firstname + ' ' + review.lastname }}</h5>
-                                            <p class="card-text">{{ review.description }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    <div v-else>
+                        Non ci sono recensioni
                     </div>
                 </div>
-                <div v-else>
-                    Non ci sono recensioni
-                </div>
-            </div>
-        </section>
-        <!-- <section v-if="singleMusician && singleMusician.reviews" class="full-page-section mb-5">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 p-0">
-                        <div class="reviews-container">
-                            <div class="reviews-wrapper">
-                                
-                                <div v-for="(review, index) in singleMusician.reviews" :key="index" class="review-item" style="background-color: #2E333A;">
-                                    <div class="review-content">
-                                        
-                                        <h4 class="review-title" style="color: white;">{{ review.firstname + ' ' + review.lastname }}</h4>
-                                        <p class="review-description" style="color: white;">{{ review.description }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section> -->
-
+            </section>
             <div class="d-flex justify-content-center margin">
                 <button @click="toggleReviewForm" v-if="!showReviewForm" class="btn-write-review">Scrivi una recensione</button>
             </div>
@@ -416,37 +394,45 @@ export default {
     </section>
 
 
-    <!-- Sezione della recensione -->
+    <!-- Sezione per scrivere una recensione -->
+    
     <section v-if="showReviewForm" id="sectionReviews" class="contact-section" style="background-color: white;">
         <div class="container-fluid border">
             <h2 class="text-black text-center py-5">Scrivi una recensione</h2>
-            <form @submit.prevent="submitReview" class="contact-form">
-                <!-- Input per nome -->
-                <div class="mb-3">
-                    <label for="review-firstname" class="form-label text-black">Nome</label>
-                    <input type="text" v-model="reviewForm.firstname" class="form-control" :class="{ 'is-invalid': showReviewFormError && !reviewForm.firstname && reviewForm.description && !voteForm.vote }" id="review-firstname" placeholder="Inserisci il tuo nome..." maxlength="74">
-                    <div class="invalid-feedback">Il nome è richiesto.</div>
-                </div>
-                <!-- Input per cognome -->
-                <div class="mb-3">
-                    <label for="review-lastname" class="form-label text-black">Cognome</label>
-                    <input type="text" v-model="reviewForm.lastname" class="form-control" :class="{ 'is-invalid': showReviewFormError && !reviewForm.lastname && reviewForm.description && !voteForm.vote }" id="review-lastname" placeholder="Inserisci il tuo cognome..." maxlength="74">
-                    <div class="invalid-feedback">Il cognome è richiesto.</div>
-                </div>
-                <!-- Input per recensione -->
-                <div class="mb-3">
-                    <label for="description" class="form-label text-black">Recensione</label>
-                    <textarea v-model="reviewForm.description" class="form-control" id="description" rows="5" maxlength="2048" placeholder="Inserisci la tua recensione..."></textarea>
-                </div>
-                <!-- Input per voto -->
-                    <input type="number" name="vote" v-model="voteForm.vote" id="" min="1" max="5">
-                <div class="text-center py-5">
-                    <button type="submit" class="btn my-button btn-lg">Invia Recensione</button>
-                </div>
-                <div class="text-center">
-                    <button type="button" @click="closeReviewForm" class="btn btn-secondary">Chiudi</button>
-                </div>
-            </form>
+            <transition name="slide-down">
+                <form @submit.prevent="submitReview" class="contact-form">
+                    <!-- Input per nome -->
+                    <div class="mb-3">
+                        <label for="review-firstname" class="form-label text-black">Nome</label>
+                        <input type="text" v-model="reviewForm.firstname" class="form-control" :class="{ 'is-invalid': showReviewFormError && !reviewForm.firstname && reviewForm.description && !voteForm.vote }" id="review-firstname" placeholder="Inserisci il tuo nome..." maxlength="74">
+                        <div class="invalid-feedback">Il nome è richiesto.</div>
+                    </div>
+                    <!-- Input per cognome -->
+                    <div class="mb-3">
+                        <label for="review-lastname" class="form-label text-black">Cognome</label>
+                        <input type="text" v-model="reviewForm.lastname" class="form-control" :class="{ 'is-invalid': showReviewFormError && !reviewForm.lastname && reviewForm.description && !voteForm.vote }" id="review-lastname" placeholder="Inserisci il tuo cognome..." maxlength="74">
+                        <div class="invalid-feedback">Il cognome è richiesto.</div>
+                    </div>
+                    <!-- Input per recensione -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label text-black">Recensione</label>
+                        <textarea v-model="reviewForm.description" class="form-control" id="description" rows="5" maxlength="2048" placeholder="Inserisci la tua recensione..."></textarea>
+                    </div>
+                    <!-- Input per voto -->
+                    <div class="mb-3">
+                        <label class="form-label text-black">Voto:</label>
+                        <div class="rating-input">
+                            <i v-for="n in 5" :key="n" class="fa-regular fa-circle fa-xl me-2" :class="{ 'fas': n <= voteForm.vote }" @click="voteForm.vote = n"></i>
+                        </div>
+                    </div>
+                    <div class="text-center py-5">
+                        <button type="submit" class="btn my-button btn-lg">Invia Recensione</button>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" @click="closeReviewForm" class="btn btn-secondary">Chiudi</button>
+                    </div>
+                </form>
+            </transition>
         </div>
     </section>
 
@@ -488,25 +474,29 @@ export default {
 
 
     <!-- Messaggi di errore/successo -->
-    <section>
+    <section class="message-section">
         <div v-if="reviewErrorMessage || successMessage" class="message-container" :class="{ active: reviewErrorMessage || successMessage }">
             <div v-if="reviewErrorMessage" class="alert alert-danger" role="alert">
-                {{ reviewErrorMessage }}
+                <span class="icon"><i class="bi bi-exclamation-triangle-fill"></i></span>
+                <span>{{ reviewErrorMessage }}</span>
                 <button @click="clearMessages" class="btn-close">&times;</button>
             </div>
             <div v-if="successMessage" class="alert alert-success" role="alert">
-                {{ successMessage }}
+                <span class="icon"><i class="bi bi-check-circle-fill"></i></span>
+                <span>{{ successMessage }}</span>
                 <button @click="clearMessages" class="btn-close">&times;</button>
             </div>
         </div>
 
         <div v-if="contactErrorMessage || successMessage" class="message-container" :class="{ active: contactErrorMessage || successMessage }">
             <div v-if="contactErrorMessage" class="alert alert-danger" role="alert">
-                {{ contactErrorMessage }}
+                <span class="icon"><i class="bi bi-exclamation-triangle-fill"></i></span>
+                <span>{{ contactErrorMessage }}</span>
                 <button @click="clearMessages" class="btn-close">&times;</button>
             </div>
             <div v-if="successMessage" class="alert alert-success" role="alert">
-                {{ successMessage }}
+                <span class="icon"><i class="bi bi-check-circle-fill"></i></span>
+                <span>{{ successMessage }}</span>
                 <button @click="clearMessages" class="btn-close">&times;</button>
             </div>
         </div>
@@ -529,6 +519,14 @@ export default {
 .instrument-pic {
     max-width: 75px;
     max-height: 75px;
+}
+
+.slide-down-enter-active {
+    transition: all 0.5s ease;
+}
+.slide-down-enter, .slide-down-leave-to {
+    transform: translateY(-100%);
+    opacity: 0;
 }
 
 @media (max-width: 425px) {
@@ -556,4 +554,106 @@ export default {
     }
 }
 
+
+.message-section {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.message-container {
+    max-width: 400px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.message-container.active {
+    opacity: 1;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(to right, #ff416c, #ff4b2b);
+    color: #ffffff;
+}
+
+.alert span {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.alert-danger {
+    background: linear-gradient(to right, #ed213a, #93291e);
+}
+
+.alert-success {
+    background: linear-gradient(to right, #11998e, #38ef7d);
+}
+
+.icon {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+.btn-close {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+.btn-close:hover {
+    color: #cccccc;
+}
+
+.vote-container {
+    position: relative; /* Assicura che gli elementi posizionati all'interno rispettino questo contenitore */
+    overflow: hidden; /* Nasconde gli elementi che escono dai confini del contenitore */
+}
+
+.filled {
+    color: gold; /* Colore per le palline piene */
+    margin-right: 5px;
+}
+
+.half-filled {
+    position: relative; /* Posizione relativa per le palline parzialmente piene */
+}
+
+.half-filled::before {
+    content: '\f111'; /* Unicode per l'icona della pallina piena di Font Awesome */
+    overflow: hidden;
+    z-index: 20;
+    font-family: 'Font Awesome 5 Free'; /* Font family per Font Awesome */
+    position: absolute; /* Posizione assoluta rispetto al contenitore */
+    color: transparent; /* Colore trasparente per l'icona della pallina piena */
+    width: 50%; /* Larghezza del contenitore per l'icona */
+    white-space: nowrap; /* Evita il wrap del testo */
+}
+
+.half-filled::after {
+    content: "";
+    position: absolute;
+    overflow: hidden;
+    z-index: 20;
+    top: 0;
+    left: -1px;
+    width: 55%;
+    height: 25px;
+    background-color: gold;
+    display: inline-block;
+    border-radius: 30px 0 0 30px;
+    margin-top: 5px;
+}
 </style>
