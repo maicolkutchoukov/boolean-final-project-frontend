@@ -151,32 +151,58 @@ export default {
 };
 </script>
 <template>
-    <div class="row d-md-none">
-            <div class="col-12">
-                <div class="input-container position-relative mb-4 d-flex align-items-center justify-content-between">
-                    <input type="text" v-model="searchQuery" class="form-control input-searchbar w-50 mx-2" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
-                    <input type="number" v-model="minimumReviews" class="form-control input-min-reviews w-50 mx-2 px-4" min="0" placeholder="Numero minimo di recensioni">
-                </div>
-                
-                <div class="text-center mb-3">
-                    
-                    <span class="star mx-3" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
-                    <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle fs-3\'></i>' : '<i class=\'fa-regular fa-circle fs-3\'></i>'"></span>
-                </span>
-                </div>
+    <!-- Bottone di trigger per l'offcanvas -->
+        <button class="btn btn-primary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        Apri filtri
+        </button>
+
+        <!-- Offcanvas -->
+        <div class="offcanvas w-100 offcanvas-start d-md-none" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Filtri</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="col-12">
-                <div class="row justify-content-between">
-                    <div v-for="(role, index) in allRoles" :key="index" class="col-3 col-sm-2 my-2 mx-2">
-                        <div
-                            class="logo-instrument-container"
-                            @click="toggleRoleSelection(role)"
-                            
-                            >
-                            <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="w-50 border logo-instrument bischero-leonardo" :class="{ 'active-roles-resp': isRoleSelected(role) }">
-                            <div class="title-hover">
-                                {{ role.title }}
+            <div class="offcanvas-body">
+                <!-- Contenuto del tuo offcanvas -->
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Input per la ricerca -->
+                        <div class="input-container position-relative mb-4 d-flex align-items-center justify-content-between flex-column">
+                            <h3 class="text-start w-100 mb-3">Nome:</h3>
+                            <input type="text" v-model="searchQuery" class="form-control input-searchbar w-100 mx-2 mb-5" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
+                        </div>
+                        <div class="col-12 mb-4 d-flex align-items-center justify-content-between flex-column">
+                            <h3 class="text-start w-100 mb-3">Numero min recensioni:</h3>
+
+                            <input type="number" v-model="minimumReviews" class="form-control input-min-reviews w-100 mx-2 px-4 mb-5" min="0" placeholder="Numero minimo di recensioni">
+                        </div>
+                        <div class="col-12 mb-4 d-flex justify-content-between flex-column">
+                            <h3 class="text-start w-100 mb-3">Voto:</h3>
+                            <div>
+                                <span class="star mx-3" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
+                                <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle fs-3\'></i>' : '<i class=\'fa-regular fa-circle fs-3\'></i>'"></span>
+                            </span>
                             </div>
+                        </div>
+                        <!-- Rating -->
+                        <div class="text-center mb-3">
+                        
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex flex-wrap justify-content-center mb-5">
+                        <h3 class="text-start w-100 mb-3">Ruolo:</h3>
+                        <div v-for="(role, index) in allRoles" :key="index" class="col-12 col-sm-6 my-2 text-center">
+                            <!-- Bottone per selezionare i ruoli -->
+                            <button
+                                class="button-roles px-5"
+                                style="min-width: 200px;"
+                                type="button"
+                                @click="toggleRoleSelection(role)"
+                                :class="{ 'active': isRoleSelected(role) || (store.selectedRoleHome !== null && role.title === store.selectedRoleHome) }"
+                            >
+                                {{ role.title }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -219,29 +245,7 @@ export default {
                 <h2 class="fw-bold fs-1 mb-4">Filtri</h2>
                 <div class="filter-container">
                     <!-- Contenitore dei ruoli selezionati -->
-                    <div class="roles-container p-4 mb-5 bg-white">
-                        <h4 class="mb-4 fw-bold fs-4">Ruoli selezionati</h4>
-
-                        <!-- Mostra i ruoli selezionati -->
-                        <div v-if="selectedRoles.length > 0">
-                            <div class="row justify-content-between">
-                                <div class="col-6 text-center mb-3" v-for="(role, index) in selectedRoles" :key="index">
-                                    <!-- Bottone per rimuovere un ruolo selezionato -->
-                                    <button class="button-roles-filters px-4 active" type="button" @click="removeRole(role)">{{ role.title }}
-
-                                    <div class="fire-overlay"></div> <!-- Sovrapposizione semi-trasparente -->
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- Bottone per rimuovere tutti i ruoli selezionati -->
-                            <span class="remove-roles" @click="removeSelectedRoles"><i class="fa-solid fa-xmark me-3 fs-3"></i></span>
-                        </div>
-
-                        <!-- Messaggio se non ci sono ruoli selezionati -->
-                        <div v-else>
-                            <p>Nessun ruolo selezionato</p>
-                        </div>
-                    </div>
+                    
                     <!-- Contenitore per il filtro del numero minimo di recensioni -->
                     <div class="reviews-container p-4 mb-5 bg-white">
                         <h4 class="mb-4 fw-bold fs-4">N. Minimo Recensioni</h4>
@@ -266,8 +270,33 @@ export default {
                             </div>
                         </div>
                     </div>
+                    <div class="roles-container p-4 mb-5 bg-white">
+                        <h4 class="mb-4 fw-bold fs-4">Ruoli selezionati</h4>
+
+                        <!-- Mostra i ruoli selezionati -->
+                        <div v-if="selectedRoles.length > 0">
+                            <div class="row justify-content-between">
+                                <div class="col-6 text-center mb-3" v-for="(role, index) in selectedRoles" :key="index">
+                                    <!-- Bottone per rimuovere un ruolo selezionato -->
+                                    <button class="button-roles-filters px-4 active" type="button" @click="removeRole(role)">{{ role.title }}
+
+                                    <div class="fire-overlay"></div> <!-- Sovrapposizione semi-trasparente -->
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Bottone per rimuovere tutti i ruoli selezionati -->
+                            <span class="remove-roles" @click="removeSelectedRoles"><i class="fa-solid fa-xmark me-3 fs-3"></i></span>
+                        </div>
+
+                        <!-- Messaggio se non ci sono ruoli selezionati -->
+                        <div v-else>
+                            <p>Nessun ruolo selezionato</p>
+                        </div>
+                    </div>
                     <!-- Bottone per annullare tutti i filtri -->
-                    <button class="btn btn-danger" @click="resetFilters">Annulla Filtri</button>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-dark rounded-5 py-3 px-5" @click="resetFilters">Annulla Filtri</button>
+                    </div>
                 </div>
                 <!-- Pulsante di ricerca -->
                 <div class="button-search my-button"></div>
