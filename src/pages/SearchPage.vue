@@ -278,10 +278,7 @@ export default {
                             <div class="row justify-content-between">
                                 <div class="col-6 text-center mb-3" v-for="(role, index) in selectedRoles" :key="index">
                                     <!-- Bottone per rimuovere un ruolo selezionato -->
-                                    <button class="button-roles-filters px-4 active" type="button" @click="removeRole(role)">{{ role.title }}
-
-                                    <div class="fire-overlay"></div> <!-- Sovrapposizione semi-trasparente -->
-                                    </button>
+                                    <button class="button-roles-filters px-4 active" type="button" @click="removeRole(role)">{{ role.title }}</button>
                                 </div>
                             </div>
                             <!-- Bottone per rimuovere tutti i ruoli selezionati -->
@@ -304,36 +301,40 @@ export default {
             
             <!-- Contenitore dei risultati della ricerca -->
             <div v-if="!loading" class="col-12 col-md-7 card-section">
-    <!-- Titolo degli artisti in evidenza -->
-    <h2 class="fw-bold px-4 py-3 fs-1">Artisti in evidenza</h2>
-    <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
-        <div 
-            class="row mb-5 card-content position-relative" 
-            :class="{ 'show-card': !loading, 'filtered': filteredMusicians.length < allMusicians.length }"
-            v-for="(singleMusician, index) in filteredMusicians" 
-            :key="singleMusician.id"
-        >
-            <!-- Immagine dell'artista -->
-            <div class="col-4 img-artist" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')', 'background-position': 'center', 'background-size': 'cover' }">     
-            </div>
-            <!-- Contenitore delle informazioni dell'artista -->
-            <div class="col-8 border my-bg-grey position-relative">
-                <div class="card-body">
-                    <!-- Nome dell'artista -->
-                    <h5 class="card-title fw-bold fs-4 ps-3 pt-4 mb-3">{{ singleMusician.name }}</h5>
-                    <!-- Biografia dell'artista -->
-                    <p class="card-text h-50 overflow-hidden ps-3 bio-text">{{ singleMusician.user_details.bio }}</p>
-                    
-                    <!-- Linee oblique per gli utenti sponsorizzati -->
-                    <div v-if="singleMusician.isSponsored" class="sponsor-lines"></div>
-                    
-                    <!-- Link al profilo dell'artista -->
-                    <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn my-btn text-white inline-block h-25 border">Vedi Profilo</router-link>
+                <!-- Titolo degli artisti in evidenza -->
+                <h2 class="fw-bold px-4 py-3 fs-1">Artisti in evidenza</h2>
+                <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
+                    <!-- Controlla se ci sono utenti filtrati -->
+                    <div v-if="filteredMusicians.length === 0" class="no-result-message fw-bold fs-2 card w-100 text-center py-5">Nessun risultato!</div>
+
+                    <div 
+                        class="row mb-5 card-content position-relative" 
+                        :class="{ 'show-card': !loading, 'filtered': filteredMusicians.length < allMusicians.length }"
+                        v-for="(singleMusician, index) in filteredMusicians" 
+                        :key="singleMusician.id"
+                    >
+                        <!-- Immagine dell'artista -->
+                        <div class="col-4 img-artist" v-if="singleMusician && singleMusician.user_details && singleMusician.user_details.picture" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')', 'background-position': 'center', 'background-size': 'cover' }">     
+                        </div>
+                        <!-- Contenitore delle informazioni dell'artista -->
+                        <div class="col-8 border my-bg-grey position-relative">
+                            <div class="card-body">
+                                <!-- Nome dell'artista -->
+                                <h5 class="card-title fw-bold fs-4 ps-3 pt-4 mb-3">{{ singleMusician.name }}</h5>
+                                <!-- Biografia dell'artista -->
+                                <p v-if="singleMusician && singleMusician.user_details && singleMusician.user_details.bio" class="card-text h-50 overflow-hidden ps-3 bio-text">{{ singleMusician.user_details.bio }}</p>
+
+                                                
+                                <!-- Linee oblique per gli utenti sponsorizzati -->
+                                <div v-if="singleMusician.isSponsored" class="sponsor-lines"></div>
+                                                
+                                <!-- Link al profilo dell'artista -->
+                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn my-btn text-white inline-block h-25 border">Vedi Profilo</router-link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
         </div>
     </section>
 
@@ -519,18 +520,6 @@ export default {
     }
 }
 
-
-@keyframes fireAnimation {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-
 .button-roles-filters {
   position: relative;
   background-color: #21252B;
@@ -542,28 +531,6 @@ export default {
   overflow: hidden; /* Nasconde eventuali contenuti che fuoriescono dalla card */
 }
 
-.fire-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('https://usagif.com/wp-content/uploads/gifs/fire-23.gif'); /* Imposta l'immagine di fuoco come sfondo */
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-radius: 10px; /* Arrotonda i bordi della sovrapposizione */
-  opacity: 0.5; /* Opacità della sovrapposizione semi-trasparente */
-  animation: fireSpread 2s infinite alternate; /* Applica l'animazione al fuoco */
-}
-
-@keyframes fireSpread {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.1);
-  }
-}
 /* ----------------------------------- */
 /* RESPONSIVE WIP*/
 .logo-instrument{
