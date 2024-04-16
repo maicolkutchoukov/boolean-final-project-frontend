@@ -353,8 +353,8 @@ export default {
                                     <div class="row">
                                         <div v-for="(review, index) in singleMusician.reviews.slice(0, 3)" :key="index" class="col-md-4">
                                             <div class="card mb-3">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{ review.firstname + ' ' + review.lastname }}</h5>
+                                                <div class="card-body px-4 pt-4">
+                                                    <h5 class="card-title fs-3 mb-4">{{ review.firstname + ' ' + review.lastname }}</h5>
                                                     <p class="card-text">{{ review.description }}</p>
                                                 </div>
                                             </div>
@@ -406,8 +406,8 @@ export default {
     <!-- Sezione per scrivere una recensione -->
     
     <section v-if="showReviewForm" id="sectionReviews" class="contact-section" style="background-color: white;">
-        <div class="container-fluid border">
-            <h2 class="text-black text-center py-5">Scrivi una recensione</h2>
+        <div class="container">
+            <h2 class="text-black text-center py-5">Lascia qui la tua opinione!</h2>
             <transition name="slide-down">
                 <form @submit.prevent="submitReview" class="contact-form">
                     <!-- Input per nome -->
@@ -473,7 +473,7 @@ export default {
                         <div id="message-error" class="invalid-feedback">Il messaggio è richiesto.</div>
                     </div>
                     <div class="text-center py-5">
-                        <button type="submit" class="btn my-button btn-lg">Invia</button>
+                        <button type="submit" class="btn my-button btn-lg px-5">Invia</button>
                     </div>
                 </form>
             </div>
@@ -526,6 +526,7 @@ export default {
 .instrument-pic {
     max-width: 75px;
     max-height: 75px;
+    margin: 0 30px;
 }
 
 .slide-down-enter-active {
@@ -667,5 +668,15 @@ export default {
     display: inline-block;
     border-radius: 30px 0 0 30px;
     margin-top: 5px;
+}
+.card{
+    border: none;
+}
+.card-body{
+    background-color: #21252b;
+    color: white;
+    border-radius: 30px;
+    border: 0 solid white;
+    min-height: 350px
 }
 </style>
