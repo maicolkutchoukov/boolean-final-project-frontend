@@ -27,69 +27,61 @@ export default {
 
 <template>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <footer>
-        <div class="footer-container container-fluid pt-5">
-            <div class="row mx-2 mx-sm-5">
-                <!-- Container-left -->
-                <div class="col-md-6 container-left">
-                    <div id="container-social" class="container d-flex flex-column justify-content-center">
-                        <!-- Logo -->
-                        <div class="container-img">
-                            <img src="../../public/Img/LogoBMusic.png" alt="">
-                        </div>
-                       
-                        <!-- Social Icon -->
-                        <div class="social-text">
-                            <div class="color text">seguici su</div>
-                            <nav>
-                                <ul class="social-list d-flex">
-                                    <li class="social-item">
-                                        <a href="#">
-                                            <i class="fa-brands fa-facebook-f"></i>
-                                        </a>
-                                    </li>
-                                    <li class="social-item">
-                                        <a href="#">
-                                            <i class="fa-brands fa-instagram"></i>
-                                        </a>
-                                    </li>
-                                    <li class="social-item">
-                                        <a href="#">
-                                            <i class="fa-brands fa-twitter"></i>
-                                        </a>
-                                    </li>
-                                    <li class="social-item">
-                                        <a href="#">
-                                            <i class="fa-brands fa-youtube"></i>
-                                        </a>
-                                    </li>
+    
+
+    <!-- --------------------------------- -->
+
+    <footer class="my-blue-bg pt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 py-lg-5 py-md-5 py-sm-3 text-center">
+                    <!-- Logo -->
+                    <div class="w-100">
+                        <img src="../../public/Img/LogoBMusic.png" alt="" class="w-25">
+                    </div>
+                    <div class="p-sm-1 p-md-3">
+                        <p class="my-cyan">
+                            Seguici su
+                        </p>
+                    </div>
+                    <ul class="list-unstyled d-flex justify-content-center mb-4">
+                        <li class="px-2">
+                            <a href="#nogo"><i class="fa-brands fa-facebook-f my-cyan"></i></a>
+                        </li>
+                        <li class="px-2">
+                            <a href="#nogo"><i class="fa-brands fa-instagram my-cyan"></i></a>
+                        </li>
+                        <li class="px-2">
+                            <a href="#nogo"><i class="fa-brands fa-twitter my-cyan"></i></a>
+                        </li>
+                        <li class="px-2">
+                            <a href="#nogo"><i class="fa-brands fa-youtube my-cyan"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-12 col-md-4 container-right d-flex justify-content-center py-lg-5 py-md-5 py-sm-3 "  v-for="footerLink in footerLinks" :key="footerLink.category">
+                            <!-- Link Footer -->
+                            <div class="w-100 text-center mb-4">
+                                <h5 class="color" >{{ footerLink.category }}</h5>
+                                <ul>
+                                    <li v-for="link in footerLink.links" :key="link" class="p-0 mb-3">{{ link }}</li>
                                 </ul>
-                            </nav>
+                            </div>                    
                         </div>
                     </div>
                 </div>
 
-                <!-- Container-right -->
-                <div class="col-md-6 container-right d-flex flex-row-reverse">
-                    <!-- Link Footer -->
-                    <div class="px-3" v-for="footerLink in footerLinks" :key="footerLink.category">
-                        <h5 class="color" >{{ footerLink.category }}</h5>
-                        <ul>
-                            <li v-for="link in footerLink.links" :key="link">{{ link }}</li>
-                        </ul>
-                    </div>                    
-                </div>
-
-                <div class="col-ms-12 mt-5">
+                <div class="col-12 mt-5">
                     <!-- Text Footer -->
                     <p class="text-center color-grey">
                         BMusic asserts its exclusive rights over all content featured on this website. Unauthorized use, reproduction, distribution, display, or transmission of any content is strictly prohibited without prior authorization from \BMusic. All rights reserved
                     </p>
                 </div>
             </div>
-
+            
         </div>
-
     </footer>
 </template>
 
@@ -152,6 +144,32 @@ ul li {
 
 .color-grey {
     color: gray;  
+}
+
+// Footer
+footer{
+    background-color: #21252B;
+}
+.my-cyan{
+    color: #BADFDA
+}
+ul{
+    list-style-type: none;
+}
+
+.footer-claim{
+    color: grey;
+    font-size: small;
+}
+.img-pic-not-found{
+    // background-image: url('/storage/images/Not-Found.jpg');
+    background-color: #d3d3d3;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 50%;
+    background-position: center;
+    background-size: 100%;
 }
 
 @media only screen and (max-width: 425px) {
