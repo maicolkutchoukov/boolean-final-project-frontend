@@ -52,17 +52,17 @@ export default {
       }
     },
     saveSelectedRoleHome() {
-        if (this.selectedRole) {
-            const selectedRoleId = store.allRoles.find(role => role.title === this.selectedRole)?.id;
-            if (selectedRoleId) {
-            store.selectedRoleHome = this.selectedRole;
-            store.selectedRoleId = selectedRoleId; // Salva l'ID del ruolo selezionato
-            } else {
-            console.error('Errore: ID del ruolo selezionato non trovato');
-            }
+      if (this.selectedRole) {
+        const selectedRoleId = store.allRoles.find(role => role.title === this.selectedRole)?.id;
+        if (selectedRoleId) {
+          store.selectedRoleHome = this.selectedRole;
+          store.selectedRoleId = selectedRoleId; // Salva l'ID del ruolo selezionato
         } else {
-            console.error('Errore: nessun ruolo selezionato');
+          console.error('Errore: ID del ruolo selezionato non trovato');
         }
+      } else {
+        console.error('Errore: nessun ruolo selezionato');
+      }
     },
     openModal() {
       this.modalVisible = true;
@@ -70,12 +70,29 @@ export default {
     closeModal() {
       this.modalVisible = false;
     },
-    
+    redirectToSearchPage() {
+      if (this.selectedRole) {
+        const selectedRoleId = store.allRoles.find(role => role.title === this.selectedRole)?.id;
+        if (selectedRoleId) {
+          store.selectedRoleHome = this.selectedRole;
+          store.selectedRoleId = selectedRoleId; // Salva l'ID del ruolo selezionato
+          // Effettua il reindirizzamento alla pagina di ricerca passando il ruolo selezionato come parametro
+          this.$router.push({ name: 'search', query: { role: this.selectedRole }});
+        } else {
+          console.error('Errore: ID del ruolo selezionato non trovato');
+        }
+      } else {
+        console.error('Errore: nessun ruolo selezionato');
+      }
+    }
   },
   created() {
     this.getMusicians();
     this.getRoles();
     this.getSponsoredMusicians();
+  },
+  mounted() {
+    window.scrollTo(0, 0); // Scorri verso l'alto quando il componente viene montato
   }
 };
 </script>
@@ -90,35 +107,35 @@ export default {
       <!-- How To Do Section -->
       <section class="how-section">
         <div class="container-lg container-fluid py-5">
-          <h3 class="display-4 fw-bold mb-2">Come funziona?</h3>
-          <div class="row g-0 py-5 justify-content-between">
-            <div class="col-lg-7 col-xxl-7 col-auto">
-              <p class="mb-1">
-                Benvenuti su BMusic, il palcoscenico digitale dove il talento musicale si incontra con le opportunità. 
-                Qui, ci impegniamo a promuovere e mettere in mostra musicisti e band di ogni genere e provenienza, 
-                offrendo loro la visibilità e le risorse necessarie per essere scoperti da potenziali fan, 
-                collaboratori e addetti ai lavori.
-              </p>
-              <p>
-                Che tu sia un musicista emergente desideroso di farsi strada nell'industria musicale o un appassionato 
-                alla ricerca di nuove melodie da scoprire, BMusic è il luogo ideale dove esplorare, 
-                connettersi e dare vita alla tua passione per la musica!
-              </p>
-              <p class="mb-5">
-                Attraverso la nostra piattaforma intuitiva e ricca di funzionalità, puoi esplorare un vasto panorama di talenti provenienti da ogni angolo del globo, 
-                ascoltare le loro tracce, leggere le loro esperienze e persino contattarli direttamente per opportunità di collaborazione o assunzione. <br>
-                Unisciti a noi su <strong>BMusic</strong> e immergiti in un mondo di musica senza confini, dove ogni nota racconta una storia e ogni artista ha la possibilità di brillare.
-              </p>
-              <div class="buttons-controller">
-                <a href="http://127.0.0.1:8000/login" class="btn-login">Accedi</a>
-                <a href="http://127.0.0.1:8000/register" class="btn-register">Registrati</a>
-              </div>
+            <h3 class="display-4 fw-bold mb-2">Come funziona?</h3>
+            <div class="row g-0 py-5 justify-content-between">
+                <div class="col-lg-7 col-xxl-7 col-auto">
+                    <p class="mb-1">
+                        Benvenuti su BMusic, il palcoscenico digitale dove il talento musicale si incontra con le opportunità. 
+                        Qui, ci impegniamo a promuovere e mettere in mostra musicisti e band di ogni genere e provenienza, 
+                        offrendo loro la visibilità e le risorse necessarie per essere scoperti da potenziali fan, 
+                        collaboratori e addetti ai lavori.
+                    </p>
+                    <p>
+                        Che tu sia un musicista emergente desideroso di farsi strada nell'industria musicale o un appassionato 
+                        alla ricerca di nuove melodie da scoprire, BMusic è il luogo ideale dove esplorare, 
+                        connettersi e dare vita alla tua passione per la musica!
+                    </p>
+                    <p class="mb-5">
+                        Attraverso la nostra piattaforma intuitiva e ricca di funzionalità, puoi esplorare un vasto panorama di talenti provenienti da ogni angolo del globo, 
+                        ascoltare le loro tracce, leggere le loro esperienze e persino contattarli direttamente per opportunità di collaborazione o assunzione. <br>
+                        Unisciti a noi su <strong>BMusic</strong> e immergiti in un mondo di musica senza confini, dove ogni nota racconta una storia e ogni artista ha la possibilità di brillare.
+                    </p>
+                    <div class="buttons-controller">
+                        <a href="http://127.0.0.1:8000/login" class="btn-login">Accedi</a>
+                        <a href="http://127.0.0.1:8000/register" class="btn-register">Registrati</a>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xxl-5 col-auto how-section-img">
+                <!-- Qui potrebbe andare un'immagine di rappresentazione -->
+                <!--ciao -->
+                </div>
             </div>
-            <div class="col-lg-5 col-xxl-5 col-auto how-section-img">
-              <!-- Qui potrebbe andare un'immagine di rappresentazione -->
-              <!--ciao -->
-            </div>
-          </div>
         </div>
       </section>
       <section class="carousel-section">
@@ -130,7 +147,7 @@ export default {
                  :key="singleMusician.id" 
                  :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')' }"
                  :class="!index ? 'active' : ''">
-              <div class="row g-0 px-5 py-3 justify-content-between position-absolute bottom-0">
+              <div class="row w-100 g-0 px-5 py-3 justify-content-between position-absolute bottom-0">
                 <div class="col-9">
                   <div class="text-white px-3 w-75">
                     <h3 class="carousel-title">{{ singleMusician.name }}</h3>
@@ -229,18 +246,34 @@ export default {
                 </div>
                 <!-- <button @click="advancedSearch" class="btn btn-dark text-white fw-bold rounded-5 px-4 py-2">Ricerca Avanzata</button> -->
                 <router-link :to="{ name: 'search' }" class="btn btn-dark btn-sm" @click="saveSelectedRoleHome">Ricerca Avanzata</router-link>
-                <button @click="closeModal()" class="btn btn-success"> Chiudi</button>
+                <button @click="closeModal()" class="btn btn-close-modal"> Chiudi</button>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      <div class="custom-select-wrapper">
+    <select v-model="selectedRole" @change="redirectToSearchPage" class="custom-select">
+        <option disabled value="">Seleziona un ruolo</option>
+        <option v-for="role in store.allRoles" :key="role.id" :value="role.title">{{ role.title }}</option>
+    </select>
+</div>
+
+
+      
     </div>
+
+    
   </template>
 <style lang="scss" scoped>
 
 @import '../assets/scss/partials/HomePage.scss';
 
+
+
+
+/* ----------------------------------- */
 .show-profile {
     font-weight: bolder;
     text-decoration: none;
@@ -320,4 +353,8 @@ export default {
 
   
 }
+.btn-close-modal {
+    position: absolute;
+}
+
 </style>
