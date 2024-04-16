@@ -252,16 +252,6 @@ export default {
           </div>
         </div>
       </section>
-
-      <div class="custom-select-wrapper">
-    <select v-model="selectedRole" @change="redirectToSearchPage" class="custom-select">
-        <option disabled value="">Seleziona un ruolo</option>
-        <option v-for="role in store.allRoles" :key="role.id" :value="role.title">{{ role.title }}</option>
-    </select>
-</div>
-
-
-      
     </div>
 
     
