@@ -151,9 +151,10 @@ export default {
 };
 </script>
 <template>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
     <!-- Bottone di trigger per l'offcanvas -->
-        <button class="btn btn-primary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-        Apri filtri
+        <button class="btn btn-dark d-md-none d-block mx-auto w-75 mt-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+            Apri filtri
         </button>
 
         <!-- Offcanvas -->
@@ -320,8 +321,12 @@ export default {
                         <div class="col-8 border my-bg-grey position-relative">
                             <div class="card-body">
                                 <!-- Nome dell'artista -->
-                                <h5 class="card-title fw-bold fs-4 ps-3 pt-4 mb-3">{{ singleMusician.name }}</h5>
-                                <!-- Biografia dell'artista -->
+                                <h5 class="card-title fw-bold fs-4 ps-3 pt-4 mb-3">
+                        {{ singleMusician.name }}
+                        <span v-if="singleMusician.isSponsored" class="badge badge-small badge-success"><i class="bi bi-award-fill"></i></span>
+                    </h5>
+                                
+                    <!-- Biografia dell'artista -->
                                 <p v-if="singleMusician && singleMusician.user_details && singleMusician.user_details.bio" class="card-text h-50 overflow-hidden ps-3 bio-text">{{ singleMusician.user_details.bio }}</p>
 
                                                 
@@ -346,6 +351,22 @@ export default {
 
 <style lang="scss" scoped>
 @import '../assets/scss/partials/SearchPage.scss';
+
+// Badge Sponsor
+.card-title {
+    position: relative;
+}
+
+.badge-success {
+    background-color: darkgreen;
+}
+
+.badge-small {
+    font-size: 0.8em;
+    padding: 0.2em 0.5em;
+    margin-left: 10px;
+}
+//
 
 .search-section {
     padding: 40px;
@@ -584,6 +605,11 @@ export default {
     transform: rotate(45deg); /* Ruota le linee di 45 gradi */
 }
 
+@media (min-width: 425px) {
+    .search-section {
+        padding: 0 40px;
+    }
+}
 
 </style>
 
