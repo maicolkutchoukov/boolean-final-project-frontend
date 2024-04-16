@@ -153,10 +153,14 @@ export default {
 <template>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
     <!-- Bottone di trigger per l'offcanvas -->
-        <button class="btn btn-dark d-md-none d-block mx-auto w-75 mt-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        
+        <div class="input-container position-relative mb-1 d-flex align-items-center justify-content-between flex-column w-75 mx-auto mt-5 d-md-none">
+            <h3 class="text-start w-100 mb-3">Nome:</h3>
+            <input type="text" v-model="searchQuery" class="form-control input-searchbar w-100 mx-2" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
+        </div>
+        <button class="btn btn-dark d-md-none d-block mx-auto w-75 mt-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
             Apri filtri
         </button>
-
         <!-- Offcanvas -->
         <div class="offcanvas w-100 offcanvas-start d-md-none" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
@@ -168,10 +172,7 @@ export default {
                 <div class="row">
                     <div class="col-12">
                         <!-- Input per la ricerca -->
-                        <div class="input-container position-relative mb-4 d-flex align-items-center justify-content-between flex-column">
-                            <h3 class="text-start w-100 mb-3">Nome:</h3>
-                            <input type="text" v-model="searchQuery" class="form-control input-searchbar w-100 mx-2 mb-5" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
-                        </div>
+                        
                         <div class="col-12 mb-4 d-flex align-items-center justify-content-between flex-column">
                             <h3 class="text-start w-100 mb-3">Numero min recensioni:</h3>
 
@@ -211,7 +212,7 @@ export default {
         </div>
 
     <!-- Sezione di ricerca -->
-    <section class="search-section container-xl mb-5">
+    <section class="search-section container-xl mb-5 mt-5">
         <div class="search-container">
             <!-- Titolo della sezione di ricerca -->
             <h1 class="fw-bold d-none d-md-block">Trova artisti o band {{ store.selectedRoleHome }}</h1>
@@ -241,7 +242,7 @@ export default {
 
         <!-- Sidebar dei filtri -->
         <div class="wrapper row justify-content-between">
-            <aside class="col-4 border my-bg-grey py-5 px-4 d-none d-md-block">
+            <aside class="col-5 col-lg-4 border my-bg-grey py-5 px-4 d-none d-md-block">
                 <!-- Titolo della sezione dei filtri -->
                 <h2 class="fw-bold fs-1 mb-4">Filtri</h2>
                 <div class="filter-container">
@@ -260,7 +261,7 @@ export default {
                         <h4 class="mb-4 fw-bold fs-4">Media votazioni</h4>
                         <!-- Visualizzazione delle stelle per selezionare la media delle votazioni -->
                         <div class="row align-items-center">
-                            <div class="col-11 px-0 mb-2">
+                            <div class="col-12 px-0 mb-2">
                                 <span class="star" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
                                     <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle\'></i>' : '<i class=\'fa-regular fa-circle\'></i>'"></span>
                                 </span>
@@ -309,7 +310,7 @@ export default {
                     <div v-if="filteredMusicians.length === 0" class="no-result-message fw-bold fs-2 card w-100 text-center py-5">Nessun risultato!</div>
 
                     <div 
-                        class="row mb-5 card-content position-relative" 
+                        class="row mb-5 card-content position-relative w-100" 
                         :class="{ 'show-card': !loading, 'filtered': filteredMusicians.length < allMusicians.length }"
                         v-for="(singleMusician, index) in filteredMusicians" 
                         :key="singleMusician.id"
@@ -318,23 +319,25 @@ export default {
                         <div class="col-4 img-artist" v-if="singleMusician && singleMusician.user_details && singleMusician.user_details.picture" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')', 'background-position': 'center', 'background-size': 'cover' }">     
                         </div>
                         <!-- Contenitore delle informazioni dell'artista -->
-                        <div class="col-8 border my-bg-grey position-relative">
+                        <div class="col-8 border my-bg-grey position-relative pe-0">
                             <div class="card-body">
-                                <!-- Nome dell'artista -->
-                                <h5 class="card-title fw-bold fs-4 ps-3 pt-4 mb-3">
-                        {{ singleMusician.name }}
-                        <span v-if="singleMusician.isSponsored" class="badge badge-small badge-success"><i class="bi bi-award-fill"></i></span>
-                    </h5>
-                                
-                    <!-- Biografia dell'artista -->
-                                <p v-if="singleMusician && singleMusician.user_details && singleMusician.user_details.bio" class="card-text h-50 overflow-hidden ps-3 bio-text">{{ singleMusician.user_details.bio }}</p>
+                                <div class="d-flex align-items-center justify-content-between ps-3 pt-4 mb-3">
+                                        <!-- Nome dell'artista -->
+                                    <h5 class="card-title fw-bold fs-4 me-5">
+                                    {{ singleMusician.name }}
+                        
+                                    </h5>
+                                    <span v-if="singleMusician.isSponsored" class="badge badge-small badge-success fs-5 pe-4 d-flex align-items-center"><small class="sponsor-text">Sponsored</small></span>
+                                </div>
+                                <!-- Biografia dell'artista -->
+                                <p v-if="singleMusician && singleMusician.user_details && singleMusician.user_details.bio" class="card-text h-50 overflow-hidden ps-3 bio-text d-none d-sm-block">{{ singleMusician.user_details.bio }}</p>
 
                                                 
                                 <!-- Linee oblique per gli utenti sponsorizzati -->
                                 <div v-if="singleMusician.isSponsored" class="sponsor-lines"></div>
                                                 
                                 <!-- Link al profilo dell'artista -->
-                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn my-btn text-white inline-block h-25 border">Vedi Profilo</router-link>
+                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn my-btn text-white inline-block h-25 border mb-2">Vedi Profilo</router-link>
                             </div>
                         </div>
                     </div>
@@ -364,7 +367,10 @@ export default {
 .badge-small {
     font-size: 0.8em;
     padding: 0.2em 0.5em;
-    margin-left: 10px;
+    border-radius: 10px 0 0 10px;
+}
+.sponsor-text{
+    font-size: 9px;
 }
 //
 
@@ -438,7 +444,7 @@ export default {
                     cursor: pointer;
                     font-size: 30px;
                     color: #21252B;
-                    margin: 0 10px;
+                    margin: 0 5px;
                     &:hover {
                         color: #BADFDA;
                         
@@ -449,7 +455,7 @@ export default {
     }
     .card-container {
         .card-content {
-            height: 200px;
+            max-height: 250px;
             overflow: hidden;
             border-radius: 10px;
             overflow: hidden;
@@ -595,15 +601,7 @@ export default {
     transform: translate(20px, -35%);
 }
 
-.sponsor-lines {
-    position: absolute;
-    top: 10px;
-    right: -20px;
-    width: 60px; /* Larghezza delle linee */
-    height: 10px; /* Altezza delle linee */
-    background-color: green; /* Colore delle linee */
-    transform: rotate(45deg); /* Ruota le linee di 45 gradi */
-}
+
 
 @media (min-width: 425px) {
     .search-section {

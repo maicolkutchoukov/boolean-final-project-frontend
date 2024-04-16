@@ -81,3 +81,13 @@
     transform: scale(1);
     opacity: 1;
 }
+
+.card-container{
+    &::-webkit-scrollbar {
+        width: 7px;
+        }
+        &::-webkit-scrollbar-thumb {
+        background: #21252B;
+        border-radius: 5px;
+        }
+}
