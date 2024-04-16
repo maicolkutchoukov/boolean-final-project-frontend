@@ -46,16 +46,16 @@ export default {
                     </div>
                     <ul class="list-unstyled d-flex justify-content-center mb-4">
                         <li class="px-2">
-                            <a href="#nogo"><i class="fa-brands fa-facebook-f my-cyan"></i></a>
+                            <a href="#nogo"><i class="fa-brands fa-facebook-f my-cyan fs-4 "></i></a>
                         </li>
                         <li class="px-2">
-                            <a href="#nogo"><i class="fa-brands fa-instagram my-cyan"></i></a>
+                            <a href="#nogo"><i class="fa-brands fa-instagram my-cyan fs-4"></i></a>
                         </li>
                         <li class="px-2">
-                            <a href="#nogo"><i class="fa-brands fa-twitter my-cyan"></i></a>
+                            <a href="#nogo"><i class="fa-brands fa-twitter my-cyan fs-4"></i></a>
                         </li>
                         <li class="px-2">
-                            <a href="#nogo"><i class="fa-brands fa-youtube my-cyan"></i></a>
+                            <a href="#nogo"><i class="fa-brands fa-youtube my-cyan fs-4"></i></a>
                         </li>
                     </ul>
                 </div>
