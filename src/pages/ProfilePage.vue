@@ -101,7 +101,7 @@ export default {
                 // Nasconde il messaggio di errore dopo 3 secondi
                 setTimeout(() => {
                     this.contactErrorMessage = '';
-                }, 3000);
+                }, 2000);
             }
         },
         async submitReview() {
@@ -156,7 +156,7 @@ export default {
                 setTimeout(() => {
                 this.reviewErrorMessage = '';
                 this.successMessage = '';
-                }, 1000);
+                }, 2000);
             }
         },
         async submitVote() {
@@ -256,7 +256,16 @@ export default {
     },
     created() {
         this.fetchUserData();
-    }
+    },
+    mounted() {
+    this.showContactForm = false; // Nascondi il form dei contatti all'inizio
+    window.scrollTo(0, 0); // Scorri verso l'alto quando il componente viene montato
+
+    // Mostra il form dei contatti dopo un breve ritardo
+    setTimeout(() => {
+        this.showContactForm = true;
+    }, 500); // Tempo in millisecondi prima di mostrare il form dei contatti
+}
 };
 </script>
 
@@ -426,10 +435,8 @@ export default {
                         </div>
                     </div>
                     <div class="text-center py-5">
-                        <button type="submit" class="btn my-button btn-lg">Invia Recensione</button>
-                    </div>
-                    <div class="text-center">
-                        <button type="button" @click="closeReviewForm" class="btn btn-secondary">Chiudi</button>
+                        <button type="submit" class="btn my-button btn-lg me-5 text-white px-4 py-3" style="background-color: #21252b;">Invia Recensione</button>
+                        <button type="button" @click="closeReviewForm" class="btn my-button btn-lg me-5 text-white px-4 py-3" style="background-color: #21252b;">Chiudi</button>
                     </div>
                 </form>
             </transition>
@@ -623,8 +630,12 @@ export default {
 }
 
 .filled {
-    color: gold; /* Colore per le palline piene */
-    margin-right: 5px;
+    color: #21252b; /* Colore per le palline piene */
+    margin-right: 3px;
+}
+
+.fa-circle:before {
+    margin-right: 3px;
 }
 
 .half-filled {
@@ -634,6 +645,7 @@ export default {
 .half-filled::before {
     content: '\f111'; /* Unicode per l'icona della pallina piena di Font Awesome */
     overflow: hidden;
+    margin-right: 5px;
     z-index: 20;
     font-family: 'Font Awesome 5 Free'; /* Font family per Font Awesome */
     position: absolute; /* Posizione assoluta rispetto al contenitore */
@@ -647,11 +659,11 @@ export default {
     position: absolute;
     overflow: hidden;
     z-index: 20;
-    top: 0;
+    top: .3px;
     left: -1px;
-    width: 55%;
+    width: 50%;
     height: 25px;
-    background-color: gold;
+    background-color: #21252b;
     display: inline-block;
     border-radius: 30px 0 0 30px;
     margin-top: 5px;
