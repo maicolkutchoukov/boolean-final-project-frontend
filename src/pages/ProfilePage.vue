@@ -75,22 +75,30 @@ export default {
                 this.successMessage = ''; // Resetta eventuali messaggi di successo precedenti
                 this.showError = true; // Mostra gli errori dopo il tentativo di invio
 
-            // Validazione dei campi
-            if (!this.contactForm.firstname.trim()) {
-                throw new Error('Inserisci il nome.');
-            }
-            if (!this.contactForm.lastname.trim()) {
-                throw new Error('Inserisci il cognome.');
-            }
-            if (!this.contactForm.email.trim()) {
-                throw new Error('Inserisci l\'email.');
-            }
-            if (!this.contactForm.message.trim()) {
-                throw new Error('Inserisci il messaggio.');
-            }
+                // Validazione dei campi
+                if (!this.contactForm.firstname.trim()) {
+                    throw new Error('Inserisci il nome.');
+                }
+                if (!this.contactForm.lastname.trim()) {
+                    throw new Error('Inserisci il cognome.');
+                }
+                if (!this.contactForm.email.trim()) {
+                    throw new Error('Inserisci l\'email.');
+                }
+                // Validazione dell'email utilizzando una espressione regolare (regex)
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(this.contactForm.email.trim())) {
+                    throw new Error('Email non valida.');
+                }
+                if (!this.contactForm.message.trim()) {
+                    throw new Error('Inserisci il messaggio.');
+                }
+                if (this.contactForm.message.trim().length < 5) {
+                    throw new Error('Il messaggio deve essere lungo almeno 5 caratteri.');
+                }
 
-            // Invia il messaggio
-            await axios.post(`${this.apiUrl}messages`, this.contactForm);
+                // Invia il messaggio
+                await axios.post(`${this.apiUrl}messages`, this.contactForm);
                 this.successMessage = 'Messaggio inviato con successo';
                 this.resetForm();
             } catch (error) {
@@ -98,9 +106,10 @@ export default {
                 this.contactErrorMessage = error.message;
                 console.error('Errore durante l\'invio del messaggio:', error);
             } finally {
-                // Nasconde il messaggio di errore dopo 3 secondi
+                // Rimuove i messaggi dopo 1 secondo
                 setTimeout(() => {
-                    this.contactErrorMessage = '';
+                    this.contactErrorMessage = ''; // Correzione della variabile
+                    this.successMessage = '';
                 }, 2000);
             }
         },
@@ -287,36 +296,48 @@ export default {
         <!-- Altre informazioni sul musicista -->
         <div class="container mb-5">
             <div class="row justify-content-between">
-                <div class="col-6 biography-section">
-                    <h2 class="fw-bold pt-3 mb-4">Bio</h2>
-                    <p v-if="singleMusician && singleMusician.user_details">{{ singleMusician.user_details.bio }}</p>
-                </div>
-                <div class="col-4 text-end skills-container">
-                    <h2 class="fw-bold pt-3 mb-4 ">Competenze</h2>
-                    <div>
-                        <span v-if="singleMusician && singleMusician.roles" v-for="(role, i) in singleMusician.roles" :key="i" class="bounce-in">
-                            <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="instrument-pic">
-                        </span>
-                    </div>
-                </div>
-                <div class="col-12 mb-5">
-                    <h2 class="fw-bold pt-3 mb-4">Demo</h2>
-                    <audio v-if="singleMusician && singleMusician.user_details" controls class="w-100">
-                        <source :src="demoPath" type="audio/mpeg">
-                    </audio>
-                </div>
-                <div class="col-12 mb-5">
-                    <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
-                    <div v-if="singleMusician && singleMusician.user_details">
-                        <i class="fa-solid fa-phone me-3"></i>
-                        Mail: {{ singleMusician.email }}
-                    </div>
-                    <div v-if="singleMusician && singleMusician.user_details">
-                        <i class="fa-solid fa-envelope me-3"></i>
-                        Cell: {{ singleMusician.user_details.cellphone }}
-                    </div>
-                </div>
+            <!-- Bio -->
+            <div class="col-6 biography-section">
+                <h2 class="fw-bold pt-3 mb-4">Bio</h2>
+                <p v-if="singleMusician && singleMusician.user_details.length > 0">{{ singleMusician.user_details.bio }}</p>
+                <p v-else>Ancora nessun dato inserito dall'utente.</p>
             </div>
+            <!-- Competenze -->
+            <div class="col-4 text-end skills-container">
+                <h2 class="fw-bold pt-3 mb-4">Competenze</h2>
+                <div v-if="singleMusician && singleMusician.roles.length > 0">
+                    <span v-for="(role, i) in singleMusician.roles" :key="i" class="bounce-in">
+                        <img :src="'http://127.0.0.1:8000/storage/' + role.icon" alt="roleInstrument" class="instrument-pic p-lg-1 p-sm-3">
+                    </span>
+                </div>
+                <p v-else>Ancora nessun dato inserito dall'utente.</p>
+            </div>
+            <!-- Demo -->
+            <div class="col-12 mb-5">
+                <h2 class="fw-bold pt-3 mb-4">Demo</h2>
+                <audio v-if="singleMusician && singleMusician.user_details.length > 0" controls class="w-100">
+                    <source :src="demoPath" type="audio/mpeg">
+                </audio>
+                <p v-else>Ancora nessun dato inserito dall'utente.</p>
+            </div>
+            <!-- Info di contatto -->
+            <div class="col-12 mb-5">
+                <h2 class="fw-bold pt-3 mb-4">Info di contatto</h2>
+                <div v-if="singleMusician && singleMusician" class="">
+                    <i class="fa-solid fa-envelope me-3"></i>Mail:<span class="ps-3">{{ singleMusician.email }}</span>
+                </div>
+                <p v-else>Ancora nessun dato inserito dall'utente.</p>
+
+                <div v-if="singleMusician && singleMusician.user_details">
+                    <i class="fa-solid fa-phone me-3"></i>Cell: 
+                    <span  v-if="singleMusician && singleMusician.user_details.cellphone" class="ps-3">
+                          {{ singleMusician.user_details.cellphone }}
+                    </span>
+                    <span class="ps-3" v-else><small>Numero di telefono non inserito</small></span>
+                </div>
+                
+            </div>
+        </div>
 
 
             <!-- Sezione per le recensioni -->
@@ -480,34 +501,33 @@ export default {
         </section>
 
 
-    <!-- Messaggi di errore/successo -->
-    <section class="message-section">
-        <div v-if="reviewErrorMessage || successMessage" class="message-container" :class="{ active: reviewErrorMessage || successMessage }">
-            <div v-if="reviewErrorMessage" class="alert alert-danger" role="alert">
-                <span class="icon"><i class="bi bi-exclamation-triangle-fill"></i></span>
-                <span>{{ reviewErrorMessage }}</span>
-                <button @click="clearMessages" class="btn-close">&times;</button>
+        <section class="message-section">
+            <div v-if="reviewErrorMessage || successMessage" class="message-container d-sm-flex" :class="{ active: reviewErrorMessage || successMessage }">
+                <div v-if="reviewErrorMessage" class="alert alert-danger" role="alert">
+                    <span class="icon"><i class="bi bi-exclamation-triangle-fill"></i></span>
+                    <span>{{ reviewErrorMessage }}</span>
+                    <button @click="clearMessages" class="btn-close">&times;</button>
+                </div>
+                <div v-if="successMessage" class="alert alert-success" role="alert">
+                    <span class="icon"><i class="bi bi-check-circle-fill"></i></span>
+                    <span>{{ successMessage }}</span>
+                    <button @click="clearMessages" class="btn-close">&times;</button>
+                </div>
             </div>
-            <div v-if="successMessage" class="alert alert-success" role="alert">
-                <span class="icon"><i class="bi bi-check-circle-fill"></i></span>
-                <span>{{ successMessage }}</span>
-                <button @click="clearMessages" class="btn-close">&times;</button>
-            </div>
-        </div>
 
-        <div v-if="contactErrorMessage || successMessage" class="message-container" :class="{ active: contactErrorMessage || successMessage }">
-            <div v-if="contactErrorMessage" class="alert alert-danger" role="alert">
-                <span class="icon"><i class="bi bi-exclamation-triangle-fill"></i></span>
-                <span>{{ contactErrorMessage }}</span>
-                <button @click="clearMessages" class="btn-close">&times;</button>
+            <div v-if="contactErrorMessage || successMessage" class="message-container d-sm-flex" :class="{ active: contactErrorMessage || successMessage }">
+                <div v-if="contactErrorMessage" class="alert alert-danger" role="alert">
+                    <span class="icon"><i class="bi bi-exclamation-triangle-fill"></i></span>
+                    <span>{{ contactErrorMessage }}</span>
+                    <button @click="clearMessages" class="btn-close">&times;</button>
+                </div>
+                <div v-if="successMessage" class="alert alert-success" role="alert">
+                    <span class="icon"><i class="bi bi-check-circle-fill"></i></span>
+                    <span>{{ successMessage }}</span>
+                    <button @click="clearMessages" class="btn-close">&times;</button>
+                </div>
             </div>
-            <div v-if="successMessage" class="alert alert-success" role="alert">
-                <span class="icon"><i class="bi bi-check-circle-fill"></i></span>
-                <span>{{ successMessage }}</span>
-                <button @click="clearMessages" class="btn-close">&times;</button>
-            </div>
-        </div>
-    </section>
+        </section>
 </template>
 
 <style lang="scss" scoped>
@@ -571,7 +591,9 @@ export default {
 }
 
 .message-container {
-    max-width: 400px;
+    width: 75%;
+    margin: 0 auto;
+    max-width: 500px;
     margin-bottom: 10px;
     opacity: 0;
     transition: opacity 0.5s ease;
