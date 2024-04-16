@@ -158,9 +158,12 @@ export default {
             <h3 class="text-start w-100 mb-3">Nome:</h3>
             <input type="text" v-model="searchQuery" class="form-control input-searchbar w-100 mx-2" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
         </div>
-        <button class="btn btn-dark d-md-none d-block mx-auto w-75 mt-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        <button class="btn btn-dark d-md-none d-block mx-auto w-75 mt-3 mb-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
             Apri filtri
         </button>
+        <div class="d-flex justify-content-center d-md-none d-block">
+            <button class="btn btn-dark rounded-5 py-3 px-5" @click="resetFilters">Annulla Filtri</button>
+        </div>
         <!-- Offcanvas -->
         <div class="offcanvas w-100 offcanvas-start d-md-none" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
@@ -168,6 +171,7 @@ export default {
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
+                
                 <!-- Contenuto del tuo offcanvas -->
                 <div class="row">
                     <div class="col-12">
@@ -182,8 +186,8 @@ export default {
                             <h3 class="text-start w-100 mb-3">Voto:</h3>
                             <div>
                                 <span class="star mx-3" v-for="star in 5" :key="star" @click="rating = star, updateFilterMusicians()">
-                                <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle fs-3\'></i>' : '<i class=\'fa-regular fa-circle fs-3\'></i>'"></span>
-                            </span>
+                                    <span v-html="star <= rating ? '<i class=\'fa-solid fa-circle fs-3\'></i>' : '<i class=\'fa-regular fa-circle fs-3\'></i>'"></span>
+                                </span>
                             </div>
                         </div>
                         <!-- Rating -->
@@ -207,6 +211,7 @@ export default {
                             </button>
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -320,8 +325,8 @@ export default {
                         </div>
                         <!-- Contenitore delle informazioni dell'artista -->
                         <div class="col-8 border my-bg-grey position-relative pe-0">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-between ps-3 pt-4 mb-3">
+                            <div class="card-body py-3">
+                                <div class="d-flex align-items-center justify-content-between ps-3 pt-1 mb-3">
                                         <!-- Nome dell'artista -->
                                     <h5 class="card-title fw-bold fs-4 me-5">
                                     {{ singleMusician.name }}
@@ -337,7 +342,7 @@ export default {
                                 <div v-if="singleMusician.isSponsored" class="sponsor-lines"></div>
                                                 
                                 <!-- Link al profilo dell'artista -->
-                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn my-btn text-white inline-block h-25 border mb-2">Vedi Profilo</router-link>
+                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="my-btn text-white inline-block h-25 border mb-5 px-4 px-md-5 text-decoration-none py-2 fs-6"><small>Vedi Profilo</small></router-link>
                             </div>
                         </div>
                     </div>
@@ -502,6 +507,7 @@ export default {
         border: 1px solid grey;
         padding: 10px 0;
         border-radius: 20px;
+        font-size: 0.8em;
 }
 .active {
     background-color: black; /* Cambia lo stile del bottone quando è selezionato */
@@ -521,7 +527,7 @@ export default {
 
 .my-btn{
     background-color: #21252B;
-    padding: 10px 30px;
+    /* padding: 10px 30px; */
     font-weight: bold;
     border-radius: 30px;
     &:hover{
