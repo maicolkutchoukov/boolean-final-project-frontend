@@ -58,7 +58,7 @@ export default {
         try {
             const response = await axios.get(`${this.apiUrl}users/${this.$route.params.name}`);
             this.singleMusician = response.data.result;
-            this.demoPath = `http://127.0.0.1:8000/storage${this.singleMusician.user_details.demo}`;
+            this.demoPath = `http://127.0.0.1:8000/storage/${this.singleMusician.user_details.demo}`;
             this.contactForm.user_id = this.singleMusician.id;
             this.reviewForm.user_id = this.singleMusician.id;
             this.voteForm.user_id = this.singleMusician.id;
