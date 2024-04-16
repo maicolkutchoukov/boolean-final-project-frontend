@@ -609,7 +609,7 @@ export default {
 
 
 
-@media (min-width: 425px) {
+@media (min-width: 430px) {
     .search-section {
         padding: 0 40px;
     }

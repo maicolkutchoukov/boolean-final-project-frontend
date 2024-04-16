@@ -290,7 +290,7 @@ export default {
            <div class="container">
                 <!-- Nome e città -->
                 <h1 class="text-white pb-3 bounce-in-x display-1 fw-bold">{{ singleMusician.name }}</h1>
-                <h2 class="text-white bounce-in-x display-2 fw-bold">{{ singleMusician.city }}</h2>
+                <h2 class="text-white bounce-in-x display-2 fw-bold d-none d-md-block">{{ singleMusician.city }}</h2>
            </div>
         </div>
         <!-- Altre informazioni sul musicista -->
@@ -299,7 +299,7 @@ export default {
             <!-- Bio -->
             <div class="col-6 biography-section">
                 <h2 class="fw-bold pt-3 mb-4">Bio</h2>
-                <p v-if="singleMusician && singleMusician.user_details.length > 0">{{ singleMusician.user_details.bio }}</p>
+                <p v-if="singleMusician && singleMusician.user_details.bio">{{ singleMusician.user_details.bio }}</p>
                 <p v-else>Ancora nessun dato inserito dall'utente.</p>
             </div>
             <!-- Competenze -->
@@ -315,7 +315,7 @@ export default {
             <!-- Demo -->
             <div class="col-12 mb-5">
                 <h2 class="fw-bold pt-3 mb-4">Demo</h2>
-                <audio v-if="singleMusician && singleMusician.user_details.length > 0" controls class="w-100">
+                <audio v-if="singleMusician && singleMusician.user_details.demo" controls class="w-100">
                     <source :src="demoPath" type="audio/mpeg">
                 </audio>
                 <p v-else>Ancora nessun dato inserito dall'utente.</p>
