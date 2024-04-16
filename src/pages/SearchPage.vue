@@ -114,36 +114,39 @@ export default {
             this.updateFilterMusicians();
         },
         removeRole(roleToRemove) {
-    console.log(this.selectedRoles);
-    this.selectedRoles = this.selectedRoles.filter(role => role.id !== roleToRemove.id);
-    if (this.selectedRoles.length === 0) {
-        this.resetFilters();
-    } else {
-        this.updateFilterMusicians();
-    }
-},
-        removeSelectedRoles() {
-            this.selectedRoles = [];
-            store.selectedRoleHome = null;
-            store.filteredMusicians = [];
-            this.updateFilterMusicians();
+            console.log("Ruolo da rimuovere:", roleToRemove);
+            this.selectedRoles = this.selectedRoles.filter(role => role.id !== roleToRemove.id);
+            if (this.selectedRoles.length === 0) {
+                this.resetFilters(); // Chiamiamo resetFilters se non ci sono più ruoli selezionati
+            } else {
+                // Ricarichiamo la lista dei musicisti filtrati con i filtri rimanenti
+                store.filteredMusicians = this.filteredMusicians;
+                this.updateFilterMusicians();
+            }
         },
+        removeSelectedRoles() {
+                this.selectedRoles = []; // Rimuoviamo tutti i ruoli selezionati
+                this.resetFilters(); // Chiamiamo resetFilters dopo aver rimosso tutti i ruoli selezionati
+            },
         resetMinimumReviews() {
             this.minimumReviews = null;
             this.updateFilterMusicians();
         },
         resetFilters() {
-            this.selectedRoles = [];
-            this.searchQuery = '';
-            this.rating = null;
-            this.minimumReviews = null;
-            store.selectedRoleHome = null;
-            store.filteredMusicians = [];
+            this.selectedRoles = []; // Resettiamo i ruoli selezionati
+            this.searchQuery = ''; // Resettiamo la query di ricerca
+            this.rating = null; // Resettiamo il rating
+            this.minimumReviews = null; // Resettiamo il numero minimo di recensioni
+            store.filteredMusicians = []; // Resettiamo la lista filtrata di musicisti
+            this.updateFilterMusicians(); // Aggiorniamo la lista degli artisti
         },
     },
     created() {
         this.getRoles();
         this.getMusicians();
+    },
+    mounted() {
+        window.scrollTo(0, 0); // Scorri verso l'alto quando il componente viene montato
     }
 };
 </script>
@@ -186,10 +189,10 @@ export default {
             <!-- Titolo della sezione di ricerca -->
             <h1 class="fw-bold d-none d-md-block">Trova artisti o band {{ store.selectedRoleHome }}</h1>
             <!-- Input per la ricerca -->
-            <div class="input-container position-relative d-none d-md-block">
+            <div class="input-container d-none d-md-block">
                 <input type="text" v-model="searchQuery" class="form-control input-searchbar" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
                 <span class="search-icon">
-                    <i class="fa-solid fa-magnifying-glass position-absolute"></i>
+                    <i class="fa-solid fa-magnifying-glass"></i>
                 </span>
             </div>
             
@@ -272,47 +275,42 @@ export default {
             
             <!-- Contenitore dei risultati della ricerca -->
             <div v-if="!loading" class="col-12 col-md-7 card-section">
-                <!-- Titolo degli artisti in evidenza -->
-                <h2 class="fw-bold px-4 py-3 fs-1">Artisti in evidenza</h2>
-                <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
-                    <div 
-                        class="row mb-5 card-content position-relative" 
-                        :class="{ 'show-card': !loading, 'filtered': filteredMusicians.length < allMusicians.length }"
-                        v-for="(singleMusician, index) in filteredMusicians" 
-                        :key="singleMusician.id"
-                    >
-                        <!-- Immagine dell'artista -->
-                        <div class="col-4 img-artist" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')', 'background-position': 'center', 'background-size': 'cover' }">     
-                        </div>
-                        <!-- Contenitore delle informazioni dell'artista -->
-                        <div class="col-8 border my-bg-grey">
-                            <div class="card-body">
-                                <!-- Nome dell'artista -->
-                                <h5 class="card-title fw-bold fs-4 ps-3 pt-4 mb-3">{{ singleMusician.name }}</h5>
-                                <!-- Biografia dell'artista -->
-                                <p class="card-text h-50 overflow-hidden ps-3 bio-text">{{ singleMusician.user_details.bio }}</p>
-                                
-                                <!-- Badge per gli artisti sponsorizzati -->
-                                <div v-if="singleMusician.isSponsored" class="sponsor-badge">
-                                    <i class="fa-solid fa-bolt fa-beat"></i>
-                                </div>
-                                
-                                <!-- Link al profilo dell'artista -->
-                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn my-btn text-white inline-block h-25 border">Vedi Profilo</router-link>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Titolo degli artisti in evidenza -->
+    <h2 class="fw-bold px-4 py-3 fs-1">Artisti in evidenza</h2>
+    <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
+        <div 
+            class="row mb-5 card-content position-relative" 
+            :class="{ 'show-card': !loading, 'filtered': filteredMusicians.length < allMusicians.length }"
+            v-for="(singleMusician, index) in filteredMusicians" 
+            :key="singleMusician.id"
+        >
+            <!-- Immagine dell'artista -->
+            <div class="col-4 img-artist" :style="{ 'background-image': 'url(http://127.0.0.1:8000/storage/' + singleMusician.user_details.picture + ')', 'background-position': 'center', 'background-size': 'cover' }">     
+            </div>
+            <!-- Contenitore delle informazioni dell'artista -->
+            <div class="col-8 border my-bg-grey position-relative">
+                <div class="card-body">
+                    <!-- Nome dell'artista -->
+                    <h5 class="card-title fw-bold fs-4 ps-3 pt-4 mb-3">{{ singleMusician.name }}</h5>
+                    <!-- Biografia dell'artista -->
+                    <p class="card-text h-50 overflow-hidden ps-3 bio-text">{{ singleMusician.user_details.bio }}</p>
+                    
+                    <!-- Linee oblique per gli utenti sponsorizzati -->
+                    <div v-if="singleMusician.isSponsored" class="sponsor-lines"></div>
+                    
+                    <!-- Link al profilo dell'artista -->
+                    <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="btn my-btn text-white inline-block h-25 border">Vedi Profilo</router-link>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+        </div>
     </section>
 
-    <!-- Overlay di caricamento -->
     <div v-if="loading" class="loading-overlay">
-        <div class="spinner-border me-4" role="status">
-            <span class="visually-hidden">Caricamento...</span>
-        </div>
-        <p class="fw-bold fs-3">Caricamento in corso...</p>
+        <img src="https://media.tenor.com/eMrZP9HBkqEAAAAj/frkst-records.gif" alt="Caricamento in corso..." class="loading-spinner">
+        <!-- <p class="fw-bold fs-3">Caricamento in corso...</p> -->
     </div>
 </template>
 
@@ -564,6 +562,33 @@ export default {
     border: 1px solid #21252B;
     background-color: #BADFDA;
 }
+
+.input-container {
+    position: relative;
+}
+
+.input-searchbar {
+    padding-right: 30px; /* Spazio a destra per l'icona */
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 0px; /* Distanza dalla destra */
+    transform: translate(20px, -35%);
+}
+
+.sponsor-lines {
+    position: absolute;
+    top: 10px;
+    right: -20px;
+    width: 60px; /* Larghezza delle linee */
+    height: 10px; /* Altezza delle linee */
+    background-color: green; /* Colore delle linee */
+    transform: rotate(45deg); /* Ruota le linee di 45 gradi */
+}
+
+
 </style>
 
 
