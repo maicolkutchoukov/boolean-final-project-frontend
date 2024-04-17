@@ -102,7 +102,7 @@ export default {
     <div class="container-fluid">
       <!-- Jumbotron SECTION -->
       <div class="jumbotron p-0 d-flex align-items-center">
-        <h1 class="container p-0 py-5 mb-3 display-4 fw-bold text-white">Trova musicisti, gruppi <br> e band per il tuo evento</h1>
+        <h1 class="container p-0 p-md-5 py-5 mb-3 display-4 fw-bold text-white">Trova musicisti, gruppi <br> e band per il tuo evento</h1>
       </div>
       <!-- How To Do Section -->
       <section class="how-section">
@@ -319,10 +319,9 @@ export default {
 }
 
 @media (max-width: 768px) {
-    .display-none{
+  .display-none{
     display: none;
   }
-
   .how-section {
     padding: 0 50px;
     .buttons-controller {
@@ -333,8 +332,8 @@ export default {
 
   .third-section {
     .row {
-    display: flex;
-    justify-content: center;
+      display: flex;
+      justify-content: center;
       .col-8 {
           width: 100%;
       }
@@ -342,19 +341,17 @@ export default {
   }
   .carousel-item {
    .row{
-        width: 100%;
-        margin-bottom: 20px;
+      width: 100%;
+      margin-bottom: 20px;
    }
    .carousel-title {
-        padding-bottom: 0px;
+      padding-bottom: 0px;
     }
     h3 {
       margin-top: 10px;
       margin-bottom: 0;
-    }
+    } 
 }
-
-  
 }
 .btn-close-modal {
     position: absolute;
