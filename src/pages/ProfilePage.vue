@@ -1,6 +1,17 @@
 <script>
 import axios from 'axios';
+ // Import Swiper Vue.js components
+ import { Swiper, SwiperSlide } from 'swiper/vue';
 
+// Import Swiper styles
+import 'swiper/css';
+
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+
+
+// import required modules
+import { EffectCoverflow, Pagination } from 'swiper/modules';
 export default {
     data() {
         return {
@@ -42,6 +53,15 @@ export default {
             reviews: [], // Tutta la lista delle review
             
         };
+    },
+    components: {
+      Swiper,
+      SwiperSlide,
+    },
+    setup() {
+      return {
+        modules: [EffectCoverflow, Pagination],
+      };
     },
     computed: {
         visibleReviews() {
@@ -338,88 +358,71 @@ export default {
                 
             </div>
         </div>
-
-
-            <!-- Sezione per le recensioni -->
-            <section class="reviews-section">
-                <div v-if="singleMusician && singleMusician.reviews" class="d-flex justify-content-between mb-5 padding">
-                    <h2 class="mb-5 fw-bold">Recensioni:</h2>
-                    <div class="hover-container">
-                        <div class="d-flex align-items-center">
-                            <!-- Numero totale delle recensioni -->
-                            <small class="me-2 number-reviews">{{ singleMusician.votes.length }} voti</small>
-                            <!-- Visualizza le palline riempite in base alla media dei voti -->
-                            <span
-                                v-for="index in 5"
-                                :key="index"
-                                :class="{
-                                    'filled': index <= averageVote,
-                                    'half-filled': index === Math.ceil(averageVote) && averageVote % 1 !== 0
-                                }"
-                                class="vote-star"
-                            >
-                                <!-- Utilizzo delle icone di Font Awesome -->
-                                <i v-if="index <= averageVote" class="fa-solid fa-circle"></i>
-                                <i v-else class="fa-regular fa-circle"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="row" v-if="singleMusician && singleMusician.reviews && singleMusician.reviews.length > 0">
-                        <div class="col-md-12 p-0">
-                            <div class="reviews-container">
-                                <div class="reviews-wrapper">
-                                    <!-- Display the first 3 reviews in a row -->
-                                    <div class="row">
-                                        <div v-for="(review, index) in singleMusician.reviews.slice(0, 3)" :key="index" class="col-md-4">
-                                            <div class="card mb-3">
-                                                <div class="card-body px-4 pt-4">
-                                                    <h5 class="card-title fs-3 mb-4">{{ review.firstname + ' ' + review.lastname }}</h5>
-                                                    <p class="card-text">{{ review.description }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Button to open offcanvas -->
-                                <div class="text-end mt-3">
-                                    <button v-if="singleMusician.reviews.length > 3" class="btn btn-dark ms-auto" @click="openOffcanvas">
-                                        <i class="bi bi-box-arrow-down-left"></i>
-                                    </button>
-                                </div>
-
-                            
-
-                            <!-- Offcanvas -->
-                            <div class="offcanvas offcanvas-end" :class="{ 'show': showOffcanvas }" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-                                <div class="offcanvas-header text-white">
-                                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Tutte le Recensioni</h5>
-                                    <button type="button" class="btn-close text-reset" @click="closeOffcanvas" aria-label="Close"></button>
-                                </div>
-                                <div class="offcanvas-body">
-                                    <div class="row">
-                                        <!-- Display all reviews starting from the 4th -->
-                                        <div v-for="(review, index) in singleMusician.reviews.slice(3)" :key="index" class="col-md-12 card mb-3">
-                                            <div class="card-body">
-                                                <h5 class="card-title">{{ review.firstname + ' ' + review.lastname }}</h5>
-                                                <p class="card-text">{{ review.description }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- ------------------------------------------------------------------------------------------------------------------------------------ -->
+       <section>
+            <div v-if="singleMusician && singleMusician.reviews" class="d-flex justify-content-between mb-5 padding">
+                        <h2 class="mb-5 fw-bold">Recensioni:</h2>
+                        <div class="hover-container">
+                            <div class="d-flex align-items-center">
+                                <!-- Numero totale delle recensioni -->
+                                <small class="me-2 number-reviews">{{ singleMusician.votes.length }} voti</small>
+                                <!-- Visualizza le palline riempite in base alla media dei voti -->
+                                <span
+                                    v-for="index in 5"
+                                    :key="index"
+                                    :class="{
+                                        'filled': index <= averageVote,
+                                        'half-filled': index === Math.ceil(averageVote) && averageVote % 1 !== 0
+                                    }"
+                                    class="vote-star"
+                                >
+                                    <!-- Utilizzo delle icone di Font Awesome -->
+                                    <i v-if="index <= averageVote" class="fa-solid fa-circle"></i>
+                                    <i v-else class="fa-regular fa-circle"></i>
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <div v-else>
-                        Non ci sono recensioni
-                    </div>
-                </div>
-            </section>
+            <div v-if="singleMusician && singleMusician.reviews && singleMusician.reviews.length > 0" class="mb-5">
+                <swiper
+                    :effect="'coverflow'"
+                    :grabCursor="true"
+                    :centeredSlides="true"
+                    :slidesPerView="'auto'"
+                    :coverflowEffect="{
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: true,
+                    }"
+                    :pagination="true"
+                    :modules="modules"
+                    class="mySwiper"
+                >
+                    <swiper-slide  v-for="(review, index) in singleMusician.reviews" :key="index">
+                        <div class="card mb-3">
+                            <div class="card-body px-4 pt-4">
+                                <h5 class="card-title fs-3 mb-4">{{ review.firstname + ' ' + review.lastname }}</h5>
+                                <p class="card-text">{{ review.description }}</p>
+                            </div>
+                        </div>
+                    </swiper-slide>
+                </swiper>
+            </div>
+            <div v-else class="mb-5">
+                Non ci sono recensioni
+            </div>
             <div class="d-flex justify-content-center margin">
                 <button @click="toggleReviewForm" v-if="!showReviewForm" class="btn-write-review">Scrivi una recensione</button>
             </div>
+       </section>
+        
+
+
+        <!-- ------------------------------------------------------------------------------------------------------------------------------------ -->
+
+            
         </div>
     </section>
 
@@ -700,5 +703,23 @@ export default {
     border-radius: 30px;
     border: 0 solid white;
     min-height: 350px
+}
+
+.swiper {
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 300px;
+  height: 300px;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
 }
 </style>
