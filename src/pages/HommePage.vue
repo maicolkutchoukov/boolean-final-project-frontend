@@ -180,10 +180,10 @@ export default {
       <section class="third-section py-5 fade-in">
         <div class="container-fluid">
           <div class="row g-0">
-            <div class="col-4-md-none">
+            <div class=" col-4 col-md-4 d-none d-md-block">
               <!-- Qui potrebbe andare un'altra sezione o un'inserzione -->
             </div>
-            <div class="col-8 px-5">
+            <div class="col-8 col-md-8 px-5">
               <h2 class="mb-5 fw-bold fs-1">Mettiamoci all'opera!</h2>
               <p class="mb-5">
                 Scopri il prossimo grande talento musicale su BMusic! 
@@ -331,6 +331,15 @@ export default {
     }
   }
 
+  .third-section {
+    .row {
+    display: flex;
+    justify-content: center;
+      .col-8 {
+          width: 100%;
+      }
+    }
+  }
   .carousel-item {
    .row{
         width: 100%;
