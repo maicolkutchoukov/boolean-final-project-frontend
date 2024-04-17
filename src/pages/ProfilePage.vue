@@ -51,6 +51,7 @@ export default {
             showReviewForm: false,
             showOffcanvas: false,
             reviews: [], // Tutta la lista delle review
+            initialSlideIndex: 2
             
         };
     },
@@ -394,10 +395,11 @@ export default {
                     stretch: 0,
                     depth: 100,
                     modifier: 1,
-                    slideShadows: true,
+                    slideShadows: false,
                     }"
                     :pagination="true"
                     :modules="modules"
+                    :initialSlide="initialSlideIndex" 
                     class="mySwiper"
                 >
                     <swiper-slide  v-for="(review, index) in singleMusician.reviews" :key="index">
