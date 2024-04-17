@@ -1,6 +1,7 @@
 <script>
 import { store } from '../store.js';
 import axios from 'axios';
+import { debounce } from 'lodash';
 
 export default {
     data() {
@@ -20,26 +21,25 @@ export default {
     computed: {
         // Metodo di calcolo per filtrare gli artisti
         filteredMusicians() {
-            let filtered = [];
+            let filtered = [...this.allMusicians];
+            store.selectedRoleHome = null;
+            store.selectedRoleId = null;
+            console.log('ruolo dalla home e id', store.selectedRoleHome, store.selectedRoleId);
 
-            if (store.selectedRoleHome !== null) {
-                // Trova il ruolo corrispondente a selectedRoleHome
-                const selectedRole = this.allRoles.find(role => role.title === store.selectedRoleHome);
-                // Se il ruolo corrisponde, aggiungilo ai filtri esistenti
+            if (this.selectedRoleHome !== null) {
+                const selectedRole = this.allRoles.find(role => role.title === this.selectedRoleHome);
                 if (selectedRole && !this.selectedRoles.some(role => role.id === selectedRole.id)) {
                     this.selectedRoles.push(selectedRole);
                 }
-                // Rimuovi selectedRoleHome dopo averlo utilizzato
-                store.selectedRoleHome = null;
+                this.selectedRoleHome = null;
             }
 
-            if (store.filteredMusicians && store.filteredMusicians.length > 0) {
-                filtered = [...store.filteredMusicians];
-            } else {
-                filtered = [...this.allMusicians];
+            if (this.selectedIdHome !== null) {
+                // Aggiungi logica per gestire selectedIdHome, se necessario
+                // Questo potrebbe implicare una ricerca aggiuntiva o un filtro diretto sui musicisti
+                // Aggiorna anche la logica per la rimozione del filtro predefinito se necessario
             }
 
-            // Applica i filtri aggiuntivi, se necessario
             if (this.selectedRoles.length > 0) {
                 filtered = filtered.filter(musician =>
                     this.selectedRoles.every(selectedRole =>
@@ -49,7 +49,9 @@ export default {
             }
 
             if (this.searchQuery.trim() !== '') {
-                filtered = filtered.filter(musician => musician.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
+                filtered = filtered.filter(musician =>
+                    musician.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+                );
             }
 
             if (this.rating !== null) {
@@ -93,19 +95,22 @@ export default {
                 console.error('Errore durante la chiamata API:', error);
             }
         },
-        updateFilterMusicians() {
+        updateFilterMusicians: debounce(function() {
             store.filteredMusicians = this.filteredMusicians;
-            this.$router.push({ query: null });
-        }, 
+        }, 300),
         isRoleSelected(role) {
             return this.selectedRoles.some(selectedRole => selectedRole.id === role.id);
         },
         toggleRoleSelection(role) {
-            const index = this.selectedRoles.findIndex(selectedRole => selectedRole.id === role.id);
-            if (index !== -1) {
-                this.selectedRoles.splice(index, 1);
-            } else {
-                this.selectedRoles.push(role);
+            // Verifica se il ruolo selezionato è quello predefinito dalla home
+            const isHomeRole = this.selectedRoleHome !== null && role.title === this.selectedRoleHome;
+            if (!isHomeRole) {
+                const index = this.selectedRoles.findIndex(selectedRole => selectedRole.id === role.id);
+                if (index !== -1) {
+                    this.selectedRoles.splice(index, 1);
+                } else {
+                    this.selectedRoles.push(role);
+                }
             }
             this.updateFilterMusicians();
         },
@@ -114,31 +119,30 @@ export default {
             this.updateFilterMusicians();
         },
         removeRole(roleToRemove) {
-            console.log("Ruolo da rimuovere:", roleToRemove);
             this.selectedRoles = this.selectedRoles.filter(role => role.id !== roleToRemove.id);
             if (this.selectedRoles.length === 0) {
-                this.resetFilters(); // Chiamiamo resetFilters se non ci sono più ruoli selezionati
+                this.resetFilters();
             } else {
-                // Ricarichiamo la lista dei musicisti filtrati con i filtri rimanenti
-                store.filteredMusicians = this.filteredMusicians;
                 this.updateFilterMusicians();
             }
         },
         removeSelectedRoles() {
-                this.selectedRoles = []; // Rimuoviamo tutti i ruoli selezionati
-                this.resetFilters(); // Chiamiamo resetFilters dopo aver rimosso tutti i ruoli selezionati
-            },
+            this.selectedRoles = [];
+            this.resetFilters();
+        },
         resetMinimumReviews() {
             this.minimumReviews = null;
             this.updateFilterMusicians();
         },
         resetFilters() {
-            this.selectedRoles = []; // Resettiamo i ruoli selezionati
-            this.searchQuery = ''; // Resettiamo la query di ricerca
-            this.rating = null; // Resettiamo il rating
-            this.minimumReviews = null; // Resettiamo il numero minimo di recensioni
-            store.filteredMusicians = []; // Resettiamo la lista filtrata di musicisti
-            this.updateFilterMusicians(); // Aggiorniamo la lista degli artisti
+            this.selectedRoles = [];
+            this.searchQuery = '';
+            this.rating = null;
+            this.minimumReviews = null;
+            store.filteredMusicians = [];
+            this.updateFilterMusicians();
+            store.selectedRoleHome = null;
+            store.selectedRoleId = null;
         },
     },
     created() {
@@ -146,7 +150,7 @@ export default {
         this.getMusicians();
     },
     mounted() {
-        window.scrollTo(0, 0); // Scorri verso l'alto quando il componente viene montato
+        window.scrollTo(0, 0);
     }
 };
 </script>
@@ -180,7 +184,7 @@ export default {
                         <div class="col-12 mb-4 d-flex align-items-center justify-content-between flex-column">
                             <h3 class="text-start w-100 mb-3">Numero min recensioni:</h3>
 
-                            <input type="number" v-model="minimumReviews" class="form-control input-min-reviews w-100 mx-2 px-4 mb-5" min="0" placeholder="Numero minimo di recensioni">
+                            <input type="number" v-model="minimumReviews" class="form-control input-min-reviews w-100 mx-2 px-4" min="0" placeholder="Numero minimo di recensioni">
                         </div>
                         <div class="col-12 mb-4 d-flex justify-content-between flex-column">
                             <h3 class="text-start w-100 mb-3">Voto:</h3>
@@ -205,7 +209,7 @@ export default {
                                 style="min-width: 200px;"
                                 type="button"
                                 @click="toggleRoleSelection(role)"
-                                :class="{ 'active': isRoleSelected(role) || (store.selectedRoleHome !== null && role.title === store.selectedRoleHome) }"
+                                :class="{ 'active': isRoleSelected(role) || (role.title == store.selectedRoleHome) }"
                             >
                                 {{ role.title }}
                             </button>
@@ -250,6 +254,9 @@ export default {
             <aside class="col-5 col-lg-4 border my-bg-grey py-5 px-4 d-none d-md-block">
                 <!-- Titolo della sezione dei filtri -->
                 <h2 class="fw-bold fs-1 mb-4">Filtri</h2>
+                <div class="d-flex justify-content-center">
+                        <button class="btn btn-dark rounded-5 py-3 px-5 mb-4" @click="resetFilters">Reset Filtri</button>
+                    </div>
                 <div class="filter-container">
                     <!-- Contenitore dei ruoli selezionati -->
                     
@@ -298,9 +305,7 @@ export default {
                         </div>
                     </div>
                     <!-- Bottone per annullare tutti i filtri -->
-                    <div class="d-flex justify-content-center">
-                        <button class="btn btn-dark rounded-5 py-3 px-5" @click="resetFilters">Annulla Filtri</button>
-                    </div>
+                    
                 </div>
                 <!-- Pulsante di ricerca -->
                 <div class="button-search my-button"></div>
@@ -309,7 +314,7 @@ export default {
             <!-- Contenitore dei risultati della ricerca -->
             <div v-if="!loading" class="col-12 col-md-7 card-section">
                 <!-- Titolo degli artisti in evidenza -->
-                <h2 class="fw-bold px-4 py-3 fs-1">Artisti in evidenza</h2>
+                <h2 class="fw-bold px-4 py-3 fs-1">I nostri artisti:</h2>
                 <div class="card-container d-flex flex-wrap p-4" style="max-height: 900px; overflow-y: auto;">
                     <!-- Controlla se ci sono utenti filtrati -->
                     <div v-if="filteredMusicians.length === 0" class="no-result-message fw-bold fs-2 card w-100 text-center py-5">Nessun risultato!</div>
@@ -328,7 +333,7 @@ export default {
                             <div class="card-body py-3">
                                 <div class="d-flex align-items-center justify-content-between ps-3 pt-1 mb-3">
                                         <!-- Nome dell'artista -->
-                                    <h5 class="card-title fw-bold fs-4 me-5">
+                                    <h5 class="card-title fw-bold fs-4 pt-3">
                                     {{ singleMusician.name }}
                         
                                     </h5>
@@ -361,10 +366,10 @@ export default {
 @import '../assets/scss/partials/SearchPage.scss';
 
 // Badge Sponsor
-.card-title {
-    position: relative;
-}
 
+.card-body{
+    position:relative;
+}
 .badge-success {
     background-color: darkgreen;
 }
@@ -373,6 +378,9 @@ export default {
     font-size: 0.8em;
     padding: 0.2em 0.5em;
     border-radius: 10px 0 0 10px;
+    position: absolute;
+    right: 0;
+    top: 15px;
 }
 .sponsor-text{
     font-size: 9px;
