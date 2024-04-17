@@ -23,7 +23,7 @@ export default {
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 split-menu">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 split-menu py-4 ">
               <li class="nav-item">
                 <a href="http://127.0.0.1:8000/login" class="header-nav-link">Accedi</a>
               </li>
@@ -42,11 +42,11 @@ export default {
 <style lang="scss" scoped>
 header {
 background-color: #21252B; color: #BADFDA; border: 1px solid #21252B;
-width: 100%; max-height: 180px;
-display: flex; align-items: center;
+width: 100%;
 position: sticky; top: 0; left: 0; right: 0; z-index: 999;
 .navbar-nav {
-    display: flex; align-items: center; flex-direction: row; min-height: 100px;
+    display: flex; align-items: center; flex-direction: row;
+    padding: 20px 0;
     .navbar-nav li {
         list-style: none;
         &:active{
@@ -94,7 +94,6 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
 .split-menu {
   display: flex;
   flex-direction: column;
-  margin-top: 15px;
 }
 
 @keyframes slideOutRight {
@@ -106,7 +105,7 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
   }
 }
 
-@media (max-width: 425px) {
+/* @media (max-width: 425px) {
 
   .split-menu {
     flex-direction: row;
@@ -124,7 +123,7 @@ position: sticky; top: 0; left: 0; right: 0; z-index: 999;
   ul {
     text-align: center;
   }
-}
+} */
 
 @media (max-width: 768px) {
   .navbar-nav {
