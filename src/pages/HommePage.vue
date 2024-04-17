@@ -152,7 +152,7 @@ export default {
                             <div class="text-white px-3 w-75">
                             <h3 class="carousel-title">{{ singleMusician.name }}</h3>
                             <div class="d-flex carousel-role">
-                                <h6 v-for="(userRole, i) in singleMusician.roles">
+                                <h6 class="display-none" v-for="(userRole, i) in singleMusician.roles">
                                 {{ userRole.title }}<span v-if="i !== singleMusician.roles.length - 1">, </span>  
                                 </h6>
                             </div>
