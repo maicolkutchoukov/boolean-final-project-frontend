@@ -330,8 +330,8 @@ export default {
                         </div>
                         <!-- Contenitore delle informazioni dell'artista -->
                         <div class="col-8 border my-bg-grey position-relative pe-0">
-                            <div class="card-body py-3">
-                                <div class="d-flex align-items-center justify-content-between ps-3 pt-1 mb-3">
+                            <div class="card-body py-3 px-3">
+                                <div class="d-flex align-items-center justify-content-between pt-1 mb-3">
                                         <!-- Nome dell'artista -->
                                     <h5 class="card-title fw-bold fs-4 pt-3">
                                     {{ singleMusician.name }}
@@ -340,14 +340,14 @@ export default {
                                     <span v-if="singleMusician.isSponsored" class="badge badge-small badge-success fs-5 pe-4 d-flex align-items-center"><small class="sponsor-text">Sponsored</small></span>
                                 </div>
                                 <!-- Biografia dell'artista -->
-                                <p v-if="singleMusician && singleMusician.user_details && singleMusician.user_details.bio" class="card-text h-50 overflow-hidden ps-3 bio-text d-none d-sm-block">{{ singleMusician.user_details.bio }}</p>
+                                <p v-if="singleMusician && singleMusician.user_details && singleMusician.user_details.bio" class="card-text h-50 overflow-hidden bio-text d-none d-sm-block">{{ singleMusician.user_details.bio }}</p>
 
                                                 
                                 <!-- Linee oblique per gli utenti sponsorizzati -->
                                 <div v-if="singleMusician.isSponsored" class="sponsor-lines"></div>
-                                                
+                                               
                                 <!-- Link al profilo dell'artista -->
-                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="my-btn text-white inline-block h-25 border mb-5 px-4 px-md-5 text-decoration-none py-2 fs-6"><small>Vedi Profilo</small></router-link>
+                                <router-link :to="{ name: 'profile', params: { name:singleMusician.name } }" class="my-btn text-white inline-block h-25 border mb-5 px-3 px-md-5 text-decoration-none py-2 fs-6"><small>Vedi Profilo</small></router-link>
                             </div>
                         </div>
                     </div>
