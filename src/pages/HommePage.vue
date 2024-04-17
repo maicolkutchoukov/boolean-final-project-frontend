@@ -180,7 +180,7 @@ export default {
       <section class="third-section py-5 fade-in">
         <div class="container-fluid">
           <div class="row g-0">
-            <div class="col-4">
+            <div class="col-4-md-none">
               <!-- Qui potrebbe andare un'altra sezione o un'inserzione -->
             </div>
             <div class="col-8 px-5">
@@ -338,6 +338,10 @@ export default {
    }
    .carousel-title {
         padding-bottom: 0px;
+    }
+    h3 {
+      margin-top: 10px;
+      margin-bottom: 0;
     }
 }
 
