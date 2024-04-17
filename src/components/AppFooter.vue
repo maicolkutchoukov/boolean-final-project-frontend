@@ -5,15 +5,15 @@ export default {
             footerLinks: [
                 {
                     category: 'Community',
-                    links: ['Blog', 'Community', 'Ideas']
+                    links: ['Blog', 'Community']
                 },
                 {
                     category: 'Company',
-                    links: ['About us', 'Team', 'Affiliati', 'Contatti', 'Jobs']
+                    links: ['About us', 'Team', 'Affiliati']
                 },
                 {
                     category: 'Link Utili',
-                    links: ['Garanzia', 'Dichiarazione', 'Privacy Policy', 'Cookie Policy', 'Cookie']
+                    links: ['Garanzia', 'Dichiarazione', 'Privacy Policy']
                 }
             ]
         };
@@ -31,10 +31,10 @@ export default {
 
     <!-- --------------------------------- -->
 
-    <footer class="my-blue-bg pt-5">
+    <footer class="pt-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 col-sm-12 py-lg-5 py-md-5 py-sm-3 text-center">
+                <div class="col-md-4 col-sm-12 text-center ps-4">
                     <!-- Logo -->
                     <div class="w-100">
                         <img src="../../public/Img/LogoBMusic.png" alt="" class="w-25">
@@ -44,7 +44,7 @@ export default {
                             Seguici su
                         </p>
                     </div>
-                    <ul class="list-unstyled d-flex justify-content-center mb-4">
+                    <ul class="list-unstyled d-flex mb-4 justify-content-center">
                         <li class="px-2">
                             <a href="#nogo"><i class="fa-brands fa-facebook-f my-cyan fs-4 "></i></a>
                         </li>
@@ -59,9 +59,9 @@ export default {
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-12 col-md-4 container-right d-flex justify-content-center py-lg-5 py-md-5 py-sm-3 "  v-for="footerLink in footerLinks" :key="footerLink.category">
+                <div class="col-md-8">
+                    <div class="row justify-content-around">
+                        <div class="col-12 col-md-3 container-right d-flex justify-content-center"  v-for="footerLink in footerLinks" :key="footerLink.category">
                             <!-- Link Footer -->
                             <div class="w-100 text-center mb-4">
                                 <h5 class="color" >{{ footerLink.category }}</h5>
@@ -87,25 +87,6 @@ export default {
 
 <style lang="scss" scoped>
 
-.footer-container {
-    background-color: #21252B;
-    min-height: 300px;
-    width: 100%;
-    color: white;
-}
-
-.container-top {
-    height: 200px;
-}
-
-.container-img {
-    height: 75px;
-    width: 150px;
-}
-
-.container-img > img {
-    width: 100%;
-}
 
 //Social Icon
 ul li a {
