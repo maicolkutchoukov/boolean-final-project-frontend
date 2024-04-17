@@ -323,7 +323,7 @@ export default {
                 <p v-else>Ancora nessun dato inserito dall'utente.</p>
             </div>
             <!-- Competenze -->
-            <div class="col-4 text-end skills-container">
+            <div class="col-4 text-end skills-container d-none d-md-block">
                 <h2 class="fw-bold pt-3 mb-4">Competenze</h2>
                 <div v-if="singleMusician && singleMusician.roles.length > 0">
                     <span v-for="(role, i) in singleMusician.roles" :key="i" class="bounce-in">
@@ -560,32 +560,6 @@ export default {
     opacity: 0;
 }
 
-@media (max-width: 425px) {
-    .user-img {
-        min-height: 300px;
-    }
-    .skills-container {
-        display: none;
-    }
-    .biography-section {
-        width: 100%;
-    }
-    .mb-5 {
-        margin: 0 !important;
-    }
-    .padding {
-        padding-top: 20px;
-        padding-bottom: 20px; 
-    }
-    .margin {
-        margin-bottom: 15px;
-    }
-    .card {
-        min-height: 200px;
-    }
-}
-
-
 .message-section {
     position: fixed;
     top: 20px;
@@ -721,5 +695,38 @@ export default {
 .swiper-slide img {
   display: block;
   width: 100%;
+}
+
+@media (max-width: 425px) {
+    .user-img {
+        min-height: 300px;
+    }
+    .skills-container {
+        display: none;
+    }
+    .biography-section {
+        width: 100%;
+    }
+    .mb-5 {
+        margin: 0 !important;
+    }
+    .padding {
+        padding-top: 20px;
+        padding-bottom: 20px; 
+    }
+    .margin {
+        margin-bottom: 15px;
+    }
+    .card {
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    
+    .biography-section {
+        width: 100%;
+    }
+    
 }
 </style>
