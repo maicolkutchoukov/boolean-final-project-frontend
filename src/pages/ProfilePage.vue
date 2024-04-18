@@ -362,28 +362,28 @@ export default {
         <!-- ------------------------------------------------------------------------------------------------------------------------------------ -->
        <section>
             <div v-if="singleMusician && singleMusician.reviews" class="d-flex justify-content-between mb-5 padding">
-                        <h2 class="mb-5 fw-bold">Recensioni:</h2>
-                        <div class="hover-container">
-                            <div class="d-flex align-items-center">
-                                <!-- Numero totale delle recensioni -->
-                                <small class="me-2 number-reviews">{{ singleMusician.votes.length }} voti</small>
-                                <!-- Visualizza le palline riempite in base alla media dei voti -->
-                                <span
-                                    v-for="index in 5"
-                                    :key="index"
-                                    :class="{
-                                        'filled': index <= averageVote,
-                                        'half-filled': index === Math.ceil(averageVote) && averageVote % 1 !== 0
-                                    }"
-                                    class="vote-star"
-                                >
-                                    <!-- Utilizzo delle icone di Font Awesome -->
-                                    <i v-if="index <= averageVote" class="fa-solid fa-circle"></i>
-                                    <i v-else class="fa-regular fa-circle"></i>
-                                </span>
-                            </div>
-                        </div>
+                <h2 class="mb-5 fw-bold">Recensioni:</h2>
+                <div class="hover-container">
+                    <div class="d-flex align-items-center">
+                        <!-- Numero totale delle recensioni -->
+                        <small class="me-2 number-reviews">{{ singleMusician.votes.length }} voti</small>
+                        <!-- Visualizza le palline riempite in base alla media dei voti -->
+                        <span
+                            v-for="index in 5"
+                            :key="index"
+                            :class="{
+                                'filled': index <= averageVote,
+                                'half-filled': index === Math.ceil(averageVote) && averageVote % 1 !== 0
+                            }"
+                            class="vote-star"
+                        >
+                            <!-- Utilizzo delle icone di Font Awesome -->
+                            <i v-if="index <= averageVote" class="fa-solid fa-circle"></i>
+                            <i v-else class="fa-regular fa-circle"></i>
+                        </span>
                     </div>
+                </div>
+            </div>
             <div v-if="singleMusician && singleMusician.reviews && singleMusician.reviews.length > 0" class="mb-5">
                 <swiper
                     :effect="'coverflow'"
@@ -397,7 +397,7 @@ export default {
                     modifier: 1,
                     slideShadows: false,
                     }"
-                    :pagination="true"
+                    :pagination="false"
                     :modules="modules"
                     :initialSlide="initialSlideIndex" 
                     class="mySwiper"
@@ -460,9 +460,9 @@ export default {
                             <i v-for="n in 5" :key="n" class="fa-regular fa-circle fa-xl me-2" :class="{ 'fas': n <= voteForm.vote }" @click="voteForm.vote = n"></i>
                         </div>
                     </div>
-                    <div class="text-center py-5">
-                        <button type="submit" class="btn my-button btn-lg me-5 text-white px-4 py-3" style="background-color: #21252b;">Invia Recensione</button>
-                        <button type="button" @click="closeReviewForm" class="btn my-button btn-lg me-5 text-white px-4 py-3" style="background-color: #21252b;">Chiudi</button>
+                    <div class="text-center py-5 d-flex align-item-center justify-content-center">
+                        <button type="submit" class="btn my-button btn-lg me-5 text-white px-4" style="background-color: #21252b;">Invia</button>
+                        <button type="button" @click="closeReviewForm" class="my-button btn-lg me-5 text-white px-4 fw-bold" style="background-color: #21252b;">Chiudi</button>
                     </div>
                 </form>
             </transition>
