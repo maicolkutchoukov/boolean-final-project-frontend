@@ -140,7 +140,7 @@ export default {
                 </div>
             </div>
         </section>
-        <section class="carousel-section">
+        <section class="carousel-sectio mb-5">
             <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-ride="carousel"> 
                 <div class="carousel-inner">
                     <!-- Carosello per gli utenti sponsorizzati -->
