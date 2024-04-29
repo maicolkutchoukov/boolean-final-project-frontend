@@ -69,31 +69,40 @@ export default {
         }
     },
     methods: {
-        async getMusicians(url = 'http://127.0.0.1:8000/api/users') {
-            try {
-                this.loading = true;
-                const response = await axios.get(url);
-                const allUsers = response.data.results.data;
-                const sponsoredResponse = await axios.get('http://127.0.0.1:8000/api/sponsor');
-                const sponsoredMusicians = sponsoredResponse.data.results;
-                sponsoredMusicians.forEach(musician => {
-                    musician.isSponsored = true;
+        getMusicians(url = 'http://127.0.0.1:8000/api/users') {
+            this.loading = true;
+            axios.get(url)
+                .then(response => {
+                    const allUsers = response.data.results.data;
+                    axios.get('http://127.0.0.1:8000/api/sponsor')
+                        .then(sponsoredResponse => {
+                            const sponsoredMusicians = sponsoredResponse.data.results;
+                            sponsoredMusicians.forEach(musician => {
+                                musician.isSponsored = true;
+                            });
+                            const nonSponsoredUsers = allUsers.filter(user => !sponsoredMusicians.some(sponsored => sponsored.id === user.id));
+                            this.allMusicians = [...sponsoredMusicians, ...nonSponsoredUsers];
+                        })
+                        .catch(error => {
+                            console.error('Errore durante la chiamata API:', error);
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        });
+                })
+                .catch(error => {
+                    console.error('Errore durante la chiamata API:', error);
+                    this.loading = false;
                 });
-                const nonSponsoredUsers = allUsers.filter(user => !sponsoredMusicians.some(sponsored => sponsored.id === user.id));
-                this.allMusicians = [...sponsoredMusicians, ...nonSponsoredUsers];
-            } catch (error) {
-                console.error('Errore durante la chiamata API:', error);
-            } finally {
-                this.loading = false;
-            }
         },
-        async getRoles() {
-            try {
-                const response = await axios.get('http://127.0.0.1:8000/api/roles');
-                this.allRoles = response.data.results;
-            } catch (error) {
-                console.error('Errore durante la chiamata API:', error);
-            }
+        getRoles() {
+            axios.get('http://127.0.0.1:8000/api/roles')
+                .then(response => {
+                    this.allRoles = response.data.results;
+                })
+                .catch(error => {
+                    console.error('Errore durante la chiamata API:', error);
+                });
         },
         updateFilterMusicians: debounce(function() {
             store.filteredMusicians = this.filteredMusicians;
@@ -158,11 +167,11 @@ export default {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
     <!-- Bottone di trigger per l'offcanvas -->
         
-        <div class="input-container position-relative mb-1 d-flex align-items-center justify-content-between flex-column w-75 mx-auto mt-5 d-md-none">
-            <h3 class="text-start w-100 mb-3">Nome:</h3>
-            <input type="text" v-model="searchQuery" class="form-control input-searchbar w-100 mx-2" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
+        <div class="input-container position-relative mb-1 d-flex align-items-center justify-content-between flex-column w-75 mx-auto d-md-none mt-5">
+            <h3 class="text-start w-100 mb-3 fw-bold">Nome:</h3>
+            <input type="text" v-model="searchQuery" class="form-control input-searchbar w-100 mx-2 rounded-5 px-4" placeholder="Cerca artisti o band..." @keyup="updateFilterMusicians()">
         </div>
-        <button class="btn btn-dark d-md-none d-block mx-auto w-75 mt-3 mb-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        <button class="btn btn-dark d-md-none d-block mx-auto w-75 mt-3 mb-5 rounded-5 fw-bold " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
             Apri filtri
         </button>
         <div class="d-flex justify-content-center d-md-none d-block">
@@ -255,7 +264,7 @@ export default {
                 <!-- Titolo della sezione dei filtri -->
                 <h2 class="fw-bold fs-1 mb-4">Filtri</h2>
                 <div class="d-flex justify-content-center">
-                        <button class="btn btn-dark rounded-5 py-3 px-5 mb-4" @click="resetFilters">Reset Filtri</button>
+                        <button class="btn btn-dark rounded-5 py-3 px-5 mb-4 fw-bold" @click="resetFilters">Azzera tutti i filtri</button>
                     </div>
                 <div class="filter-container">
                     <!-- Contenitore dei ruoli selezionati -->
@@ -522,13 +531,13 @@ export default {
     color: white;
 }
 .bio-text {
-    max-height: 3.6em; /* Altezza massima di tre righe (3 righe * altezza del carattere) */
+    height: 3.6em !important; /* Altezza massima di tre righe (3 righe * altezza del carattere) */
     line-height: 1.2em; /* Altezza di una riga (altezza del carattere) */
     overflow: hidden; /* Nasconde il testo in eccesso */
     text-overflow: ellipsis; /* Aggiunge i puntini di sospensione se il testo supera le tre righe */
     white-space: normal; /* Consente al testo di andare a capo */
     width: 100%; /* Imposta una larghezza fissa per il contenitore del testo */
-    display: -webkit-box; /* Permette il troncamento multilinea */
+    display: -webkit-box !important; /* Permette il troncamento multilinea */
     -webkit-line-clamp: 3; /* Imposta il numero massimo di righe da visualizzare */
     -webkit-box-orient: vertical; /* Orienta il testo in senso verticale */
 }
